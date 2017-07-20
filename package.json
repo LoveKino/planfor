@@ -1,0 +1,26 @@
+{
+  "name": "planfor",
+  "version": "0.0.1",
+  "description": "A plan system",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "mocha test/function/**.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/LoveKino/planfor.git"
+  },
+  "keywords": [
+    "plan",
+    "system"
+  ],
+  "author": "ddchen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LoveKino/planfor/issues"
+  },
+  "homepage": "https://github.com/LoveKino/planfor#readme"
+}
