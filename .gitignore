@@ -57,3 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 
+*.swp
+*.swn
+*.DS_Store
+asset/plan-tmp.json

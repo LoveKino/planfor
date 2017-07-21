@@ -6,8 +6,11 @@
   "directories": {
     "doc": "doc"
   },
+  "bin": {
+    "planfor": "./bin/planfor"
+  },
   "scripts": {
-    "test": "mocha test/function/**.js"
+    "test": "mocha test/function/**.js -t 1000000"
   },
   "repository": {
     "type": "git",
@@ -24,6 +27,15 @@
   },
   "homepage": "https://github.com/LoveKino/planfor#readme",
   "devDependencies": {
+    "jsenhance": "0.0.3",
     "mocha": "^3.4.2"
+  },
+  "dependencies": {
+    "cl-requestor": "0.0.3",
+    "crude-server": "0.0.1",
+    "es6-promisify": "^5.0.0",
+    "nodemailer": "^4.0.1",
+    "text-flow-pfc-compiler": "^0.1.0",
+    "yargs": "^8.0.2"
   }
 }
