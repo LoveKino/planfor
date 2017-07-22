@@ -5,24 +5,18 @@ let {
 } = require('..');
 let yargs = require('yargs');
 let path = require('path');
-let fs = require('fs');
-let promisify = require('es6-promisify');
-
-let readFile = promisify(fs.readFile);
-let stat = promisify(fs.stat);
 let log = console.log; // eslint-disable-line
 
-yargs.usage(`Usage: planfor launchServer
-    --config [config file path]
+const help = `Usage: planfor server
+    --port [port]
 
-Usage: planfor loadWeekPlan
-    --config [config file path]
-    --plan [plan file path]
+Usage: planfor load
+    --port [port]
+    --hostname [hostname]
+    --config [plan config json path]
+    `;
 
-Usage: planfor loadIntervalPlan
-    --config [config file path]
-    --plan [plan file path]
-    `).demandOption([]).help('h').alias('h', 'help');
+yargs.usage(help).demandOption([]).help('h').alias('h', 'help');
 
 let {
     argv
@@ -31,43 +25,16 @@ let {
 let action = argv._[0];
 
 let runCommand = async() => {
-    let configPath = getConfigPath();
-    if (action === 'launchServer') {
-        let config = await getPlanConfig(configPath);
-
-        launchServer(config);
-    } else if (action === 'loadWeekPlan') {
-        let config = await getPlanConfig(configPath);
+    if (action === 'server') {
+        launchServer(argv.port);
+    } else if (action === 'load') {
         let {
-            loadWeekPlan
-        } = startClient(config);
+            loadPlan
+        } = startClient(argv.hostname, argv.port);
 
-        return loadWeekPlan(await readFile(getPlanPath(configPath, config.weekPlanFile), 'utf-8'));
-    } else if (action === 'loadIntervalPlan') {
-        let config = await getPlanConfig(configPath);
-        let {
-            loadIntervalPlan
-        } = startClient(config);
-
-        return loadIntervalPlan(await readFile(getPlanPath(configPath, config.intervalPlanFile), 'utf-8'));
-    }
-};
-
-let getPlanPath = (configPath, planFilePath) => {
-    return argv.plan ? getParamPath(argv.plan) : path.resolve(configPath, planFilePath);
-};
-
-let getPlanConfig = async(configPath) => {
-    try {
-        let stats = await stat(configPath);
-        if (stats.isFile()) {
-            let configStr = await readFile(configPath, 'utf-8');
-            return JSON.parse(configStr);
-        } else {
-            return {};
-        }
-    } catch (err) { // eslint-disable-line
-        return {};
+        return loadPlan(getConfigPath(argv.config));
+    } else {
+        throw new Error(`unrecognized action ${action},\n${help}`);
     }
 };
 
@@ -80,4 +47,7 @@ let getParamPath = (p) => {
     return path.resolve(process.cwd(), p);
 };
 
-runCommand();
+runCommand().catch(err => {
+    log(err.toString());
+    process.exit(1);
+});

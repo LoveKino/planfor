@@ -1,44 +1,32 @@
 'use strict';
 
-let {
-    weekPlan
-} = require('../plansys');
 let crudeServer = require('crude-server');
+let url = require('url');
+let plansys = require('./plansys');
+
 let log = console.log; //eslint-disable-line
 
-module.exports = (planConfig) => {
+module.exports = () => {
     let {
-        loadPlanData
-    } = weekPlan(planConfig, {
+        reloadPlan
+    } = plansys({
         log
     });
 
-    return crudeServer((pathname) => {
-        log(pathname);
-        if (pathname === '/api/plan/week/load') {
+    return crudeServer((pathname, reqUrl) => {
+        log(reqUrl);
+
+        if (pathname === '/api/plan/load') {
             return async(req, res) => {
-                let planData = await reqBody(req);
-                loadPlanData(planData);
-                res.end('plan loaded');
+                let planConfigPath = url.parse(req.url, true).query.planConfigPath;
+                try {
+                    await reloadPlan(planConfigPath);
+                    res.end('plan reloaded!');
+                } catch (err) {
+                    res.end(`error happened when try to reload plan ${planConfigPath}. Error message: ${err.toString()}`);
+                    log(err);
+                }
             };
         }
-    });
-};
-
-let reqBody = (req) => {
-    return new Promise((resolve, reject) => {
-        let chunks = [];
-        req.on('data', (chunk) => {
-            chunks.push(chunk);
-        });
-
-        req.on('end', () => {
-            try {
-                let data = JSON.parse(chunks.join(''));
-                resolve(data);
-            } catch (err) {
-                reject(err);
-            }
-        });
     });
 };

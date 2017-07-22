@@ -35,7 +35,7 @@
     "crude-server": "0.0.1",
     "es6-promisify": "^5.0.0",
     "nodemailer": "^4.0.1",
-    "text-flow-pfc-compiler": "^0.1.0",
+    "text-flow-pfc-compiler": "^0.1.1",
     "yargs": "^8.0.2"
   }
 }

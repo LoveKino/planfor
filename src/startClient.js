@@ -6,11 +6,9 @@ let {
 } = require('./config');
 let log = console.log; // eslint-disable-line
 
-module.exports = (planConfig = {}) => {
-    let port = planConfig.port || SERVER_PORT;
-    let hostname = planConfig.hostname || SERVER_HOST;
-
+module.exports = (hostname, port) => {
     return planClient({
-        hostname, port
+        hostname: hostname || SERVER_HOST,
+        port: port || SERVER_PORT
     });
 };
