@@ -30,6 +30,8 @@ module.exports = ({
         // parse plan files to tasks
         let tasks = await parsePlanToTasks(planIndexFile);
 
+        log(tasks);
+
         // run tasks
         tasksMap[planConfigPath] = {
             tasks,
@@ -98,6 +100,12 @@ let isTimeMoment = (prevTime, curTime, event) => {
         let cms = (curHours * 3600 + curDate.getMinutes() * 60 + curDate.getSeconds()) * 1000 + curDate.getMilliseconds();
 
         if (ms >= pms && ms <= cms) return true;
+    } else if (event.type === 'time') {
+        let {
+            time
+        } = event;
+
+        return prevTime <= time && time <= curTime;
     }
 
     return false;
@@ -111,27 +119,28 @@ let parsePlanToTasks = async(planFile) => {
         [planFile]: true
     };
 
-    let contexter = (item, index, tokens) => {
-        return Object.assign(sandboxer(item, index, tokens), {
-            linkPlan: (filePath) => {
-                filePath = path.join(planFile, '..', filePath);
-                if (!closeMap[filePath]) {
-                    stack.push(filePath);
-                    closeMap[filePath] = true;
-                }
-
-                return {
-                    type: 'linkPlan',
-                    filePath
-                };
-            }
-        });
-    };
-
     while (stack.length) {
-        let top = stack.pop();
+        let top = stack.pop(); // current parse plan file
         let planstr = await readFile(top, 'utf-8');
         let ast = parseStrToAst(planstr);
+
+        let contexter = (item, index, tokens) => {
+            return Object.assign(sandboxer(item, index, tokens), {
+                linkPlan: (filePath) => {
+                    filePath = path.join(top, '..', filePath);
+                    if (!closeMap[filePath]) {
+                        stack.push(filePath);
+                        closeMap[filePath] = true;
+                    }
+
+                    return {
+                        type: 'linkPlan',
+                        filePath
+                    };
+                }
+            });
+        };
+
         checkASTWithContext(ast, contexter);
         let fileTasks = executeAST(ast, contexter);
 

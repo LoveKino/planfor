@@ -91,10 +91,19 @@ let daily = (clock) => {
     });
 };
 
+let time = (timeStr) => {
+    // TODO check timeStr
+    return moment({
+        type: 'time',
+        time: new Date(timeStr).getTime()
+    });
+};
+
 module.exports = (item, index, tokens) => {
     return Object.assign(contextText(item, index, tokens), {
         task,
         daily,
+        time,
         sendEmail,
         sequence,
         concurrent
