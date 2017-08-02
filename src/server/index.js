@@ -16,6 +16,7 @@ module.exports = () => {
     return crudeServer((pathname, reqUrl) => {
         log(reqUrl);
 
+        // load plans
         if (pathname === '/api/plan/load') {
             return async(req, res) => {
                 let planConfigPath = url.parse(req.url, true).query.planConfigPath;

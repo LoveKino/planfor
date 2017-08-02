@@ -9,6 +9,7 @@ let {
     parseStrToAst, checkASTWithContext, executeAST
 } = require('text-flow-pfc-compiler');
 let sendMail = require('./sendMail');
+let _ = require('lodash');
 
 let readFile = promisify(fs.readFile);
 
@@ -28,14 +29,18 @@ module.exports = ({
         let planIndexFile = path.join(planConfigPath, '..', planConfig.plan);
 
         // parse plan files to tasks
-        let tasks = await parsePlanToTasks(planIndexFile);
+        let {
+            tasks, focus
+        } = await parsePlanToTasks(planIndexFile);
 
         log(tasks);
+        log(focus);
 
         // run tasks
         tasksMap[planConfigPath] = {
             tasks,
-            planConfig
+            planConfig,
+            focus
         };
     };
 
@@ -111,12 +116,13 @@ let isTimeMoment = (prevTime, curTime, event) => {
     return false;
 };
 
-let parsePlanToTasks = async(planFile) => {
-    let tasks = [];
+// parse plan document
+let parsePlanToTasks = async(indexPlanFile) => {
+    let planItemsMap = {};
 
-    let stack = [planFile];
+    let stack = [indexPlanFile];
     let closeMap = {
-        [planFile]: true
+        [indexPlanFile]: true
     };
 
     while (stack.length) {
@@ -125,7 +131,7 @@ let parsePlanToTasks = async(planFile) => {
         let ast = parseStrToAst(planstr);
 
         let contexter = (item, index, tokens) => {
-            return Object.assign(sandboxer(item, index, tokens), {
+            return Object.assign(sandboxer(top)(item, index, tokens), {
                 linkPlan: (filePath) => {
                     filePath = path.join(top, '..', filePath);
                     if (!closeMap[filePath]) {
@@ -137,17 +143,82 @@ let parsePlanToTasks = async(planFile) => {
                         type: 'linkPlan',
                         filePath
                     };
+                },
+
+                planFocus: (planPath) => {
+                    planPath = path.join(top, '..', planPath);
+                    return {
+                        type: 'planFocus',
+                        planPath
+                    };
                 }
             });
         };
 
         checkASTWithContext(ast, contexter);
-        let fileTasks = executeAST(ast, contexter);
-
-        tasks = tasks.concat(fileTasks.filter((item) => item.type === 'pfc' && item.value.type === 'task').map(({
-            value
-        }) => value));
+        let fileItems = executeAST(ast, contexter);
+        planItemsMap[top] = fileItems;
     }
 
-    return tasks;
+    // resolve tasks
+    let tasks = _.reduce(planItemsMap, (prev, fileItems) => {
+        return prev.concat(_.filter(fileItems, (item) => item.type === 'pfc' && item.value.type === 'task').map(({
+            value
+        }) => value));
+    }, []);
+
+    // build map
+    let planTaskMap = _.reduce(planItemsMap, (prev, fileItems, filePath) => {
+        prev[filePath] = _.reduce(fileItems, (pre, item) => {
+            if (item.type === 'pfc' && item.value.type === 'task') {
+                // check repeated name
+                if(pre[item.value.name]) {
+                    throw new Error(`Repeated task names in a same plan file. Task info: ${filePath}, ${item.value.name}.`);
+                }
+                pre[item.value.name] = item;
+            }
+
+            return pre;
+        }, {});
+
+        return prev;
+    }, {});
+
+    let focusItem = planItemsMap[indexPlanFile].find((item) => {
+        return item.type === 'pfc' && item.value.type === 'planFocus';
+    });
+
+    return {
+        planItemsMap,
+        planTaskMap,
+        tasks,
+        focus: focusItem && await parsePlanFocus(focusItem.value.planPath, planTaskMap)
+    };
+};
+
+let parsePlanFocus = async(filePath, planTaskMap) => {
+    let planstr = await readFile(filePath, 'utf-8');
+    let ast = parseStrToAst(planstr);
+
+    let contexter = () => {
+        return {
+            linkTask: (planFile, name) => {
+                planFile = path.join(filePath, '..', planFile);
+                if (!(planTaskMap[planFile] && planTaskMap[planFile][name])) {
+                    throw new Error(`Try to link unexistence task. Link info: ${planFile}, ${name}`);
+                }
+                return {
+                    type: 'linkTask',
+                    planFile,
+                    name
+                };
+            }
+        };
+    };
+
+    checkASTWithContext(ast, contexter);
+
+    let fileItems = executeAST(ast, contexter);
+
+    return fileItems.filter((item) => item.type === 'pfc');
 };

@@ -1,5 +1,7 @@
 'use strict';
 
+let path = require('path');
+
 let contextText = require('text-flow-pfc-compiler/apply/contextText');
 
 let isType = (v, type) => v && typeof v === 'object' && v.type === type;
@@ -8,19 +10,6 @@ let checkType = (v, type, str) => {
     if (!isType(v, type)) {
         throw new Error(str || `Expect type ${type} for data ${v}`);
     }
-};
-
-let task = (name, moment, progress, target = 'myself') => {
-    checkType(moment, 'moment');
-    checkType(progress, 'action');
-    // TODO check
-    return {
-        type: 'task',
-        name,
-        moment,
-        progress,
-        target
-    };
 };
 
 let action = (content) => {
@@ -99,13 +88,52 @@ let time = (timeStr) => {
     });
 };
 
-module.exports = (item, index, tokens) => {
+let anyTime = () => {
+    return moment({
+        type: 'anyTime'
+    });
+};
+
+let doNothing = () => {
+    return atomAction('doNothing');
+};
+
+module.exports = (filePath) => (item, index, tokens) => {
+    let planFocus = (planPath) => {
+        planPath = path.join(filePath, '..', planPath);
+        return {
+            type: 'planFocus',
+            planPath
+        };
+    };
+
+    // unique a task by using filePath + name
+    let task = (name, moment, progress, target = 'myself') => {
+        moment = moment || anyTime();
+        progress = progress || doNothing();
+
+        checkType(moment, 'moment');
+        checkType(progress, 'action');
+        // TODO check
+        return {
+            type: 'task',
+            name,
+            filePath,
+            moment,
+            progress,
+            target
+        };
+    };
+
     return Object.assign(contextText(item, index, tokens), {
         task,
         daily,
         time,
+        anyTime,
+        doNothing,
         sendEmail,
         sequence,
-        concurrent
+        concurrent,
+        planFocus
     });
 };

@@ -34,6 +34,7 @@
     "cl-requestor": "0.0.3",
     "crude-server": "0.0.1",
     "es6-promisify": "^5.0.0",
+    "lodash": "^4.17.4",
     "nodemailer": "^4.0.1",
     "text-flow-pfc-compiler": "^0.1.1",
     "yargs": "^8.0.2"
