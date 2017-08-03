@@ -8,7 +8,8 @@ let {
     n,
     mount
 } = require('kabanery');
-let focusPage = require('./focusPage');
+let focusPage = require('./page/focusPage');
+let editTaskPage = require('./page/editTaskPage');
 
 mount(n('div id="pager"'), document.body);
 
@@ -18,6 +19,10 @@ let {
     'focusPage': {
         title: 'focusPage',
         render: focusPage
+    },
+    'editTask': {
+        title: 'editTask',
+        render: editTaskPage
     }
 }, 'focusPage'));
 

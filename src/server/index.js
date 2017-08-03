@@ -2,9 +2,10 @@
 
 let crudeServer = require('crude-server');
 let url = require('url');
-let plansys = require('./plansys');
+let plansys = require('../plansys');
 let fs = require('fs');
 let path = require('path');
+let reqBody = require('./reqBody');
 
 let log = console.log; //eslint-disable-line
 
@@ -33,7 +34,9 @@ module.exports = () => {
     let {
         reloadPlan,
         getFocusData,
-        getDailyTasks
+        getDailyTasks,
+        getTask,
+        updateTaskByCode
     } = plansys({
         log
     });
@@ -72,6 +75,39 @@ module.exports = () => {
                 res.end(JSON.stringify({
                     errno: 0,
                     data: result
+                }));
+            });
+        } else if (pathname === '/api/task') {
+            return runTimeError(async(req, res) => {
+                let qs = url.parse(req.url, true).query;
+                let {
+                    planConfigPath,
+                    filePath,
+                    name
+                } = qs;
+                planConfigPath = planConfigPath.trim();
+                filePath = filePath.trim();
+                name = name.trim();
+
+                let result = await getTask(planConfigPath, filePath, name);
+                res.end(JSON.stringify({
+                    errno: 0,
+                    data: result
+                }));
+            });
+        } else if (pathname === '/api/task/update/code') {
+            return runTimeError(async(req, res) => {
+                let {
+                    code,
+                    planConfigPath,
+                    filePath,
+                    name
+                } = await reqBody(req);
+
+                await updateTaskByCode(code, planConfigPath, filePath, name);
+
+                res.end(JSON.stringify({
+                    errno: 0
                 }));
             });
         } else if (pathname === '/') {

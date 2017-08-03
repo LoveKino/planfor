@@ -36,11 +36,14 @@
     "crude-server": "0.0.1",
     "es6-promisify": "^5.0.0",
     "kabanery": "^0.2.4",
+    "kabanery-fold": "0.0.10",
+    "kabanery-modal": "0.0.9",
     "kabanery-spa": "0.0.16",
     "lodash": "^4.17.4",
     "nodemailer": "^4.0.1",
+    "pfc-compiler": "^0.1.7",
     "quick-steady-theme": "0.0.2",
-    "text-flow-pfc-compiler": "^0.1.1",
+    "text-flow-pfc-compiler": "^0.1.2",
     "yargs": "^8.0.2"
   }
 }

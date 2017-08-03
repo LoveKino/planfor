@@ -1,0 +1,16 @@
+'use strict';
+
+const STATUS_NOT_STARTED = 'not_started';
+const STATUS_WORKING = 'working';
+const STATUS_FINISHED = 'finished';
+const STATUS_DISCARDED = 'discarded';
+
+const STATUS_LIST = [STATUS_NOT_STARTED, STATUS_WORKING, STATUS_FINISHED, STATUS_DISCARDED];
+
+module.exports = {
+    STATUS_LIST,
+    STATUS_NOT_STARTED,
+    STATUS_WORKING,
+    STATUS_FINISHED,
+    STATUS_DISCARDED
+};

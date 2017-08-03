@@ -60,11 +60,121 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isObject, funType, or, isString, isFalsy, likeArray
+} = __webpack_require__(1);
+
+let iterate = __webpack_require__(9);
+
+let {
+    map, reduce, find, findIndex, forEach, filter, any, exist, compact
+} = __webpack_require__(23);
+
+let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
+
+let difference = (list1, list2, fopts) => {
+    return reduce(list1, (prev, item) => {
+        if (!contain(list2, item, fopts) &&
+            !contain(prev, item, fopts)) {
+            prev.push(item);
+        }
+        return prev;
+    }, []);
+};
+
+let union = (list1, list2, fopts) => deRepeat(list2, fopts, deRepeat(list1, fopts));
+
+let mergeMap = (map1 = {}, map2 = {}) => reduce(map2, setValueKey, reduce(map1, setValueKey, {}));
+
+let setValueKey = (obj, value, key) => {
+    obj[key] = value;
+    return obj;
+};
+
+let interset = (list1, list2, fopts) => {
+    return reduce(list1, (prev, cur) => {
+        if (contain(list2, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, []);
+};
+
+let deRepeat = (list, fopts, init = []) => {
+    return reduce(list, (prev, cur) => {
+        if (!contain(prev, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, init);
+};
+
+/**
+ * a.b.c
+ */
+let get = funType((sandbox, name = '') => {
+    name = name.trim();
+    let parts = !name ? [] : name.split('.');
+    return reduce(parts, getValue, sandbox, invertLogic);
+}, [
+    isObject,
+    or(isString, isFalsy)
+]);
+
+let getValue = (obj, key) => obj[key];
+
+let invertLogic = v => !v;
+
+let delay = (time) => new Promise((resolve) => {
+    setTimeout(resolve, time);
+});
+
+let flat = (list) => {
+    if (likeArray(list) && !isString(list)) {
+        return reduce(list, (prev, item) => {
+            prev = prev.concat(flat(item));
+            return prev;
+        }, []);
+    } else {
+        return [list];
+    }
+};
+
+module.exports = {
+    flat,
+    contain,
+    difference,
+    union,
+    interset,
+    map,
+    reduce,
+    iterate,
+    find,
+    findIndex,
+    deRepeat,
+    forEach,
+    filter,
+    any,
+    exist,
+    get,
+    delay,
+    mergeMap,
+    compact
+};
+
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -290,117 +400,98 @@ module.exports = {
 
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let {
-    isObject, funType, or, isString, isFalsy, likeArray
-} = __webpack_require__(0);
-
-let iterate = __webpack_require__(8);
-
-let {
-    map, reduce, find, findIndex, forEach, filter, any, exist, compact
-} = __webpack_require__(16);
-
-let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
-
-let difference = (list1, list2, fopts) => {
-    return reduce(list1, (prev, item) => {
-        if (!contain(list2, item, fopts) &&
-            !contain(prev, item, fopts)) {
-            prev.push(item);
-        }
-        return prev;
-    }, []);
-};
-
-let union = (list1, list2, fopts) => deRepeat(list2, fopts, deRepeat(list1, fopts));
-
-let mergeMap = (map1 = {}, map2 = {}) => reduce(map2, setValueKey, reduce(map1, setValueKey, {}));
-
-let setValueKey = (obj, value, key) => {
-    obj[key] = value;
-    return obj;
-};
-
-let interset = (list1, list2, fopts) => {
-    return reduce(list1, (prev, cur) => {
-        if (contain(list2, cur, fopts)) {
-            prev.push(cur);
-        }
-        return prev;
-    }, []);
-};
-
-let deRepeat = (list, fopts, init = []) => {
-    return reduce(list, (prev, cur) => {
-        if (!contain(prev, cur, fopts)) {
-            prev.push(cur);
-        }
-        return prev;
-    }, init);
-};
+module.exports = __webpack_require__(22);
 
 /**
- * a.b.c
+ * @readme-quick-run
+ *
+ * Using method n to construct dom node quickly.
+ *
+ * [readme-lang:zh]用方法n快速构造dom节点
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {n, mount} = kabanery;
+ *
+ * mount(n('div', {
+ *   id: 'qu',
+ *   style: {
+ *      backgroundColor: 'red'
+ *   }
+ * }, [
+ *      n('span class=go style="font-size:16px"')
+ * ]), document.body);
+ *
+ * console.log(document.getElementById('qu').outerHTML); // print result
  */
-let get = funType((sandbox, name = '') => {
-    name = name.trim();
-    let parts = !name ? [] : name.split('.');
-    return reduce(parts, getValue, sandbox, invertLogic);
-}, [
-    isObject,
-    or(isString, isFalsy)
-]);
 
-let getValue = (obj, key) => obj[key];
+/**
+ * @readme-quick-run
+ *
+ * Basic way to construct a view.
+ *
+ * [readme-lang:zh]构造一个组件的简单方法
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {view, n, mount} = kabanery;
+ *
+ * let MyView = view((data) => {
+ *      let {type} = data;
+ *
+ *      return n('div', {
+ *         id: 'test1',
+ *         style: {
+ *            fontSize: 10
+ *         }
+ *      },[
+ *          type === 2 && n('span', 'second'),
+ *          type === 3 && n('div', 'third')
+ *      ]);
+ * });
+ *
+ * mount(MyView({type: 3}), document.body);
+ *
+ * console.log(document.getElementById('test1').outerHTML); // print result
+ */
 
-let invertLogic = v => !v;
-
-let delay = (time) => new Promise((resolve) => {
-    setTimeout(resolve, time);
-});
-
-let flat = (list) => {
-    if (likeArray(list) && !isString(list)) {
-        return reduce(list, (prev, item) => {
-            prev = prev.concat(flat(item));
-            return prev;
-        }, []);
-    } else {
-        return [list];
-    }
-};
-
-module.exports = {
-    flat,
-    contain,
-    difference,
-    union,
-    interset,
-    map,
-    reduce,
-    iterate,
-    find,
-    findIndex,
-    deRepeat,
-    forEach,
-    filter,
-    any,
-    exist,
-    get,
-    delay,
-    mergeMap,
-    compact
-};
+/**
+ * @readme-quick-run
+ *
+ * Using update api to update a view.
+ *
+ * [readme-lang:zh]运用update api去更新一个view
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {view, n, mount} = kabanery;
+ *
+ * let MyView = view((data, {update}) => {
+ *      return n('div', {
+ *         id: 'a',
+ *         style: {
+ *            fontSize: 10
+ *         },
+ *         onclick: () => {
+ *            update('show', !data.show);
+ *         }
+ *      }, [
+ *          data.show && n('div', 'show text')
+ *      ]);
+ * });
+ *
+ * mount(MyView({show: false}), document.body);
+ *
+ * document.getElementById('a').click(); // simulate user action
+ * console.log(document.getElementById('a').outerHTML); // print result
+ */
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -408,10 +499,10 @@ module.exports = {
 
 let {
     reduce
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 let {
     funType, isObject, or, isString, isFalsy
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let defineProperty = (obj, key, opts) => {
     if (Object.defineProperty) {
@@ -556,97 +647,6 @@ module.exports = {
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(15);
-
-/**
- * @readme-quick-run
- *
- * Using method n to construct dom node quickly.
- *
- * [readme-lang:zh]用方法n快速构造dom节点
- *
- * ## test tar=js r_c=kabanery env=browser
- * let {n, mount} = kabanery;
- *
- * mount(n('div', {
- *   id: 'qu',
- *   style: {
- *      backgroundColor: 'red'
- *   }
- * }, [
- *      n('span class=go style="font-size:16px"')
- * ]), document.body);
- *
- * console.log(document.getElementById('qu').outerHTML); // print result
- */
-
-/**
- * @readme-quick-run
- *
- * Basic way to construct a view.
- *
- * [readme-lang:zh]构造一个组件的简单方法
- *
- * ## test tar=js r_c=kabanery env=browser
- * let {view, n, mount} = kabanery;
- *
- * let MyView = view((data) => {
- *      let {type} = data;
- *
- *      return n('div', {
- *         id: 'test1',
- *         style: {
- *            fontSize: 10
- *         }
- *      },[
- *          type === 2 && n('span', 'second'),
- *          type === 3 && n('div', 'third')
- *      ]);
- * });
- *
- * mount(MyView({type: 3}), document.body);
- *
- * console.log(document.getElementById('test1').outerHTML); // print result
- */
-
-/**
- * @readme-quick-run
- *
- * Using update api to update a view.
- *
- * [readme-lang:zh]运用update api去更新一个view
- *
- * ## test tar=js r_c=kabanery env=browser
- * let {view, n, mount} = kabanery;
- *
- * let MyView = view((data, {update}) => {
- *      return n('div', {
- *         id: 'a',
- *         style: {
- *            fontSize: 10
- *         },
- *         onclick: () => {
- *            update('show', !data.show);
- *         }
- *      }, [
- *          data.show && n('div', 'show text')
- *      ]);
- * });
- *
- * mount(MyView({show: false}), document.body);
- *
- * document.getElementById('a').click(); // simulate user action
- * console.log(document.getElementById('a').outerHTML); // print result
- */
-
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -654,13 +654,260 @@ module.exports = __webpack_require__(15);
 
 
 let {
-    map
+    reduce
+} = __webpack_require__(0);
+let {
+    funType, isObject, or, isString, isFalsy
 } = __webpack_require__(1);
+
+let defineProperty = (obj, key, opts) => {
+    if (Object.defineProperty) {
+        Object.defineProperty(obj, key, opts);
+    } else {
+        obj[key] = opts.value;
+    }
+    return obj;
+};
+
+let hasOwnProperty = (obj, key) => {
+    if (obj.hasOwnProperty) {
+        return obj.hasOwnProperty(key);
+    }
+    for (var name in obj) {
+        if (name === key) return true;
+    }
+    return false;
+};
+
+let toArray = (v = []) => Array.prototype.slice.call(v);
+
+/**
+ * a.b.c
+ */
+let get = funType((sandbox, name = '') => {
+    name = name.trim();
+    let parts = !name ? [] : name.split('.');
+    return reduce(parts, getValue, sandbox, invertLogic);
+}, [
+    isObject,
+    or(isString, isFalsy)
+]);
+
+let getValue = (obj, key) => obj[key];
+
+let invertLogic = v => !v;
+
+let set = (sandbox, name = '', value) => {
+    name = name.trim();
+    let parts = !name ? [] : name.split('.');
+    let parent = sandbox;
+    if (!isObject(parent)) return;
+    if (!parts.length) return;
+    for (let i = 0; i < parts.length - 1; i++) {
+        let part = parts[i];
+        parent = parent[part];
+        // avoid exception
+        if (!isObject(parent)) return null;
+    }
+
+    parent[parts[parts.length - 1]] = value;
+    return true;
+};
+
+/**
+ * provide property:
+ *
+ * 1. read props freely
+ *
+ * 2. change props by provide token
+ */
+
+let authProp = (token) => {
+    let set = (obj, key, value) => {
+        let temp = null;
+
+        if (!hasOwnProperty(obj, key)) {
+            defineProperty(obj, key, {
+                enumerable: false,
+                configurable: false,
+                set: (value) => {
+                    if (isObject(value)) {
+                        if (value.token === token) {
+                            // save
+                            temp = value.value;
+                        }
+                    }
+                },
+                get: () => {
+                    return temp;
+                }
+            });
+        }
+
+        setProp(obj, key, value);
+    };
+
+    let setProp = (obj, key, value) => {
+        obj[key] = {
+            token,
+            value
+        };
+    };
+
+    return {
+        set
+    };
+};
+
+let evalCode = (code) => {
+    if (typeof code !== 'string') return code;
+    return eval(`(function(){
+    try {
+        ${code}
+    } catch(err) {
+        console.log('Error happened, when eval code.');
+        throw err;
+    }
+})()`);
+};
+
+let delay = (time) => new Promise((resolve) => {
+    setTimeout(resolve, time);
+});
+
+let runSequence = (list, params = [], context, stopV) => {
+    if (!list.length) {
+        return Promise.resolve();
+    }
+    let fun = list[0];
+    let v = fun && fun.apply(context, params);
+    if (stopV && v === stopV) {
+        return Promise.resolve(stopV);
+    }
+    return Promise.resolve(v).then(() => {
+        return runSequence(list.slice(1), params, context, stopV);
+    });
+};
+
+module.exports = {
+    defineProperty,
+    hasOwnProperty,
+    toArray,
+    get,
+    set,
+    authProp,
+    evalCode,
+    delay,
+    runSequence
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let shadowFrame = __webpack_require__(20);
+
+let startMomenter = __webpack_require__(21);
+
+let getX = (elem) => {
+    var x = 0;
+    while (elem) {
+        x = x + elem.offsetLeft;
+        elem = elem.offsetParent;
+    }
+    return x;
+};
+
+let getY = (elem) => {
+    var y = 0;
+    while (elem) {
+        y = y + elem.offsetTop;
+        elem = elem.offsetParent;
+    }
+    return y;
+};
+
+let getClientX = (elem) => {
+    return getX(elem) - window.scrollX;
+};
+
+let getClientY = (elem) => {
+    return getY(elem) - window.scrollY;
+};
+
+let removeChilds = (node) => {
+    while (node && node.firstChild) {
+        node.removeChild(node.firstChild);
+    }
+};
+
+let once = (node, type, handler, useCapture) => {
+    let fun = function(e) {
+        let ret = handler.apply(this, [e]);
+        node.removeEventListener(type, fun, useCapture);
+        return ret;
+    };
+
+    node.addEventListener(type, fun, useCapture);
+};
+
+let getAttributeMap = (attributes = []) => {
+    let map = {};
+    for (let i = 0; i < attributes.length; i++) {
+        let {
+            name, value
+        } = attributes[i];
+        map[name] = value;
+    }
+    return map;
+};
+
+let getClasses = (clz = '') => {
+    let ret = [];
+    let items = clz.split(' ');
+    for (let i = 0; i < items.length; i++) {
+        let item = items[i];
+        item = item.trim();
+        if (item) {
+            ret.push(item);
+        }
+    }
+    return ret;
+};
+
+module.exports = {
+    getX,
+    getY,
+    getClientX,
+    getClientY,
+    removeChilds,
+    once,
+    shadowFrame,
+    getAttributeMap,
+    startMomenter,
+    getClasses
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    map
+} = __webpack_require__(0);
 let {
     isObject, isNode
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
-let parseArgs = __webpack_require__(17);
+let parseArgs = __webpack_require__(24);
 
 const KABANERY_NODE = 'kabanery_node';
 
@@ -761,7 +1008,7 @@ module.exports = {
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -769,19 +1016,19 @@ module.exports = {
 
 let {
     createElement, createSvgElement
-} = __webpack_require__(25);
+} = __webpack_require__(32);
 
 let {
     bindEvents
-} = __webpack_require__(6);
+} = __webpack_require__(8);
 
 let {
     map
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     isKabaneryNode
-} = __webpack_require__(4);
+} = __webpack_require__(6);
 
 let reduceNode = (node) => {
     if (isKabaneryNode(node)) {
@@ -803,13 +1050,13 @@ module.exports = reduceNode;
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let EventMatrix = __webpack_require__(26);
+let EventMatrix = __webpack_require__(33);
 
 let {
     listenEventType,
@@ -834,98 +1081,7 @@ module.exports = {
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let shadowFrame = __webpack_require__(13);
-
-let startMomenter = __webpack_require__(14);
-
-let getX = (elem) => {
-    var x = 0;
-    while (elem) {
-        x = x + elem.offsetLeft;
-        elem = elem.offsetParent;
-    }
-    return x;
-};
-
-let getY = (elem) => {
-    var y = 0;
-    while (elem) {
-        y = y + elem.offsetTop;
-        elem = elem.offsetParent;
-    }
-    return y;
-};
-
-let getClientX = (elem) => {
-    return getX(elem) - window.scrollX;
-};
-
-let getClientY = (elem) => {
-    return getY(elem) - window.scrollY;
-};
-
-let removeChilds = (node) => {
-    while (node && node.firstChild) {
-        node.removeChild(node.firstChild);
-    }
-};
-
-let once = (node, type, handler, useCapture) => {
-    let fun = function(e) {
-        let ret = handler.apply(this, [e]);
-        node.removeEventListener(type, fun, useCapture);
-        return ret;
-    };
-
-    node.addEventListener(type, fun, useCapture);
-};
-
-let getAttributeMap = (attributes = []) => {
-    let map = {};
-    for (let i = 0; i < attributes.length; i++) {
-        let {
-            name, value
-        } = attributes[i];
-        map[name] = value;
-    }
-    return map;
-};
-
-let getClasses = (clz = '') => {
-    let ret = [];
-    let items = clz.split(' ');
-    for (let i = 0; i < items.length; i++) {
-        let item = items[i];
-        item = item.trim();
-        if (item) {
-            ret.push(item);
-        }
-    }
-    return ret;
-};
-
-module.exports = {
-    getX,
-    getY,
-    getClientX,
-    getClientY,
-    removeChilds,
-    once,
-    shadowFrame,
-    getAttributeMap,
-    startMomenter,
-    getClasses
-};
-
-
-/***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -933,7 +1089,7 @@ module.exports = {
 
 let {
     likeArray, isObject, funType, isFunction, isUndefined, or, isNumber, isFalsy, mapType
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 /**
  *
@@ -1032,7 +1188,7 @@ module.exports = iterate;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1040,17 +1196,17 @@ module.exports = iterate;
 
 let {
     attachDocument
-} = __webpack_require__(6);
+} = __webpack_require__(8);
 
 let {
     isNode
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let {
     flat, forEach
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
-let reduceNode = __webpack_require__(5);
+let reduceNode = __webpack_require__(7);
 
 /**
  * @param parentNode
@@ -1079,1877 +1235,18 @@ let getDoc = (node) => {
 
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    router,
-    queryPager
-} = __webpack_require__(11);
-let {
-    n,
-    mount
-} = __webpack_require__(3);
-let focusPage = __webpack_require__(31);
-
-mount(n('div id="pager"'), document.body);
-
-let {
-    forward
-} = router(queryPager({
-    'focusPage': {
-        title: 'focusPage',
-        render: focusPage
-    }
-}, 'focusPage'));
-
-forward(window.location.href);
-
-
-/***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(12);
-
-/**
- * @readme-quick-run
- *
- * ## test tar=js env=browser r_c=spa
- *
- * let {router, queryPager} = spa;
- * let {n, mount} = require('kabanery');
- * mount(n('div id="pager"'), document.body); // pager as contauner
- *
- * let {forward} = router(queryPager({
- *      'page1': {
- *          title: 'page1',
- *          render: () => {
- *              return n('div', 'this is page1');
- *          }
- *      },
- *      'page2': {
- *          render: () => {
- *              return n('div', 'this is page2');
- *          }
- *      }
- * }, 'page1')); // default page is page1
- *
- * module.exports = forward(window.location.href).then(() => {
- *    console.log('page 1 content: ');
- *    console.log(document.getElementById('pager').innerHTML);
- *    return forward('?page=page2').then(() => {
- *      console.log('\n\npage 2 content: ');
- *      console.log(document.getElementById('pager').innerHTML);
- *    });
- * });
- */
+exports.decode = exports.parse = __webpack_require__(39);
+exports.encode = exports.stringify = __webpack_require__(40);
 
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    removeChilds
-} = __webpack_require__(7);
-
-let {
-    mount
-} = __webpack_require__(3);
-
-let querystring = __webpack_require__(28);
-
-const SINGLE_JUMP_PREFIX = 'single://';
-
-const CONTAINER_ID = 'pager';
-
-let queryPager = (map = [], index) => {
-    index = initDefaultPage(map, index);
-
-    return (url) => {
-        let qs = querystring.parse(url.split('?')[1] || '');
-        let pageName = qs.page || index;
-
-        return map[pageName];
-    };
-};
-
-let restPager = (map = [], index) => {
-    index = initDefaultPage(map, index);
-
-    return (url) => {
-        let pathname = url.split(/.*\:\/\//)[1];
-        let pageName = pathname.split('/')[1];
-        pageName = pageName || index;
-
-        return map[pageName];
-    };
-};
-
-let initDefaultPage = (map = [], index) => {
-    if (index === null || index === undefined) {
-        for (let name in map) {
-            index = name;
-            break;
-        }
-    }
-    return index;
-};
-
-let renderPage = (render, pageEnv, title, containerId) => {
-    return Promise.resolve(render(pageEnv, title)).then((pageNode) => {
-        // TODO pager is the default container, make it configurable
-        let pager = document.getElementById(containerId);
-        // unload old page
-        removeChilds(pager);
-        // add new page
-        mount(pageNode, pager);
-        pager.style = 'display:block;';
-        document.title = title;
-
-        // hash location
-        if (window.location.hash) {
-            let item = document.getElementById(window.location.hash.substring(1));
-            if (item) {
-                window.scrollTo(0, item.offsetTop);
-            }
-        }
-    });
-};
-
-/**
- * pager: (url) => {title, render}
- */
-let router = (pager, pageEnv, {
-    onSwitchPageStart,
-    onSwitchPageFinished,
-    containerId = CONTAINER_ID
-} = {}) => {
-    let listenFlag = false;
-
-    /**
-     * only entrance for switching pages
-     */
-    let switchPage = (render, pageEnv, title) => {
-        onSwitchPageStart && onSwitchPageStart(render, pageEnv, title);
-        let ret = switchBetweenPages(render, pageEnv, title);
-
-        Promise.resolve(ret).then((data) => {
-            onSwitchPageFinished && onSwitchPageFinished(null, data);
-        }).catch((err) => {
-            onSwitchPageFinished && onSwitchPageFinished(err);
-        });
-
-        return ret;
-    };
-
-    let switchBetweenPages = (render, pageEnv, title) => {
-        let ret = renderPage(render, pageEnv, title, containerId);
-
-        if (!listenFlag) {
-            listenPageSwitch();
-            listenFlag = true;
-        }
-
-        return ret;
-    };
-
-    let forward = (url, {
-        keepLocation
-    } = {}) => {
-        if (!window.history.pushState) {
-            window.location.href = url;
-            return;
-        }
-        let {
-            render, title = '', transitionData = {}
-        } = pager(url);
-
-        if (url !== window.location.href) {
-            window.history.pushState(transitionData, title, url);
-        }
-        if (!keepLocation) {
-            window.scrollTo(0, 0);
-        }
-        return switchPage(render, pageEnv, title);
-    };
-
-    let redirect = (url) => {
-        if (!window.history.pushState) {
-            window.location.href = url;
-            window.location.replace(url);
-            return;
-        }
-        let {
-            render, title = '', transitionData = {}
-        } = pager(url);
-
-        if (url !== window.location.href) {
-            window.history.replaceState(transitionData, title, url);
-        }
-        return switchPage(render, pageEnv);
-    };
-
-    let listenPageSwitch = () => {
-        window.onpopstate = () => {
-            forward(window.location.href);
-        };
-
-        document.addEventListener('click', (e) => {
-            // hack kabanery, TODO fix this hack
-            setTimeout(() => {
-                let target = e.target;
-                // hack kabanery, TODO fix this hack
-                if (e.__stopPropagation) return;
-
-                while (target) {
-                    if (target.getAttribute) { // document does not have getAttribute method
-                        let url = (target.getAttribute('href') || '').trim();
-                        // matched
-                        if (url.indexOf(SINGLE_JUMP_PREFIX) === 0) {
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            forward(url.substring(SINGLE_JUMP_PREFIX.length).trim());
-                            break;
-                        }
-                    }
-                    target = target.parentNode;
-                }
-            });
-        });
-    };
-
-    return {
-        forward,
-        redirect,
-        reload: () => {
-            return forward(window.location.href, {
-                keepLocation: true
-            });
-        }
-    };
-};
-
-module.exports = {
-    router,
-    queryPager,
-    restPager
-};
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let shadowFrame = () => {
-    let div = document.createElement('div');
-    let sr = div.createShadowRoot();
-    sr.innerHTML = '<div id="shadow-page"></div>';
-
-    let frame = null;
-
-    let create = () => {
-        let html = document.getElementsByTagName('html')[0];
-        html.appendChild(div);
-
-        return sr.getElementById('shadow-page');
-    };
-
-    let start = () => {
-        if (frame) {
-            return frame;
-        }
-        frame = new Promise(resolve => {
-            if (document.body) {
-                resolve(create());
-            } else {
-                document.addEventListener('DOMContentLoaded', () => {
-                    resolve(create());
-                });
-            }
-        });
-        return frame;
-    };
-
-    let close = () => {
-        frame.then(() => {
-            let parent = div.parentNode;
-            parent && parent.removeChild(div);
-        });
-    };
-
-    return {
-        start,
-        close,
-        sr,
-        rootDiv: div
-    };
-};
-
-module.exports = shadowFrame;
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let isDomReady = (doc) => doc.readyState === 'complete' ||
-    (!doc.attachEvent && doc.readyState === 'interactive');
-
-let startMomenter = (doc = document) => {
-    let loadedFlag = false;
-
-    let resolves = [];
-
-    let docReady = () => {
-        let ready = () => {
-            if (loadedFlag) return;
-            loadedFlag = true;
-            for (let i = 0; i < resolves.length; i++) {
-                resolves[i]();
-            }
-            resolves = [];
-        };
-        if (doc.addEventListener) {
-            doc.addEventListener('DOMContentLoaded', ready);
-            doc.addEventListener('DOMContentLoaded', ready);
-        } else {
-            doc.attachEvent('onreadystatechange', () => {
-                if (document.readyState === 'complete') {
-                    ready();
-                }
-            });
-        }
-    };
-
-    docReady();
-
-    // generalWaitTime is used for async rendering
-    return ({
-        generalWaitTime = 0, startTimeout = 10000
-    } = {}) => new Promise((resolve, reject) => {
-        if (loadedFlag || isDomReady(doc)) { // already ready
-            setTimeout(resolve, generalWaitTime);
-        } else { // wait for ready
-            resolves.push(resolve);
-            setTimeout(() => {
-                reject(new Error('timeout'));
-            }, startTimeout);
-        }
-    });
-};
-
-module.exports = startMomenter;
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    n, svgn, bindPlugs, toHTML, parseArgs, isKabaneryNode, cn
-} = __webpack_require__(4);
-
-let plugs = __webpack_require__(19);
-
-let view = __webpack_require__(22);
-
-let mount = __webpack_require__(9);
-
-let N = __webpack_require__(27);
-
-let reduceNode = __webpack_require__(5);
-
-let {dispatchEvent} = __webpack_require__(6);
-
-module.exports = {
-    n,
-    isKabaneryNode,
-    cn,
-    N,
-    svgn,
-    view,
-    plugs,
-    bindPlugs,
-    mount,
-    toHTML,
-    reduceNode,
-
-    parseArgs,
-    dispatchEvent
-};
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let iterate = __webpack_require__(8);
-
-let defauls = {
-    eq: (v1, v2) => v1 === v2
-};
-
-let setDefault = (opts, defauls) => {
-    for (let name in defauls) {
-        opts[name] = opts[name] || defauls[name];
-    }
-};
-
-let forEach = (list, handler) => iterate(list, {
-    limit: (rets) => {
-        if (rets === true) return true;
-        return false;
-    },
-    transfer: handler,
-    output: (prev, cur) => cur,
-    def: false
-});
-
-let map = (list, handler, limit) => iterate(list, {
-    transfer: handler,
-    def: [],
-    limit
-});
-
-let reduce = (list, handler, def, limit) => iterate(list, {
-    output: handler,
-    def,
-    limit
-});
-
-let filter = (list, handler, limit) => reduce(list, (prev, cur, index, list) => {
-    handler && handler(cur, index, list) && prev.push(cur);
-    return prev;
-}, [], limit);
-
-let find = (list, item, fopts) => {
-    let index = findIndex(list, item, fopts);
-    if (index === -1) return undefined;
-    return list[index];
-};
-
-let any = (list, handler) => reduce(list, (prev, cur, index, list) => {
-    let curLogic = handler && handler(cur, index, list);
-    return prev && originLogic(curLogic);
-}, true, falsyIt);
-
-let exist = (list, handler) => reduce(list, (prev, cur, index, list) => {
-    let curLogic = handler && handler(cur, index, list);
-    return prev || originLogic(curLogic);
-}, false, originLogic);
-
-let findIndex = (list, item, fopts = {}) => {
-    setDefault(fopts, defauls);
-
-    let {
-        eq
-    } = fopts;
-    let predicate = (v) => eq(item, v);
-    let ret = iterate(list, {
-        transfer: indexTransfer,
-        limit: onlyOne,
-        predicate,
-        def: []
-    });
-    if (!ret.length) return -1;
-    return ret[0];
-};
-
-let compact = (list) => reduce(list, (prev, cur) => {
-    if (cur) prev.push(cur);
-    return prev;
-}, []);
-
-let indexTransfer = (item, index) => index;
-
-let onlyOne = (rets, item, name, domain, count) => count >= 1;
-
-let falsyIt = v => !v;
-
-let originLogic = v => !!v;
-
-module.exports = {
-    map,
-    forEach,
-    reduce,
-    find,
-    findIndex,
-    filter,
-    any,
-    exist,
-    compact
-};
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let parseAttribute = __webpack_require__(18);
-
-let {
-    isString, isObject, isNode, likeArray, isNumber, isBool
-} = __webpack_require__(0);
-
-let parseArgs = (args) => {
-    let tagName,
-        attributes = {},
-        childExp = [];
-
-    let first = args.shift();
-
-    let parts = splitTagNameAttribute(first);
-
-    if (parts.length > 1) { // not only tagName
-        tagName = parts[0];
-        attributes = parts[1];
-    } else {
-        tagName = first;
-    }
-
-    tagName = tagName.toLowerCase().trim();
-
-    let next = args.shift();
-
-    let nextAttr = {};
-
-    if (likeArray(next) ||
-        isString(next) ||
-        isNode(next) ||
-        isNumber(next) ||
-        isBool(next)) {
-        childExp = next;
-    } else if (isObject(next)) {
-        nextAttr = next;
-        childExp = args.shift() || [];
-    }
-
-    attributes = parseAttribute(attributes, nextAttr);
-
-    let childs = parseChildExp(childExp);
-
-    return {
-        tagName,
-        attributes,
-        childs
-    };
-};
-
-let splitTagNameAttribute = (str = '') => {
-    let tagName = str.split(' ')[0];
-    let attr = str.substring(tagName.length);
-    attr = attr && attr.trim();
-    if (attr) {
-        return [tagName, attr];
-    } else {
-        return [tagName];
-    }
-};
-
-let parseChildExp = (childExp) => {
-    let ret = [];
-    if (isNode(childExp)) {
-        ret.push(childExp);
-    } else if (likeArray(childExp)) {
-        for (let i = 0; i < childExp.length; i++) {
-            let child = childExp[i];
-            ret = ret.concat(parseChildExp(child));
-        }
-    } else if (childExp) {
-        ret.push(childExp);
-    }
-    return ret;
-};
-
-module.exports = parseArgs;
-
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    isString, isObject
-} = __webpack_require__(0);
-
-let {
-    mergeMap
-} = __webpack_require__(1);
-
-const ITEM_REG = /([\w-]+)\s*=\s*(([\w-]+)|('.*?')|(".*?"))/;
-
-// TODO better key=value grammer
-// TODO refactor with grammerL: class grammer, id grammer, refer some popular grammer
-let parseAttribute = (attributes, nextAttr) => {
-    // key=value key=value
-    // value='abc' value=true value=123 value="def"
-    if (isString(attributes)) {
-        let str = attributes.trim(),
-            kvs = [];
-
-        let stop = false;
-        while (!stop) {
-            let newstr = str.replace(ITEM_REG, (matchStr, $1, $2) => {
-                kvs.push([$1, $2]);
-                return '';
-            }).trim();
-            if (newstr === str) {
-                stop = true;
-            }
-            str = newstr;
-        }
-
-        attributes = {};
-        for (let i = 0; i < kvs.length; i++) {
-            let [key, value] = kvs[i];
-            if (value[0] === '\'' && value[value.length - 1] === '\'' ||
-                value[0] === '"' && value[value.length - 1] === '"') {
-                value = value.substring(1, value.length - 1);
-            }
-            attributes[key] = value;
-        }
-    }
-    // merge
-    attributes = mergeMap(attributes, nextAttr);
-
-    if (attributes.style) {
-        attributes.style = getStyleString(attributes.style);
-    }
-
-    // TODO presudo
-    /*
-    if (attributes.presudo) {
-        for (let name in attributes.presudo) {
-            attributes.presudo[name] = getStyleString(attributes.presudo[name]);
-        }
-    }
-   */
-
-    return attributes;
-};
-
-let getStyleString = (attr = '') => {
-    if (isString(attr)) {
-        return attr;
-    }
-
-    if (!isObject(attr)) {
-        throw new TypeError(`Expect object for style object, but got ${attr}`);
-    }
-    let styles = [];
-    for (let key in attr) {
-        let value = attr[key];
-        key = convertStyleKey(key);
-        value = convertStyleValue(value, key);
-        styles.push(`${key}: ${value}`);
-    }
-    return styles.join(';');
-};
-
-let convertStyleKey = (key) => {
-    return key.replace(/[A-Z]/, (letter) => {
-        return `-${letter.toLowerCase()}`;
-    });
-};
-
-let convertStyleValue = (value, key) => {
-    if (typeof value === 'number' && key !== 'z-index') {
-        return value + 'px';
-    }
-    if (key === 'padding' || key === 'margin') {
-        let parts = value.split(' ');
-        for (let i = 0; i < parts.length; i++) {
-            let part = parts[i];
-            if (!isNaN(Number(part))) {
-                parts[i] = part + 'px';
-            }
-        }
-
-        value = parts.join(' ');
-    }
-    return value;
-};
-
-module.exports = parseAttribute;
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let twowaybinding = __webpack_require__(20);
-let eventError = __webpack_require__(21);
-
-module.exports = {
-    twowaybinding,
-    eventError
-};
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    get, set
-} = __webpack_require__(2);
-
-module.exports = (obj, path) => (tagName, attributes, childExp) => {
-    let value = get(obj, path, '');
-    if (tagName === 'input') {
-        attributes.value = value;
-    } else {
-        childExp.unshift(value);
-    }
-
-    if (!attributes.oninput) {
-        attributes.oninput = (e) => {
-            set(obj, path, e.target.value);
-        };
-    }
-};
-
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = (catcher) => (tagName, attributes) => {
-    for (let name in attributes) {
-        let item = attributes[name];
-        if (name.indexOf('on') === 0) {
-            if (typeof item === 'function') {
-                attributes[name] = wrapEventHandler(item, catcher);
-            }
-        }
-    }
-};
-
-let wrapEventHandler = (fun, catcher) => {
-    return function () {
-        try {
-            let ret = fun.apply(this, arguments);
-            ret = Promise.resolve(ret);
-            ret.catch(catcher);
-            return ret;
-        } catch (err) {
-            return catcher(err);
-        }
-    };
-};
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    set
-} = __webpack_require__(2);
-
-let {
-    isObject, isFunction, likeArray
-} = __webpack_require__(0);
-
-let {
-    forEach
-} = __webpack_require__(1);
-
-let replace = __webpack_require__(23);
-
-let reduceNode = __webpack_require__(5);
-
-let mount = __webpack_require__(9);
-
-/**
- * render function: (data) => node
- */
-
-// TODO observable for update, append
-
-// class level
-let View = (view, construct, {
-    afterRender
-} = {}) => {
-    // TODO class level API
-    // instance level
-    let viewer = (obj, initor) => {
-        // create context
-        let ctx = createCtx({
-            view, afterRender
-        });
-
-        return createView(ctx, obj, initor, construct);
-    };
-
-    let viewerOps = (viewer) => {
-        viewer.create = (handler) => {
-            let ctx = createCtx({
-                view, afterRender
-            });
-
-            handler && handler(ctx);
-
-            let inst = (obj, initor) => {
-                return createView(ctx, obj, initor, construct);
-            };
-
-            inst.ctx = ctx;
-
-            return inst;
-        };
-
-        // extend some context
-        viewer.expand = (ctxMap = {}) => {
-            let newViewer = (...args) => {
-                let obj = args[0];
-                args[0] = View.ext(obj, ctxMap);
-
-                return viewer(...args);
-            };
-
-            viewerOps(newViewer);
-            return newViewer;
-        };
-    };
-
-    viewerOps(viewer);
-
-    return viewer;
-};
-
-View.ext = (data, ctxMap = {}) => (ctx) => {
-    for (let name in ctxMap) {
-        ctx[name] = ctxMap[name];
-    }
-    if (isFunction(data)) {
-        return data(ctx);
-    }
-    return data;
-};
-
-let createView = (ctx, obj, initor, construct) => {
-    let data = ctx.initData(obj, ctx);
-    // only run initor when construct view
-    initor && initor(data, ctx);
-    construct && construct(data, ctx);
-
-    // render node
-    return ctx.replaceView();
-};
-
-let createCtx = ({
-    view, afterRender
-}) => {
-    let node = null,
-        data = null,
-        render = null;
-
-    let update = (...args) => {
-        if (!args.length) return replaceView();
-        if (args.length === 1 && likeArray(args[0])) {
-            let arg = args[0];
-            forEach(arg, (item) => {
-                set(data, item[0], item[1]);
-            });
-            return replaceView();
-        } else {
-            let [path, value] = args;
-
-            // function is a special data
-            if (isFunction(value)) {
-                value = value(data);
-            }
-
-            set(data, path, value);
-            return replaceView();
-        }
-    };
-
-    let appendView = (itemView) => {
-        if (node) {
-            mount(itemView, node);
-        }
-    };
-
-    let replaceView = () => {
-        let newNode = getNewNode();
-        newNode = reduceNode(newNode);
-
-        // type check for newNode
-
-        node = replace(node, newNode);
-
-        afterRender && afterRender(ctx);
-
-        if (node) node.ctx = ctx;
-        return node;
-    };
-
-    let getNewNode = () => {
-        if (!render) render = view;
-        let ret = render(data, ctx);
-        if (isFunction(ret)) {
-            render = ret;
-            return render(data, ctx);
-        } else {
-            return ret;
-        }
-    };
-
-    let initData = (obj = {}) => {
-        data = generateData(obj, ctx);
-        return data;
-    };
-
-    let getNode = () => node;
-
-    let getData = () => data;
-
-    let getCtx = () => ctx;
-
-    // TODO refator
-    let transferCtx = (newNode) => {
-        node = newNode;
-        newNode.ctx = ctx;
-    };
-
-    let ctx = {
-        update,
-        getNode,
-        getData,
-        transferCtx,
-        initData,
-        replaceView,
-        appendView,
-        getCtx
-    };
-
-    return ctx;
-};
-
-let generateData = (obj, ctx) => {
-    let data = null;
-    // data generator
-    if (isFunction(obj)) {
-        data = obj(ctx);
-    } else {
-        data = obj;
-    }
-
-    // TODO need mount event
-    if (!isObject(data)) {
-        throw new TypeError(`Expect object, but got ${data}. Type is ${typeof data}`);
-    }
-    return data;
-};
-
-module.exports = View;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    toArray
-} = __webpack_require__(2);
-
-let {
-    isNode
-} = __webpack_require__(0);
-
-let {
-    forEach
-} = __webpack_require__(1);
-
-let applyAttibutes = __webpack_require__(24);
-
-let replaceDirectly = (node, newNode) => {
-    let parent = node.parentNode;
-    if (parent) {
-        // replace
-        parent.replaceChild(newNode, node);
-        return newNode;
-    } else {
-        return node;
-    }
-};
-
-let removeOldNode = (oldNode) => {
-    let parent = oldNode.parentNode;
-    if (parent) {
-        parent.removeChild(oldNode);
-    }
-};
-
-// TODO using key
-let diffNode = (node, newNode) => {
-    if (!newNode) {
-        return removeOldNode(node);
-    }
-
-    if (node.nodeType === 3 && newNode.nodeType === 3) {
-        node.textContent = newNode.textContent;
-    }
-
-    if (isNode(node) && isNode(newNode)) {
-        if (node.nodeType === 3 && newNode.nodeType === 3) {
-            node.textContent = newNode.textContent;
-            return node;
-        }
-
-        if (node.tagName !== newNode.tagName ||
-            node.tagName === 'INPUT'
-        ) {
-            // TODO problems performance
-            // TODO nodetype problem
-            return replaceDirectly(node, newNode);
-        } else {
-            editNode(node, newNode);
-        }
-    }
-    return node;
-};
-
-let editNode = (node, newNode) => {
-    // attributes
-    applyAttibutes(node, newNode);
-
-    // transfer context
-    if (newNode.ctx) {
-        newNode.ctx.transferCtx(node);
-    }
-
-    // transfer event map
-    if (newNode.__eventMap) {
-        node.__eventMap = newNode.__eventMap;
-    }
-
-    let orinChildNodes = toArray(node.childNodes);
-    let newChildNodes = toArray(newNode.childNodes);
-
-    // TODO using key
-    convertLists(orinChildNodes, newChildNodes, node);
-};
-
-let convertLists = (orinChildNodes, newChildNodes, parent) => {
-    removeExtra(orinChildNodes, newChildNodes);
-
-    // diff
-    forEach(orinChildNodes, (orinChild, i) => {
-        diffNode(orinChild, newChildNodes[i]);
-    });
-
-    appendMissing(orinChildNodes, newChildNodes, parent);
-    return orinChildNodes;
-};
-
-let removeExtra = (orinChildNodes, newChildNodes) => {
-    // remove
-    for (let i = newChildNodes.length; i < orinChildNodes.length; i++) {
-        removeOldNode(orinChildNodes[i]);
-    }
-};
-
-let appendMissing = (orinChildNodes, newChildNodes, parent) => {
-    // append
-    for (let i = orinChildNodes.length; i < newChildNodes.length; i++) {
-        let newChild = newChildNodes[i];
-        parent.appendChild(newChild);
-    }
-};
-
-module.exports = (node, newNode) => {
-    let ret = null;
-
-    if (!node) {
-        ret = newNode;
-    } else if (!newNode) {
-        removeOldNode(node);
-        ret = null;
-    } else {
-        ret = diffNode(node, newNode);
-    }
-
-    return ret;
-};
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    getAttributeMap
-} = __webpack_require__(7);
-
-let {
-    hasOwnProperty
-} = __webpack_require__(2);
-
-let {
-    forEach
-} = __webpack_require__(1);
-
-let applyAttibutes = (node, newNode) => {
-    // attributes
-    let orinAttrMap = getAttributeMap(node.attributes);
-    let newAttrMap = getAttributeMap(newNode.attributes);
-
-    // update and remove
-    forEach(orinAttrMap, (orinValue, name) => {
-        if (hasOwnProperty(newAttrMap, name)) {
-            let newValue = newAttrMap[name];
-            if (newValue !== orinValue) {
-                node.setAttribute(name, newValue);
-            }
-        } else {
-            node.removeAttribute(name);
-        }
-    });
-
-    // append
-    forEach(newAttrMap, (newAttr, name) => {
-        if (!hasOwnProperty(orinAttrMap, name)) {
-            node.setAttribute(name, newAttr);
-        }
-    });
-};
-
-module.exports = applyAttibutes;
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    isNode
-} = __webpack_require__(0);
-
-const svgNS = 'http://www.w3.org/2000/svg';
-
-let applyNode = (node, attributes, childs) => {
-    for (let name in attributes) {
-        let attr = attributes[name];
-        node.setAttribute(name, attr);
-    }
-
-    for (let i = 0; i < childs.length; i++) {
-        let child = childs[i];
-        if (isNode(child)) {
-            node.appendChild(child);
-        } else {
-            node.textContent = child + '';
-        }
-    }
-};
-
-let createElement = (tagName, attributes, childs) => {
-    let node = document.createElement(tagName);
-    applyNode(node, attributes, childs);
-    return node;
-};
-
-let createSvgElement = (tagName, attributes, childs) => {
-    let node = document.createElementNS(svgNS, tagName);
-    applyNode(node, attributes, childs);
-    return node;
-};
-
-module.exports = {
-    createElement,
-    createSvgElement
-};
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    contain
-} = __webpack_require__(1);
-
-module.exports = () => {
-    let docs = [];
-    let eventTypeMap = {};
-    let handlerMap = {};
-
-    let listenEventType = (type) => {
-        if (!eventTypeMap[type]) {
-            updateDocs(type);
-        }
-        eventTypeMap[type] = true;
-    };
-
-    /**
-     * attach document used to accept events
-     */
-    let attachDocument = (doc = document) => {
-        if (!contain(docs, doc)) {
-            for (let type in eventTypeMap) {
-                // prevent multiple version of kabanery to binding multiple times
-                let id = getGlobalEventTypeId(type);
-                if (!doc[id]) {
-                    addEventListenerToDoc(doc, type);
-                    doc[id] = true;
-                }
-            }
-            docs.push(doc);
-        }
-    };
-
-    let updateDocs = (type) => {
-        if (!docs.length) {
-            docs.push(document);
-        }
-        for (let i = 0; i < docs.length; i++) {
-            let doc = docs[i];
-            addEventListenerToDoc(doc, type);
-        }
-    };
-
-    let addEventListenerToDoc = (doc, type) => {
-        let handler = null;
-        if (handlerMap[type]) {
-            handler = handlerMap[type];
-        } else {
-            handler = listener(type);
-            handlerMap[type] = handler;
-        }
-        doc.addEventListener(type, handler);
-    };
-
-    /**
-     * e = {
-     *  target,
-     *  stopPropagation [optional]
-     * }
-     */
-    let listener = (type) => function(e) {
-        let ctx = this;
-        let target = e.target;
-
-        // hack the stopPropagration function
-        let oldProp = e.stopPropagation;
-        e.stopPropagation = function(...args) {
-            e.__stopPropagation = true;
-            return oldProp && oldProp.apply(this, args);
-        };
-
-        let nodePath = getNodePath(target);
-
-        for (let i = 0; i < nodePath.length; i++) {
-            let node = nodePath[i];
-            applyNodeHandlers(e, type, node, ctx);
-        }
-    };
-
-    let applyNodeHandlers = (e, type, node, ctx) => {
-        if (e.__stopPropagation) { // event already been stoped by child node
-            return true;
-        }
-
-        let handler = getHandler(type, node);
-        return handler && handler.apply(ctx, [e]);
-    };
-
-    let getHandler = (type, target) => {
-        let eventMap = target && target.__eventMap;
-        return eventMap && eventMap[type];
-    };
-
-    let dispatchEvent = (type, e) => {
-        let handler = handlerMap[type];
-        handler && handler(e);
-    };
-
-    return {
-        listenEventType,
-        attachDocument,
-        dispatchEvent
-    };
-};
-
-/**
- * get the path of node
- */
-let getNodePath = (target) => {
-    let paths = [];
-    while (target) {
-        paths.push(target);
-        target = target.parentNode;
-    }
-    return paths;
-};
-
-let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    n
-} = __webpack_require__(4);
-
-let {
-    isArray, isFunction, isObject
-} = __webpack_require__(0);
-
-let {
-    map
-} = __webpack_require__(1);
-
-module.exports = (...args) => {
-    let tagName = args[0],
-        attrs = {},
-        childs = [];
-    if (isArray(args[1])) {
-        childs = args[1];
-    } else if (isFunction(args[1])) {
-        childs = [args[1]];
-    } else {
-        if (isObject(args[1])) {
-            attrs = args[1];
-            if (isArray(args[2])) {
-                childs = args[2];
-            } else if (isFunction(args[2])) {
-                childs = [args[2]];
-            }
-        }
-    }
-
-    return (...params) => {
-        let renderList = (list) => {
-            return map(list, (viewer) => {
-                if (isArray(viewer)) {
-                    return renderList(viewer);
-                } else if (isFunction(viewer)) {
-                    return viewer(...params);
-                } else {
-                    return viewer;
-                }
-            });
-        };
-
-        return n(tagName, attrs, renderList(childs));
-    };
-};
-
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.decode = exports.parse = __webpack_require__(29);
-exports.encode = exports.stringify = __webpack_require__(30);
-
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-// If obj.hasOwnProperty has been overridden, then calling
-// obj.hasOwnProperty(prop) will break.
-// See: https://github.com/joyent/node/issues/1707
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
-module.exports = function(qs, sep, eq, options) {
-  sep = sep || '&';
-  eq = eq || '=';
-  var obj = {};
-
-  if (typeof qs !== 'string' || qs.length === 0) {
-    return obj;
-  }
-
-  var regexp = /\+/g;
-  qs = qs.split(sep);
-
-  var maxKeys = 1000;
-  if (options && typeof options.maxKeys === 'number') {
-    maxKeys = options.maxKeys;
-  }
-
-  var len = qs.length;
-  // maxKeys <= 0 means that we should not limit keys count
-  if (maxKeys > 0 && len > maxKeys) {
-    len = maxKeys;
-  }
-
-  for (var i = 0; i < len; ++i) {
-    var x = qs[i].replace(regexp, '%20'),
-        idx = x.indexOf(eq),
-        kstr, vstr, k, v;
-
-    if (idx >= 0) {
-      kstr = x.substr(0, idx);
-      vstr = x.substr(idx + 1);
-    } else {
-      kstr = x;
-      vstr = '';
-    }
-
-    k = decodeURIComponent(kstr);
-    v = decodeURIComponent(vstr);
-
-    if (!hasOwnProperty(obj, k)) {
-      obj[k] = v;
-    } else if (isArray(obj[k])) {
-      obj[k].push(v);
-    } else {
-      obj[k] = [obj[k], v];
-    }
-  }
-
-  return obj;
-};
-
-var isArray = Array.isArray || function (xs) {
-  return Object.prototype.toString.call(xs) === '[object Array]';
-};
-
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-var stringifyPrimitive = function(v) {
-  switch (typeof v) {
-    case 'string':
-      return v;
-
-    case 'boolean':
-      return v ? 'true' : 'false';
-
-    case 'number':
-      return isFinite(v) ? v : '';
-
-    default:
-      return '';
-  }
-};
-
-module.exports = function(obj, sep, eq, name) {
-  sep = sep || '&';
-  eq = eq || '=';
-  if (obj === null) {
-    obj = undefined;
-  }
-
-  if (typeof obj === 'object') {
-    return map(objectKeys(obj), function(k) {
-      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
-      if (isArray(obj[k])) {
-        return map(obj[k], function(v) {
-          return ks + encodeURIComponent(stringifyPrimitive(v));
-        }).join(sep);
-      } else {
-        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
-      }
-    }).join(sep);
-
-  }
-
-  if (!name) return '';
-  return encodeURIComponent(stringifyPrimitive(name)) + eq +
-         encodeURIComponent(stringifyPrimitive(obj));
-};
-
-var isArray = Array.isArray || function (xs) {
-  return Object.prototype.toString.call(xs) === '[object Array]';
-};
-
-function map (xs, f) {
-  if (xs.map) return xs.map(f);
-  var res = [];
-  for (var i = 0; i < xs.length; i++) {
-    res.push(f(xs[i], i));
-  }
-  return res;
-}
-
-var objectKeys = Object.keys || function (obj) {
-  var res = [];
-  for (var key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) res.push(key);
-  }
-  return res;
-};
-
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    n,
-    view
-} = __webpack_require__(3);
-let queryString = __webpack_require__(32);
-let _ = __webpack_require__(35);
-
-let FocusTaskListView = view((data) => {
-    return n('ul', [
-        _.map(data, ({
-            type,
-            value
-        }) => {
-            if (type === 'pfc') {
-                let sourceValue = value.sourceTask.value;
-                return TaskView(sourceValue);
-            }
-        })
-    ]);
-});
-
-let DailyTaskListView = view((data) => {
-    return n('ul', [
-        _.map(data, (value) => {
-            return TaskView(value);
-        })
-    ]);
-});
-
-let TaskView = view((taskValue) => {
-    return n('li class="card"', [
-        n('strong', 'name:'), n('span style="padding-left:8px"', taskValue.name), n('br'),
-        n('strong', 'moment:'), n('span style="padding-left:8px"', taskValue.moment.event.type), n('br')
-    ]);
-});
-
-let PageView = view((pageData) => {
-    return n('page', [
-        n('div', {
-            style: {
-                padding: 10
-            }
-        }, [
-            n('h3', 'plan focus'),
-
-            pageData.focusData && (pageData.focusData.errno === 0 ? FocusTaskListView(pageData.focusData.data) : n('div', pageData.focusData.errMsg))
-        ]),
-
-        n('div', {
-            style: {
-                padding: 10
-            }
-        }, [
-            n('h3', 'daily plans'),
-
-            pageData.dailyData && (pageData.dailyData.errno === 0 ? DailyTaskListView(pageData.dailyData.data) : n('div', pageData.dailyData.errMsg))
-        ])
-    ]);
-});
-
-module.exports = () => {
-    let qs = queryString.parse(window.location.search.substring(1));
-
-    let pageView = PageView({
-        focusData: null,
-        dailyData: null
-    });
-
-    fetch(`/api/plan/focus?planConfigPath=${qs.planConfigPath}`).then((res) => res.json()).then((focusData) => {
-        pageView.ctx.update('focusData', focusData);
-    });
-
-    fetch(`/api/plan/daily?planConfigPath=${qs.planConfigPath}`).then((res) => res.json()).then((dailyData) => {
-        pageView.ctx.update('dailyData', dailyData);
-    });
-
-    return pageView;
-};
-
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.decode = exports.parse = __webpack_require__(33);
-exports.encode = exports.stringify = __webpack_require__(34);
-
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-// If obj.hasOwnProperty has been overridden, then calling
-// obj.hasOwnProperty(prop) will break.
-// See: https://github.com/joyent/node/issues/1707
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
-module.exports = function(qs, sep, eq, options) {
-  sep = sep || '&';
-  eq = eq || '=';
-  var obj = {};
-
-  if (typeof qs !== 'string' || qs.length === 0) {
-    return obj;
-  }
-
-  var regexp = /\+/g;
-  qs = qs.split(sep);
-
-  var maxKeys = 1000;
-  if (options && typeof options.maxKeys === 'number') {
-    maxKeys = options.maxKeys;
-  }
-
-  var len = qs.length;
-  // maxKeys <= 0 means that we should not limit keys count
-  if (maxKeys > 0 && len > maxKeys) {
-    len = maxKeys;
-  }
-
-  for (var i = 0; i < len; ++i) {
-    var x = qs[i].replace(regexp, '%20'),
-        idx = x.indexOf(eq),
-        kstr, vstr, k, v;
-
-    if (idx >= 0) {
-      kstr = x.substr(0, idx);
-      vstr = x.substr(idx + 1);
-    } else {
-      kstr = x;
-      vstr = '';
-    }
-
-    k = decodeURIComponent(kstr);
-    v = decodeURIComponent(vstr);
-
-    if (!hasOwnProperty(obj, k)) {
-      obj[k] = v;
-    } else if (Array.isArray(obj[k])) {
-      obj[k].push(v);
-    } else {
-      obj[k] = [obj[k], v];
-    }
-  }
-
-  return obj;
-};
-
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-var stringifyPrimitive = function(v) {
-  switch (typeof v) {
-    case 'string':
-      return v;
-
-    case 'boolean':
-      return v ? 'true' : 'false';
-
-    case 'number':
-      return isFinite(v) ? v : '';
-
-    default:
-      return '';
-  }
-};
-
-module.exports = function(obj, sep, eq, name) {
-  sep = sep || '&';
-  eq = eq || '=';
-  if (obj === null) {
-    obj = undefined;
-  }
-
-  if (typeof obj === 'object') {
-    return Object.keys(obj).map(function(k) {
-      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
-      if (Array.isArray(obj[k])) {
-        return obj[k].map(function(v) {
-          return ks + encodeURIComponent(stringifyPrimitive(v));
-        }).join(sep);
-      } else {
-        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
-      }
-    }).join(sep);
-
-  }
-
-  if (!name) return '';
-  return encodeURIComponent(stringifyPrimitive(name)) + eq +
-         encodeURIComponent(stringifyPrimitive(obj));
-};
-
-
-/***/ }),
-/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -20038,10 +18335,2110 @@ module.exports = function(obj, sep, eq, name) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36), __webpack_require__(37)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(42)(module)))
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(48);
+
+/**
+ * @readme-quick-run
+ *
+ * Basic way to construct a view.
+ *
+ * [readme-lang:zh]构造一个组件的简单方法
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {view, n, mount} = kabanery;
+ *
+ * let MyView = view((data) => {
+ *      let {type} = data;
+ *
+ *      return n('div', {
+ *         id: 'a',
+ *         style: {
+ *            fontSize: 10
+ *         }
+ *      },[
+ *          type === 2 && n('span', 'second'),
+ *          type === 3 && n('div', 'third')
+ *      ]);
+ * });
+ *
+ * mount(MyView({type: 3}), document.body);
+ *
+ * console.log(document.getElementById('a').outerHTML); // print result
+ */
+
+/**
+ * @readme-quick-run
+ *
+ * Using update api to update a view.
+ *
+ * [readme-lang:zh]运用update api去更新一个view
+ *
+ * ## test tar=js r_c=kabanery env=browser
+ * let {view, n, mount} = kabanery;
+ *
+ * let MyView = view((data, {update}) => {
+ *      return n('div', {
+ *         id: 'a',
+ *         style: {
+ *            fontSize: 10
+ *         },
+ *         onclick: () => {
+ *            update('show', !data.show);
+ *         }
+ *      }, [
+ *          data.show && n('div', 'show text')
+ *      ]);
+ * });
+ *
+ * mount(MyView({show: false}), document.body);
+ *
+ * document.getElementById('a').click(); // simulate user action
+ * console.log(document.getElementById('a').outerHTML); // print result
+ */
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    createElement, createSvgElement, parseArgs, nodeGener
+} = __webpack_require__(15);
+
+let {
+    bindEvents
+} = __webpack_require__(16);
+
+// TODO general proxy n way
+
+let cn = (create) => {
+    let nodeGen = nodeGener(create);
+    return (...args) => {
+        let {
+            tagName, attributes, childs
+        } = parseArgs(args);
+
+        // plugin
+        runPlugins(attributes['plugin'], tagName, attributes, childs);
+
+        let {
+            attrMap, eventMap
+        } = splitAttribues(attributes);
+
+        // TODO delay node gen operations
+        let node = nodeGen(tagName, attrMap, childs);
+
+        // tmp solution
+        bindEvents(node, eventMap);
+
+        return node;
+    };
+};
+
+let bindPlugs = (typen, plugs = []) => (...args) => {
+    let {
+        tagName, attributes, childs
+    } = parseArgs(args);
+
+    let oriPlugs = attributes.plugin = attributes.plugin || [];
+    attributes.plugin = oriPlugs.concat(plugs);
+
+    let node = typen(tagName, attributes, childs);
+
+    return node;
+};
+
+let runPlugins = (plugs = [], tagName, attributes, childExp) => {
+    for (let i = 0; i < plugs.length; i++) {
+        let plug = plugs[i];
+        plug && plug(tagName, attributes, childExp);
+    }
+};
+
+let splitAttribues = (attributes) => {
+    let attrMap = {},
+        eventMap = {};
+    for (let name in attributes) {
+        let item = attributes[name];
+        if (name.indexOf('on') === 0) {
+            eventMap[name.substring(2)] = item;
+        } else if (name !== 'plugin') {
+            attrMap[name] = item;
+        }
+    }
+    return {
+        attrMap,
+        eventMap
+    };
+};
+
+module.exports = {
+    n: cn(createElement),
+    svgn: cn(createSvgElement),
+    bindPlugs
+};
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(49);
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let EventMatrix = __webpack_require__(51);
+
+let {
+    listenEventType,
+    attachDocument
+} = EventMatrix();
+
+let bindEvents = (node, eventMap) => {
+    // hook event at node
+    node.__eventMap = eventMap;
+
+    for (let type in eventMap) {
+        listenEventType(type);
+    }
+};
+
+module.exports = {
+    bindEvents,
+    attachDocument
+};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    router,
+    queryPager
+} = __webpack_require__(18);
+let {
+    n,
+    mount
+} = __webpack_require__(2);
+let focusPage = __webpack_require__(38);
+let editTaskPage = __webpack_require__(61);
+
+mount(n('div id="pager"'), document.body);
+
+let {
+    forward
+} = router(queryPager({
+    'focusPage': {
+        title: 'focusPage',
+        render: focusPage
+    },
+    'editTask': {
+        title: 'editTask',
+        render: editTaskPage
+    }
+}, 'focusPage'));
+
+forward(window.location.href);
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(19);
+
+/**
+ * @readme-quick-run
+ *
+ * ## test tar=js env=browser r_c=spa
+ *
+ * let {router, queryPager} = spa;
+ * let {n, mount} = require('kabanery');
+ * mount(n('div id="pager"'), document.body); // pager as contauner
+ *
+ * let {forward} = router(queryPager({
+ *      'page1': {
+ *          title: 'page1',
+ *          render: () => {
+ *              return n('div', 'this is page1');
+ *          }
+ *      },
+ *      'page2': {
+ *          render: () => {
+ *              return n('div', 'this is page2');
+ *          }
+ *      }
+ * }, 'page1')); // default page is page1
+ *
+ * module.exports = forward(window.location.href).then(() => {
+ *    console.log('page 1 content: ');
+ *    console.log(document.getElementById('pager').innerHTML);
+ *    return forward('?page=page2').then(() => {
+ *      console.log('\n\npage 2 content: ');
+ *      console.log(document.getElementById('pager').innerHTML);
+ *    });
+ * });
+ */
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    removeChilds
+} = __webpack_require__(5);
+
+let {
+    mount
+} = __webpack_require__(2);
+
+let querystring = __webpack_require__(35);
+
+const SINGLE_JUMP_PREFIX = 'single://';
+
+const CONTAINER_ID = 'pager';
+
+let queryPager = (map = [], index) => {
+    index = initDefaultPage(map, index);
+
+    return (url) => {
+        let qs = querystring.parse(url.split('?')[1] || '');
+        let pageName = qs.page || index;
+
+        return map[pageName];
+    };
+};
+
+let restPager = (map = [], index) => {
+    index = initDefaultPage(map, index);
+
+    return (url) => {
+        let pathname = url.split(/.*\:\/\//)[1];
+        let pageName = pathname.split('/')[1];
+        pageName = pageName || index;
+
+        return map[pageName];
+    };
+};
+
+let initDefaultPage = (map = [], index) => {
+    if (index === null || index === undefined) {
+        for (let name in map) {
+            index = name;
+            break;
+        }
+    }
+    return index;
+};
+
+let renderPage = (render, pageEnv, title, containerId) => {
+    return Promise.resolve(render(pageEnv, title)).then((pageNode) => {
+        // TODO pager is the default container, make it configurable
+        let pager = document.getElementById(containerId);
+        // unload old page
+        removeChilds(pager);
+        // add new page
+        mount(pageNode, pager);
+        pager.style = 'display:block;';
+        document.title = title;
+
+        // hash location
+        if (window.location.hash) {
+            let item = document.getElementById(window.location.hash.substring(1));
+            if (item) {
+                window.scrollTo(0, item.offsetTop);
+            }
+        }
+    });
+};
+
+/**
+ * pager: (url) => {title, render}
+ */
+let router = (pager, pageEnv, {
+    onSwitchPageStart,
+    onSwitchPageFinished,
+    containerId = CONTAINER_ID
+} = {}) => {
+    let listenFlag = false;
+
+    /**
+     * only entrance for switching pages
+     */
+    let switchPage = (render, pageEnv, title) => {
+        onSwitchPageStart && onSwitchPageStart(render, pageEnv, title);
+        let ret = switchBetweenPages(render, pageEnv, title);
+
+        Promise.resolve(ret).then((data) => {
+            onSwitchPageFinished && onSwitchPageFinished(null, data);
+        }).catch((err) => {
+            onSwitchPageFinished && onSwitchPageFinished(err);
+        });
+
+        return ret;
+    };
+
+    let switchBetweenPages = (render, pageEnv, title) => {
+        let ret = renderPage(render, pageEnv, title, containerId);
+
+        if (!listenFlag) {
+            listenPageSwitch();
+            listenFlag = true;
+        }
+
+        return ret;
+    };
+
+    let forward = (url, {
+        keepLocation
+    } = {}) => {
+        if (!window.history.pushState) {
+            window.location.href = url;
+            return;
+        }
+        let {
+            render, title = '', transitionData = {}
+        } = pager(url);
+
+        if (url !== window.location.href) {
+            window.history.pushState(transitionData, title, url);
+        }
+        if (!keepLocation) {
+            window.scrollTo(0, 0);
+        }
+        return switchPage(render, pageEnv, title);
+    };
+
+    let redirect = (url) => {
+        if (!window.history.pushState) {
+            window.location.href = url;
+            window.location.replace(url);
+            return;
+        }
+        let {
+            render, title = '', transitionData = {}
+        } = pager(url);
+
+        if (url !== window.location.href) {
+            window.history.replaceState(transitionData, title, url);
+        }
+        return switchPage(render, pageEnv);
+    };
+
+    let listenPageSwitch = () => {
+        window.onpopstate = () => {
+            forward(window.location.href);
+        };
+
+        document.addEventListener('click', (e) => {
+            // hack kabanery, TODO fix this hack
+            setTimeout(() => {
+                let target = e.target;
+                // hack kabanery, TODO fix this hack
+                if (e.__stopPropagation) return;
+
+                while (target) {
+                    if (target.getAttribute) { // document does not have getAttribute method
+                        let url = (target.getAttribute('href') || '').trim();
+                        // matched
+                        if (url.indexOf(SINGLE_JUMP_PREFIX) === 0) {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            forward(url.substring(SINGLE_JUMP_PREFIX.length).trim());
+                            break;
+                        }
+                    }
+                    target = target.parentNode;
+                }
+            });
+        });
+    };
+
+    return {
+        forward,
+        redirect,
+        reload: () => {
+            return forward(window.location.href, {
+                keepLocation: true
+            });
+        }
+    };
+};
+
+module.exports = {
+    router,
+    queryPager,
+    restPager
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let shadowFrame = () => {
+    let div = document.createElement('div');
+    let sr = div.createShadowRoot();
+    sr.innerHTML = '<div id="shadow-page"></div>';
+
+    let frame = null;
+
+    let create = () => {
+        let html = document.getElementsByTagName('html')[0];
+        html.appendChild(div);
+
+        return sr.getElementById('shadow-page');
+    };
+
+    let start = () => {
+        if (frame) {
+            return frame;
+        }
+        frame = new Promise(resolve => {
+            if (document.body) {
+                resolve(create());
+            } else {
+                document.addEventListener('DOMContentLoaded', () => {
+                    resolve(create());
+                });
+            }
+        });
+        return frame;
+    };
+
+    let close = () => {
+        frame.then(() => {
+            let parent = div.parentNode;
+            parent && parent.removeChild(div);
+        });
+    };
+
+    return {
+        start,
+        close,
+        sr,
+        rootDiv: div
+    };
+};
+
+module.exports = shadowFrame;
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let isDomReady = (doc) => doc.readyState === 'complete' ||
+    (!doc.attachEvent && doc.readyState === 'interactive');
+
+let startMomenter = (doc = document) => {
+    let loadedFlag = false;
+
+    let resolves = [];
+
+    let docReady = () => {
+        let ready = () => {
+            if (loadedFlag) return;
+            loadedFlag = true;
+            for (let i = 0; i < resolves.length; i++) {
+                resolves[i]();
+            }
+            resolves = [];
+        };
+        if (doc.addEventListener) {
+            doc.addEventListener('DOMContentLoaded', ready);
+            doc.addEventListener('DOMContentLoaded', ready);
+        } else {
+            doc.attachEvent('onreadystatechange', () => {
+                if (document.readyState === 'complete') {
+                    ready();
+                }
+            });
+        }
+    };
+
+    docReady();
+
+    // generalWaitTime is used for async rendering
+    return ({
+        generalWaitTime = 0, startTimeout = 10000
+    } = {}) => new Promise((resolve, reject) => {
+        if (loadedFlag || isDomReady(doc)) { // already ready
+            setTimeout(resolve, generalWaitTime);
+        } else { // wait for ready
+            resolves.push(resolve);
+            setTimeout(() => {
+                reject(new Error('timeout'));
+            }, startTimeout);
+        }
+    });
+};
+
+module.exports = startMomenter;
+
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n, svgn, bindPlugs, toHTML, parseArgs, isKabaneryNode, cn
+} = __webpack_require__(6);
+
+let plugs = __webpack_require__(26);
+
+let view = __webpack_require__(29);
+
+let mount = __webpack_require__(10);
+
+let N = __webpack_require__(34);
+
+let reduceNode = __webpack_require__(7);
+
+let {dispatchEvent} = __webpack_require__(8);
+
+module.exports = {
+    n,
+    isKabaneryNode,
+    cn,
+    N,
+    svgn,
+    view,
+    plugs,
+    bindPlugs,
+    mount,
+    toHTML,
+    reduceNode,
+
+    parseArgs,
+    dispatchEvent
+};
+
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let iterate = __webpack_require__(9);
+
+let defauls = {
+    eq: (v1, v2) => v1 === v2
+};
+
+let setDefault = (opts, defauls) => {
+    for (let name in defauls) {
+        opts[name] = opts[name] || defauls[name];
+    }
+};
+
+let forEach = (list, handler) => iterate(list, {
+    limit: (rets) => {
+        if (rets === true) return true;
+        return false;
+    },
+    transfer: handler,
+    output: (prev, cur) => cur,
+    def: false
+});
+
+let map = (list, handler, limit) => iterate(list, {
+    transfer: handler,
+    def: [],
+    limit
+});
+
+let reduce = (list, handler, def, limit) => iterate(list, {
+    output: handler,
+    def,
+    limit
+});
+
+let filter = (list, handler, limit) => reduce(list, (prev, cur, index, list) => {
+    handler && handler(cur, index, list) && prev.push(cur);
+    return prev;
+}, [], limit);
+
+let find = (list, item, fopts) => {
+    let index = findIndex(list, item, fopts);
+    if (index === -1) return undefined;
+    return list[index];
+};
+
+let any = (list, handler) => reduce(list, (prev, cur, index, list) => {
+    let curLogic = handler && handler(cur, index, list);
+    return prev && originLogic(curLogic);
+}, true, falsyIt);
+
+let exist = (list, handler) => reduce(list, (prev, cur, index, list) => {
+    let curLogic = handler && handler(cur, index, list);
+    return prev || originLogic(curLogic);
+}, false, originLogic);
+
+let findIndex = (list, item, fopts = {}) => {
+    setDefault(fopts, defauls);
+
+    let {
+        eq
+    } = fopts;
+    let predicate = (v) => eq(item, v);
+    let ret = iterate(list, {
+        transfer: indexTransfer,
+        limit: onlyOne,
+        predicate,
+        def: []
+    });
+    if (!ret.length) return -1;
+    return ret[0];
+};
+
+let compact = (list) => reduce(list, (prev, cur) => {
+    if (cur) prev.push(cur);
+    return prev;
+}, []);
+
+let indexTransfer = (item, index) => index;
+
+let onlyOne = (rets, item, name, domain, count) => count >= 1;
+
+let falsyIt = v => !v;
+
+let originLogic = v => !!v;
+
+module.exports = {
+    map,
+    forEach,
+    reduce,
+    find,
+    findIndex,
+    filter,
+    any,
+    exist,
+    compact
+};
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let parseAttribute = __webpack_require__(25);
+
+let {
+    isString, isObject, isNode, likeArray, isNumber, isBool
+} = __webpack_require__(1);
+
+let parseArgs = (args) => {
+    let tagName,
+        attributes = {},
+        childExp = [];
+
+    let first = args.shift();
+
+    let parts = splitTagNameAttribute(first);
+
+    if (parts.length > 1) { // not only tagName
+        tagName = parts[0];
+        attributes = parts[1];
+    } else {
+        tagName = first;
+    }
+
+    tagName = tagName.toLowerCase().trim();
+
+    let next = args.shift();
+
+    let nextAttr = {};
+
+    if (likeArray(next) ||
+        isString(next) ||
+        isNode(next) ||
+        isNumber(next) ||
+        isBool(next)) {
+        childExp = next;
+    } else if (isObject(next)) {
+        nextAttr = next;
+        childExp = args.shift() || [];
+    }
+
+    attributes = parseAttribute(attributes, nextAttr);
+
+    let childs = parseChildExp(childExp);
+
+    return {
+        tagName,
+        attributes,
+        childs
+    };
+};
+
+let splitTagNameAttribute = (str = '') => {
+    let tagName = str.split(' ')[0];
+    let attr = str.substring(tagName.length);
+    attr = attr && attr.trim();
+    if (attr) {
+        return [tagName, attr];
+    } else {
+        return [tagName];
+    }
+};
+
+let parseChildExp = (childExp) => {
+    let ret = [];
+    if (isNode(childExp)) {
+        ret.push(childExp);
+    } else if (likeArray(childExp)) {
+        for (let i = 0; i < childExp.length; i++) {
+            let child = childExp[i];
+            ret = ret.concat(parseChildExp(child));
+        }
+    } else if (childExp) {
+        ret.push(childExp);
+    }
+    return ret;
+};
+
+module.exports = parseArgs;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isString, isObject
+} = __webpack_require__(1);
+
+let {
+    mergeMap
+} = __webpack_require__(0);
+
+const ITEM_REG = /([\w-]+)\s*=\s*(([\w-]+)|('.*?')|(".*?"))/;
+
+// TODO better key=value grammer
+// TODO refactor with grammerL: class grammer, id grammer, refer some popular grammer
+let parseAttribute = (attributes, nextAttr) => {
+    // key=value key=value
+    // value='abc' value=true value=123 value="def"
+    if (isString(attributes)) {
+        let str = attributes.trim(),
+            kvs = [];
+
+        let stop = false;
+        while (!stop) {
+            let newstr = str.replace(ITEM_REG, (matchStr, $1, $2) => {
+                kvs.push([$1, $2]);
+                return '';
+            }).trim();
+            if (newstr === str) {
+                stop = true;
+            }
+            str = newstr;
+        }
+
+        attributes = {};
+        for (let i = 0; i < kvs.length; i++) {
+            let [key, value] = kvs[i];
+            if (value[0] === '\'' && value[value.length - 1] === '\'' ||
+                value[0] === '"' && value[value.length - 1] === '"') {
+                value = value.substring(1, value.length - 1);
+            }
+            attributes[key] = value;
+        }
+    }
+    // merge
+    attributes = mergeMap(attributes, nextAttr);
+
+    if (attributes.style) {
+        attributes.style = getStyleString(attributes.style);
+    }
+
+    // TODO presudo
+    /*
+    if (attributes.presudo) {
+        for (let name in attributes.presudo) {
+            attributes.presudo[name] = getStyleString(attributes.presudo[name]);
+        }
+    }
+   */
+
+    return attributes;
+};
+
+let getStyleString = (attr = '') => {
+    if (isString(attr)) {
+        return attr;
+    }
+
+    if (!isObject(attr)) {
+        throw new TypeError(`Expect object for style object, but got ${attr}`);
+    }
+    let styles = [];
+    for (let key in attr) {
+        let value = attr[key];
+        key = convertStyleKey(key);
+        value = convertStyleValue(value, key);
+        styles.push(`${key}: ${value}`);
+    }
+    return styles.join(';');
+};
+
+let convertStyleKey = (key) => {
+    return key.replace(/[A-Z]/, (letter) => {
+        return `-${letter.toLowerCase()}`;
+    });
+};
+
+let convertStyleValue = (value, key) => {
+    if (typeof value === 'number' && key !== 'z-index') {
+        return value + 'px';
+    }
+    if (key === 'padding' || key === 'margin') {
+        let parts = value.split(' ');
+        for (let i = 0; i < parts.length; i++) {
+            let part = parts[i];
+            if (!isNaN(Number(part))) {
+                parts[i] = part + 'px';
+            }
+        }
+
+        value = parts.join(' ');
+    }
+    return value;
+};
+
+module.exports = parseAttribute;
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let twowaybinding = __webpack_require__(27);
+let eventError = __webpack_require__(28);
+
+module.exports = {
+    twowaybinding,
+    eventError
+};
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    get, set
+} = __webpack_require__(3);
+
+module.exports = (obj, path) => (tagName, attributes, childExp) => {
+    let value = get(obj, path, '');
+    if (tagName === 'input') {
+        attributes.value = value;
+    } else {
+        childExp.unshift(value);
+    }
+
+    if (!attributes.oninput) {
+        attributes.oninput = (e) => {
+            set(obj, path, e.target.value);
+        };
+    }
+};
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = (catcher) => (tagName, attributes) => {
+    for (let name in attributes) {
+        let item = attributes[name];
+        if (name.indexOf('on') === 0) {
+            if (typeof item === 'function') {
+                attributes[name] = wrapEventHandler(item, catcher);
+            }
+        }
+    }
+};
+
+let wrapEventHandler = (fun, catcher) => {
+    return function () {
+        try {
+            let ret = fun.apply(this, arguments);
+            ret = Promise.resolve(ret);
+            ret.catch(catcher);
+            return ret;
+        } catch (err) {
+            return catcher(err);
+        }
+    };
+};
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    set
+} = __webpack_require__(3);
+
+let {
+    isObject, isFunction, likeArray
+} = __webpack_require__(1);
+
+let {
+    forEach
+} = __webpack_require__(0);
+
+let replace = __webpack_require__(30);
+
+let reduceNode = __webpack_require__(7);
+
+let mount = __webpack_require__(10);
+
+/**
+ * render function: (data) => node
+ */
+
+// TODO observable for update, append
+
+// class level
+let View = (view, construct, {
+    afterRender
+} = {}) => {
+    // TODO class level API
+    // instance level
+    let viewer = (obj, initor) => {
+        // create context
+        let ctx = createCtx({
+            view, afterRender
+        });
+
+        return createView(ctx, obj, initor, construct);
+    };
+
+    let viewerOps = (viewer) => {
+        viewer.create = (handler) => {
+            let ctx = createCtx({
+                view, afterRender
+            });
+
+            handler && handler(ctx);
+
+            let inst = (obj, initor) => {
+                return createView(ctx, obj, initor, construct);
+            };
+
+            inst.ctx = ctx;
+
+            return inst;
+        };
+
+        // extend some context
+        viewer.expand = (ctxMap = {}) => {
+            let newViewer = (...args) => {
+                let obj = args[0];
+                args[0] = View.ext(obj, ctxMap);
+
+                return viewer(...args);
+            };
+
+            viewerOps(newViewer);
+            return newViewer;
+        };
+    };
+
+    viewerOps(viewer);
+
+    return viewer;
+};
+
+View.ext = (data, ctxMap = {}) => (ctx) => {
+    for (let name in ctxMap) {
+        ctx[name] = ctxMap[name];
+    }
+    if (isFunction(data)) {
+        return data(ctx);
+    }
+    return data;
+};
+
+let createView = (ctx, obj, initor, construct) => {
+    let data = ctx.initData(obj, ctx);
+    // only run initor when construct view
+    initor && initor(data, ctx);
+    construct && construct(data, ctx);
+
+    // render node
+    return ctx.replaceView();
+};
+
+let createCtx = ({
+    view, afterRender
+}) => {
+    let node = null,
+        data = null,
+        render = null;
+
+    let update = (...args) => {
+        if (!args.length) return replaceView();
+        if (args.length === 1 && likeArray(args[0])) {
+            let arg = args[0];
+            forEach(arg, (item) => {
+                set(data, item[0], item[1]);
+            });
+            return replaceView();
+        } else {
+            let [path, value] = args;
+
+            // function is a special data
+            if (isFunction(value)) {
+                value = value(data);
+            }
+
+            set(data, path, value);
+            return replaceView();
+        }
+    };
+
+    let appendView = (itemView) => {
+        if (node) {
+            mount(itemView, node);
+        }
+    };
+
+    let replaceView = () => {
+        let newNode = getNewNode();
+        newNode = reduceNode(newNode);
+
+        // type check for newNode
+
+        node = replace(node, newNode);
+
+        afterRender && afterRender(ctx);
+
+        if (node) node.ctx = ctx;
+        return node;
+    };
+
+    let getNewNode = () => {
+        if (!render) render = view;
+        let ret = render(data, ctx);
+        if (isFunction(ret)) {
+            render = ret;
+            return render(data, ctx);
+        } else {
+            return ret;
+        }
+    };
+
+    let initData = (obj = {}) => {
+        data = generateData(obj, ctx);
+        return data;
+    };
+
+    let getNode = () => node;
+
+    let getData = () => data;
+
+    let getCtx = () => ctx;
+
+    // TODO refator
+    let transferCtx = (newNode) => {
+        node = newNode;
+        newNode.ctx = ctx;
+    };
+
+    let ctx = {
+        update,
+        getNode,
+        getData,
+        transferCtx,
+        initData,
+        replaceView,
+        appendView,
+        getCtx
+    };
+
+    return ctx;
+};
+
+let generateData = (obj, ctx) => {
+    let data = null;
+    // data generator
+    if (isFunction(obj)) {
+        data = obj(ctx);
+    } else {
+        data = obj;
+    }
+
+    // TODO need mount event
+    if (!isObject(data)) {
+        throw new TypeError(`Expect object, but got ${data}. Type is ${typeof data}`);
+    }
+    return data;
+};
+
+module.exports = View;
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    toArray
+} = __webpack_require__(3);
+
+let {
+    isNode
+} = __webpack_require__(1);
+
+let {
+    forEach
+} = __webpack_require__(0);
+
+let applyAttibutes = __webpack_require__(31);
+
+let replaceDirectly = (node, newNode) => {
+    let parent = node.parentNode;
+    if (parent) {
+        // replace
+        parent.replaceChild(newNode, node);
+        return newNode;
+    } else {
+        return node;
+    }
+};
+
+let removeOldNode = (oldNode) => {
+    let parent = oldNode.parentNode;
+    if (parent) {
+        parent.removeChild(oldNode);
+    }
+};
+
+// TODO using key
+let diffNode = (node, newNode) => {
+    if (!newNode) {
+        return removeOldNode(node);
+    }
+
+    if (node.nodeType === 3 && newNode.nodeType === 3) {
+        node.textContent = newNode.textContent;
+    }
+
+    if (isNode(node) && isNode(newNode)) {
+        if (node.nodeType === 3 && newNode.nodeType === 3) {
+            node.textContent = newNode.textContent;
+            return node;
+        }
+
+        if (node.tagName !== newNode.tagName ||
+            node.tagName === 'INPUT'
+        ) {
+            // TODO problems performance
+            // TODO nodetype problem
+            return replaceDirectly(node, newNode);
+        } else {
+            editNode(node, newNode);
+        }
+    }
+    return node;
+};
+
+let editNode = (node, newNode) => {
+    // attributes
+    applyAttibutes(node, newNode);
+
+    // transfer context
+    if (newNode.ctx) {
+        newNode.ctx.transferCtx(node);
+    }
+
+    // transfer event map
+    if (newNode.__eventMap) {
+        node.__eventMap = newNode.__eventMap;
+    }
+
+    let orinChildNodes = toArray(node.childNodes);
+    let newChildNodes = toArray(newNode.childNodes);
+
+    // TODO using key
+    convertLists(orinChildNodes, newChildNodes, node);
+};
+
+let convertLists = (orinChildNodes, newChildNodes, parent) => {
+    removeExtra(orinChildNodes, newChildNodes);
+
+    // diff
+    forEach(orinChildNodes, (orinChild, i) => {
+        diffNode(orinChild, newChildNodes[i]);
+    });
+
+    appendMissing(orinChildNodes, newChildNodes, parent);
+    return orinChildNodes;
+};
+
+let removeExtra = (orinChildNodes, newChildNodes) => {
+    // remove
+    for (let i = newChildNodes.length; i < orinChildNodes.length; i++) {
+        removeOldNode(orinChildNodes[i]);
+    }
+};
+
+let appendMissing = (orinChildNodes, newChildNodes, parent) => {
+    // append
+    for (let i = orinChildNodes.length; i < newChildNodes.length; i++) {
+        let newChild = newChildNodes[i];
+        parent.appendChild(newChild);
+    }
+};
+
+module.exports = (node, newNode) => {
+    let ret = null;
+
+    if (!node) {
+        ret = newNode;
+    } else if (!newNode) {
+        removeOldNode(node);
+        ret = null;
+    } else {
+        ret = diffNode(node, newNode);
+    }
+
+    return ret;
+};
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    getAttributeMap
+} = __webpack_require__(5);
+
+let {
+    hasOwnProperty
+} = __webpack_require__(3);
+
+let {
+    forEach
+} = __webpack_require__(0);
+
+let applyAttibutes = (node, newNode) => {
+    // attributes
+    let orinAttrMap = getAttributeMap(node.attributes);
+    let newAttrMap = getAttributeMap(newNode.attributes);
+
+    // update and remove
+    forEach(orinAttrMap, (orinValue, name) => {
+        if (hasOwnProperty(newAttrMap, name)) {
+            let newValue = newAttrMap[name];
+            if (newValue !== orinValue) {
+                node.setAttribute(name, newValue);
+            }
+        } else {
+            node.removeAttribute(name);
+        }
+    });
+
+    // append
+    forEach(newAttrMap, (newAttr, name) => {
+        if (!hasOwnProperty(orinAttrMap, name)) {
+            node.setAttribute(name, newAttr);
+        }
+    });
+};
+
+module.exports = applyAttibutes;
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isNode
+} = __webpack_require__(1);
+
+const svgNS = 'http://www.w3.org/2000/svg';
+
+let applyNode = (node, attributes, childs) => {
+    for (let name in attributes) {
+        let attr = attributes[name];
+        node.setAttribute(name, attr);
+    }
+
+    for (let i = 0; i < childs.length; i++) {
+        let child = childs[i];
+        if (isNode(child)) {
+            node.appendChild(child);
+        } else {
+            node.textContent = child + '';
+        }
+    }
+};
+
+let createElement = (tagName, attributes, childs) => {
+    let node = document.createElement(tagName);
+    applyNode(node, attributes, childs);
+    return node;
+};
+
+let createSvgElement = (tagName, attributes, childs) => {
+    let node = document.createElementNS(svgNS, tagName);
+    applyNode(node, attributes, childs);
+    return node;
+};
+
+module.exports = {
+    createElement,
+    createSvgElement
+};
+
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    contain
+} = __webpack_require__(0);
+
+module.exports = () => {
+    let docs = [];
+    let eventTypeMap = {};
+    let handlerMap = {};
+
+    let listenEventType = (type) => {
+        if (!eventTypeMap[type]) {
+            updateDocs(type);
+        }
+        eventTypeMap[type] = true;
+    };
+
+    /**
+     * attach document used to accept events
+     */
+    let attachDocument = (doc = document) => {
+        if (!contain(docs, doc)) {
+            for (let type in eventTypeMap) {
+                // prevent multiple version of kabanery to binding multiple times
+                let id = getGlobalEventTypeId(type);
+                if (!doc[id]) {
+                    addEventListenerToDoc(doc, type);
+                    doc[id] = true;
+                }
+            }
+            docs.push(doc);
+        }
+    };
+
+    let updateDocs = (type) => {
+        if (!docs.length) {
+            docs.push(document);
+        }
+        for (let i = 0; i < docs.length; i++) {
+            let doc = docs[i];
+            addEventListenerToDoc(doc, type);
+        }
+    };
+
+    let addEventListenerToDoc = (doc, type) => {
+        let handler = null;
+        if (handlerMap[type]) {
+            handler = handlerMap[type];
+        } else {
+            handler = listener(type);
+            handlerMap[type] = handler;
+        }
+        doc.addEventListener(type, handler);
+    };
+
+    /**
+     * e = {
+     *  target,
+     *  stopPropagation [optional]
+     * }
+     */
+    let listener = (type) => function(e) {
+        let ctx = this;
+        let target = e.target;
+
+        // hack the stopPropagration function
+        let oldProp = e.stopPropagation;
+        e.stopPropagation = function(...args) {
+            e.__stopPropagation = true;
+            return oldProp && oldProp.apply(this, args);
+        };
+
+        let nodePath = getNodePath(target);
+
+        for (let i = 0; i < nodePath.length; i++) {
+            let node = nodePath[i];
+            applyNodeHandlers(e, type, node, ctx);
+        }
+    };
+
+    let applyNodeHandlers = (e, type, node, ctx) => {
+        if (e.__stopPropagation) { // event already been stoped by child node
+            return true;
+        }
+
+        let handler = getHandler(type, node);
+        return handler && handler.apply(ctx, [e]);
+    };
+
+    let getHandler = (type, target) => {
+        let eventMap = target && target.__eventMap;
+        return eventMap && eventMap[type];
+    };
+
+    let dispatchEvent = (type, e) => {
+        let handler = handlerMap[type];
+        handler && handler(e);
+    };
+
+    return {
+        listenEventType,
+        attachDocument,
+        dispatchEvent
+    };
+};
+
+/**
+ * get the path of node
+ */
+let getNodePath = (target) => {
+    let paths = [];
+    while (target) {
+        paths.push(target);
+        target = target.parentNode;
+    }
+    return paths;
+};
+
+let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n
+} = __webpack_require__(6);
+
+let {
+    isArray, isFunction, isObject
+} = __webpack_require__(1);
+
+let {
+    map
+} = __webpack_require__(0);
+
+module.exports = (...args) => {
+    let tagName = args[0],
+        attrs = {},
+        childs = [];
+    if (isArray(args[1])) {
+        childs = args[1];
+    } else if (isFunction(args[1])) {
+        childs = [args[1]];
+    } else {
+        if (isObject(args[1])) {
+            attrs = args[1];
+            if (isArray(args[2])) {
+                childs = args[2];
+            } else if (isFunction(args[2])) {
+                childs = [args[2]];
+            }
+        }
+    }
+
+    return (...params) => {
+        let renderList = (list) => {
+            return map(list, (viewer) => {
+                if (isArray(viewer)) {
+                    return renderList(viewer);
+                } else if (isFunction(viewer)) {
+                    return viewer(...params);
+                } else {
+                    return viewer;
+                }
+            });
+        };
+
+        return n(tagName, attrs, renderList(childs));
+    };
+};
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.decode = exports.parse = __webpack_require__(36);
+exports.encode = exports.stringify = __webpack_require__(37);
+
 
 /***/ }),
 /* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+// If obj.hasOwnProperty has been overridden, then calling
+// obj.hasOwnProperty(prop) will break.
+// See: https://github.com/joyent/node/issues/1707
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+module.exports = function(qs, sep, eq, options) {
+  sep = sep || '&';
+  eq = eq || '=';
+  var obj = {};
+
+  if (typeof qs !== 'string' || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options && typeof options.maxKeys === 'number') {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys <= 0 means that we should not limit keys count
+  if (maxKeys > 0 && len > maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i < len; ++i) {
+    var x = qs[i].replace(regexp, '%20'),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx >= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = '';
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+};
+
+var isArray = Array.isArray || function (xs) {
+  return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var stringifyPrimitive = function(v) {
+  switch (typeof v) {
+    case 'string':
+      return v;
+
+    case 'boolean':
+      return v ? 'true' : 'false';
+
+    case 'number':
+      return isFinite(v) ? v : '';
+
+    default:
+      return '';
+  }
+};
+
+module.exports = function(obj, sep, eq, name) {
+  sep = sep || '&';
+  eq = eq || '=';
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === 'object') {
+    return map(objectKeys(obj), function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (isArray(obj[k])) {
+        return map(obj[k], function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return '';
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+};
+
+var isArray = Array.isArray || function (xs) {
+  return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+function map (xs, f) {
+  if (xs.map) return xs.map(f);
+  var res = [];
+  for (var i = 0; i < xs.length; i++) {
+    res.push(f(xs[i], i));
+  }
+  return res;
+}
+
+var objectKeys = Object.keys || function (obj) {
+  var res = [];
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) res.push(key);
+  }
+  return res;
+};
+
+
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n,
+    view
+} = __webpack_require__(2);
+let queryString = __webpack_require__(11);
+let _ = __webpack_require__(12);
+let TaskView = __webpack_require__(43);
+let {
+    STATUS_WORKING,
+    STATUS_FINISHED,
+    STATUS_DISCARDED,
+    STATUS_NOT_STARTED
+} = __webpack_require__(60);
+
+let FocusTaskListView = view((data) => {
+    return n('ul', [
+        TaskListView({
+            taskList: _.reduce(data.focusList, (prev, {
+                type,
+                value
+            }) => {
+                if (type === 'pfc') {
+                    let sourceValue = value.sourceTask.value;
+                    prev.push(sourceValue);
+                }
+
+                return prev;
+            }, []),
+
+            planConfigPath: data.planConfigPath
+        })
+    ]);
+});
+
+let DailyTaskListView = view((data) => {
+    return n('ul', [
+        TaskListView({
+            taskList: data.dailyList,
+            planConfigPath: data.planConfigPath
+        })
+    ]);
+});
+
+let TaskListView = view(({
+    taskList,
+    planConfigPath
+}) => {
+    let groups = _.reduce(taskList, (prev, task) => {
+        if (task.status === STATUS_WORKING) {
+            prev.working.push(task);
+        } else if (task.status === STATUS_FINISHED) {
+            prev.finished.push(task);
+        } else if (task.status === STATUS_NOT_STARTED) {
+            prev.notStarted.push(task);
+        } else if (task.status === STATUS_DISCARDED) {
+            prev.discarded.push(task);
+        }
+        return prev;
+    }, {
+        working: [],
+        finished: [],
+        notStarted: [],
+        discarded: []
+    });
+
+    return n('ul', [
+        _.map(groups.working.concat(groups.notStarted).concat(groups.finished).concat(groups.discarded), (value) => {
+            return TaskView({
+                taskValue: value,
+                planConfigPath
+            });
+        })
+    ]);
+});
+
+let PageView = view((pageData) => {
+    return n('page', [
+        n('div', {
+            style: {
+                padding: 10
+            }
+        }, [
+            n('h3', 'plan focus'),
+
+            pageData.focusData && (pageData.focusData.errno === 0 ? FocusTaskListView({
+                focusList: pageData.focusData.data,
+                planConfigPath: pageData.planConfigPath
+            }) : n('div', pageData.focusData.errMsg))
+        ]),
+
+        n('div', {
+            style: {
+                padding: 10
+            }
+        }, [
+            n('h3', 'daily plans'),
+
+            pageData.dailyData && (pageData.dailyData.errno === 0 ? DailyTaskListView({
+                dailyList: pageData.dailyData.data,
+                planConfigPath: pageData.planConfigPath
+            }) : n('div', pageData.dailyData.errMsg))
+        ])
+    ]);
+});
+
+module.exports = () => {
+    let qs = queryString.parse(window.location.search.substring(1));
+
+    let pageView = PageView({
+        focusData: null,
+        dailyData: null,
+        planConfigPath: qs.planConfigPath
+    });
+
+    fetch(`/api/plan/focus?planConfigPath=${qs.planConfigPath}`).then((res) => res.json()).then((focusData) => {
+        pageView.ctx.update('focusData', focusData);
+    });
+
+    fetch(`/api/plan/daily?planConfigPath=${qs.planConfigPath}`).then((res) => res.json()).then((dailyData) => {
+        pageView.ctx.update('dailyData', dailyData);
+    });
+
+    return pageView;
+};
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+// If obj.hasOwnProperty has been overridden, then calling
+// obj.hasOwnProperty(prop) will break.
+// See: https://github.com/joyent/node/issues/1707
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+module.exports = function(qs, sep, eq, options) {
+  sep = sep || '&';
+  eq = eq || '=';
+  var obj = {};
+
+  if (typeof qs !== 'string' || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options && typeof options.maxKeys === 'number') {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys <= 0 means that we should not limit keys count
+  if (maxKeys > 0 && len > maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i < len; ++i) {
+    var x = qs[i].replace(regexp, '%20'),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx >= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = '';
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (Array.isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+};
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var stringifyPrimitive = function(v) {
+  switch (typeof v) {
+    case 'string':
+      return v;
+
+    case 'boolean':
+      return v ? 'true' : 'false';
+
+    case 'number':
+      return isFinite(v) ? v : '';
+
+    default:
+      return '';
+  }
+};
+
+module.exports = function(obj, sep, eq, name) {
+  sep = sep || '&';
+  eq = eq || '=';
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === 'object') {
+    return Object.keys(obj).map(function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (Array.isArray(obj[k])) {
+        return obj[k].map(function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return '';
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+};
+
+
+/***/ }),
+/* 41 */
 /***/ (function(module, exports) {
 
 var g;
@@ -20068,7 +20465,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 37 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -20093,6 +20490,1504 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(2);
+let Fold = __webpack_require__(44);
+let FoldArrow = __webpack_require__(45);
+let _ = __webpack_require__(12);
+
+let {
+    STATUS_NOT_STARTED,
+    STATUS_FINISHED,
+    STATUS_WORKING
+} = __webpack_require__(60);
+
+let colorMap = {
+    [STATUS_NOT_STARTED]: '#999999',
+    [STATUS_FINISHED]: 'rgb(111,140,29)',
+    [STATUS_WORKING]: 'white'
+};
+
+module.exports = view(({
+    taskValue,
+    planConfigPath
+}) => {
+    let backgroundColor = colorMap[taskValue.status];
+
+    return n('li class="card"', {
+        style: {
+            backgroundColor,
+            fontSize: 16
+        }
+    }, [
+        line('name', taskValue.name),
+        line('filePath', prettyFilePath(taskValue.filePath)),
+        line('moment', taskValue.moment.event.type),
+        line('status', taskValue.status),
+        taskValue.description && line('description', taskValue.description),
+        taskValue.progress && lineBlock('progress', displayProgress(taskValue.progress), taskValue.status === STATUS_WORKING),
+
+        n(`a href="?page=editTask&planConfigPath=${planConfigPath}&filePath=${taskValue.filePath}&name=${taskValue.name}"`, {
+            style: {
+                marginTop: 8,
+                display: 'block'
+            }
+        }, 'edit')
+    ]);
+});
+
+let line = (key, value) => {
+    return n('div', {
+        style: {
+            padding: '4px 0'
+        }
+    }, [
+        n('strong', `${key}:`), n('span style="padding-left:8px"', value)
+    ]);
+};
+
+let lineBlock = (key, value, showDetail) => {
+    let body = () => value;
+    let head = (ops) => n('div', {
+        onclick: () => {
+            ops.toggle();
+        },
+        style: {
+            cursor: 'pointer'
+        }
+    }, [
+        FoldArrow(ops), n('strong', `${key}`)
+    ]);
+
+    return Fold({
+        head,
+        body,
+        hide: !showDetail
+    });
+};
+
+let prettyFilePath = (filePath) => {
+    let parts = filePath.split('/');
+    if (parts.length < 3) return filePath;
+    return `.../${parts.slice(parts.length - 3).join('/')}`;
+};
+
+let displayProgress = (progress) => {
+    // TODO convert progress to steps
+    let steps = compactAction(progress);
+
+    return n('ul', [
+        steps.map(({
+            actionType,
+            info
+        }) => {
+            return n('li', {
+                style: {
+                    marginLeft: 28,
+                    'list-style': 'square !important'
+                }
+            }, [
+                displayAtomAction(actionType, info)
+            ]);
+        })
+    ]);
+};
+
+let compactAction = (action) => {
+    let content = action.content;
+
+    if (content.type === 'atom') {
+        return [content];
+    } else {
+        if (content.actionType === 'sequence' || content.actionType === 'concurrent') {
+            let info = content.info;
+            return _.reduce(info, (prev, next) => {
+                return prev.concat(compactAction(next));
+            }, []);
+        }
+    }
+};
+
+let displayAtomAction = (actionType, info) => {
+    if (atomActionDisplayMap[actionType]) {
+        return n('span', atomActionDisplayMap[actionType](info));
+    }
+
+    return n('span', `${actionType}: ${info? JSON.stringify(info): '...'}`);
+};
+
+let atomActionDisplayMap = {
+    'textAction': (info) => info.text
+};
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n, view
+} = __webpack_require__(2);
+
+/**
+ * data = {
+ *    hide,
+ *    head,
+ *    body
+ * }
+ */
+module.exports = view((data, {
+    update
+}) => {
+    if (data.hide === undefined) data.hide = true;
+
+    let hide = () => update('hide', true);
+    let show = () => update('hide', false);
+    let toggle = () => update('hide', !data.hide);
+    let isHide = () => data.hide;
+
+    let ops = {
+        hide, show, toggle, isHide
+    };
+
+    return n('div', [
+        data.head(ops), !isHide() && data.body(ops)
+    ]);
+});
+
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n
+} = __webpack_require__(2);
+
+let angle = __webpack_require__(46);
+
+module.exports = (ops) => {
+    return n('span', {
+        style: {
+            display: 'inline-block',
+            paddingRight: 8
+        }
+    }, angle({
+        direction: ops.isHide() ? 'bottom' : 'top',
+        length: 5,
+        color: '#666666'
+    }));
+};
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let line = __webpack_require__(47);
+let {
+    n
+} = __webpack_require__(13);
+
+module.exports = ({
+    length = 10, bold = 1, color = 'black', angle = 0, direction
+} = {}) => {
+    if (direction === 'left') {
+        angle = 45;
+    } else if (direction === 'top') {
+        angle = 135;
+    } else if (direction === 'right') {
+        angle = 225;
+    } else if (direction === 'bottom') {
+        angle = 315;
+    }
+    return n('div', {
+        style: {
+            display: 'inline-block',
+            transform: `rotate(${angle}deg)`
+        }
+    }, [
+        line({
+            color,
+            bold,
+            length
+        }),
+
+        n('div', {
+            style: {
+                marginLeft: length / 2 - bold / 2,
+                marginTop: -1 * length / 2 - bold / 2
+            }
+        }, [
+            line({
+                color,
+                bold,
+                length,
+                angle: 90
+            })
+        ])
+    ]);
+};
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n
+} = __webpack_require__(13);
+
+module.exports = ({
+    color = 'black', bold = 3, length = 20, direction = 'vertical', angle = 0
+} = {}) => {
+    return direction === 'vertical' ?
+        n('div', {
+            style: {
+                width: bold,
+                height: length,
+                backgroundColor: color,
+                transform: `rotate(${angle}deg)`
+            }
+        }) : n('div', {
+            style: {
+                height: bold,
+                width: length,
+                backgroundColor: color,
+                transform: `rotate(${angle}deg)`
+            }
+        });
+};
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n, svgn, bindPlugs
+} = __webpack_require__(14);
+
+let {
+    parseArgs
+} = __webpack_require__(15);
+
+let plugs = __webpack_require__(52);
+
+let view = __webpack_require__(55);
+
+let mount = __webpack_require__(58);
+
+let N = __webpack_require__(59);
+
+module.exports = {
+    n,
+    N,
+    svgn,
+    view,
+    plugs,
+    bindPlugs,
+    mount,
+
+    parseArgs
+};
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isString, isObject, isNode, likeArray, isNumber, isBool
+} = __webpack_require__(1);
+
+let parseAttribute = __webpack_require__(50);
+
+const svgNS = 'http://www.w3.org/2000/svg';
+
+let cn = (create) => {
+    let nodeGen = nodeGener(create);
+    return (...args) => {
+        let {
+            tagName, attributes, childs
+        } = parseArgs(args);
+        return nodeGen(tagName, attributes, childs);
+    };
+};
+
+let nodeGener = (create) => (tagName, attributes, childs) => {
+    let node = create(tagName);
+    applyNode(node, attributes, childs);
+
+    return node;
+};
+
+let parseArgs = (args) => {
+    let tagName,
+        attributes = {},
+        childExp = [];
+
+    let first = args.shift();
+
+    let parts = splitTagNameAttribute(first);
+
+    if (parts.length > 1) { // not only tagName
+        tagName = parts[0];
+        attributes = parts[1];
+    } else {
+        tagName = first;
+    }
+
+    tagName = tagName.toLowerCase().trim();
+
+    let next = args.shift();
+
+    let nextAttr = {};
+
+    if (likeArray(next) ||
+        isString(next) ||
+        isNode(next) ||
+        isNumber(next) ||
+        isBool(next)) {
+        childExp = next;
+    } else if (isObject(next)) {
+        nextAttr = next;
+        childExp = args.shift() || [];
+    }
+
+    attributes = parseAttribute(attributes, nextAttr);
+
+    let childs = parseChildExp(childExp);
+
+    return {
+        tagName,
+        attributes,
+        childs
+    };
+};
+
+let splitTagNameAttribute = (str = '') => {
+    let tagName = str.split(' ')[0];
+    let attr = str.substring(tagName.length);
+    attr = attr && attr.trim();
+    if (attr) {
+        return [tagName, attr];
+    } else {
+        return [tagName];
+    }
+};
+
+let applyNode = (node, attributes, childs) => {
+    setAttributes(node, attributes);
+    for (let i = 0; i < childs.length; i++) {
+        let child = childs[i];
+        if (isString(child)) {
+            node.textContent = child;
+        } else {
+            node.appendChild(child);
+        }
+    }
+};
+
+let setAttributes = (node, attributes) => {
+    for (let name in attributes) {
+        let attr = attributes[name];
+        node.setAttribute(name, attr);
+    }
+};
+
+let parseChildExp = (childExp) => {
+    let ret = [];
+    if (isNode(childExp)) {
+        ret.push(childExp);
+    } else if (likeArray(childExp)) {
+        for (let i = 0; i < childExp.length; i++) {
+            let child = childExp[i];
+            ret = ret.concat(parseChildExp(child));
+        }
+    } else if (childExp) {
+        ret.push(childExp.toString());
+    }
+    return ret;
+};
+
+let createElement = (tagName) => document.createElement(tagName);
+
+let createSvgElement = (tagName) => document.createElementNS(svgNS, tagName);
+
+module.exports = {
+    svgn: cn(createSvgElement),
+    n: cn(createElement),
+    parseArgs,
+    nodeGener,
+    createElement,
+    createSvgElement,
+    cn
+};
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isString, isObject
+} = __webpack_require__(1);
+
+let {
+    mergeMap
+} = __webpack_require__(0);
+
+const ITEM_REG = /([\w-]+)\s*=\s*(([\w-]+)|('.*?')|(".*?"))/;
+
+// TODO better key=value grammer
+// TODO refactor with grammerL: class grammer, id grammer, refer some popular grammer
+let parseAttribute = (attributes, nextAttr) => {
+    // key=value key=value
+    // value='abc' value=true value=123 value="def"
+    if (isString(attributes)) {
+        let str = attributes.trim(),
+            kvs = [];
+
+        let stop = false;
+        while (!stop) {
+            let newstr = str.replace(ITEM_REG, (matchStr, $1, $2) => {
+                kvs.push([$1, $2]);
+                return '';
+            }).trim();
+            if (newstr === str) {
+                stop = true;
+            }
+            str = newstr;
+        }
+
+        attributes = {};
+        for (let i = 0; i < kvs.length; i++) {
+            let [key, value] = kvs[i];
+            if (value[0] === '\'' && value[value.length - 1] === '\'' ||
+                value[0] === '"' && value[value.length - 1] === '"') {
+                value = value.substring(1, value.length - 1);
+            }
+            attributes[key] = value;
+        }
+    }
+    // merge
+    attributes = mergeMap(attributes, nextAttr);
+
+    if (attributes.style) {
+        attributes.style = getStyleString(attributes.style);
+    }
+
+    // TODO presudo
+    /*
+    if (attributes.presudo) {
+        for (let name in attributes.presudo) {
+            attributes.presudo[name] = getStyleString(attributes.presudo[name]);
+        }
+    }
+   */
+
+    return attributes;
+};
+
+let getStyleString = (attr = '') => {
+    if (isString(attr)) {
+        return attr;
+    }
+
+    if (!isObject(attr)) {
+        throw new TypeError(`Expect object for style object, but got ${attr}`);
+    }
+    let style = '';
+    for (let key in attr) {
+        let value = attr[key];
+        key = convertStyleKey(key);
+        value = convertStyleValue(value, key);
+        style = `${style};${key}: ${value}`;
+    }
+    return style;
+};
+
+let convertStyleKey = (key) => {
+    return key.replace(/[A-Z]/, (letter) => {
+        return `-${letter.toLowerCase()}`;
+    });
+};
+
+let convertStyleValue = (value, key) => {
+    if (typeof value === 'number' && key !== 'z-index') {
+        return value + 'px';
+    }
+    if (key === 'padding' || key === 'margin') {
+        let parts = value.split(' ');
+        for (let i = 0; i < parts.length; i++) {
+            let part = parts[i];
+            if (!isNaN(Number(part))) {
+                parts[i] = part + 'px';
+            }
+        }
+
+        value = parts.join(' ');
+    }
+    return value;
+};
+
+module.exports = parseAttribute;
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    contain
+} = __webpack_require__(0);
+
+module.exports = () => {
+    let docs = [];
+    let eventTypeMap = {};
+
+    let listenEventType = (type) => {
+        if (!eventTypeMap[type]) {
+            updateDocs(type);
+        }
+        eventTypeMap[type] = true;
+    };
+
+    /**
+     * attach document used to accept events
+     */
+    let attachDocument = (doc = document) => {
+        if (!contain(docs, doc)) {
+            for (let type in eventTypeMap) {
+                // prevent multiple version of kabanery to binding multiple times
+                let id = getGlobalEventTypeId(type);
+                if (!doc[id]) {
+                    doc.addEventListener(type, listener(type));
+                    doc[id] = true;
+                }
+            }
+            docs.push(doc);
+        }
+    };
+
+    let updateDocs = (type) => {
+        if (!docs.length) {
+            docs.push(document);
+        }
+        for (let i = 0; i < docs.length; i++) {
+            let doc = docs[i];
+            doc.addEventListener(type, listener(type));
+        }
+    };
+
+    let listener = (type) => function(e) {
+        let ctx = this;
+        let target = e.target;
+
+        // hack the stopPropagration function
+        let oldProp = e.stopPropagation;
+        e.stopPropagation = function(...args) {
+            e.__stopPropagation = true;
+            return oldProp.apply(this, args);
+        };
+
+        let nodePath = getNodePath(target);
+
+        for (let i = 0; i < nodePath.length; i++) {
+            let node = nodePath[i];
+            applyNodeHandlers(e, type, node, ctx);
+        }
+    };
+
+    let applyNodeHandlers = (e, type, node, ctx) => {
+        if (e.__stopPropagation) { // event already been stoped by child node
+            return true;
+        }
+
+        let handler = getHandler(type, node);
+        return handler && handler.apply(ctx, [e]);
+    };
+
+    let getHandler = (type, target) => {
+        let eventMap = target && target.__eventMap;
+        return eventMap && eventMap[type];
+    };
+
+    return {
+        listenEventType,
+        attachDocument
+    };
+};
+
+/**
+ * get the path of node
+ */
+let getNodePath = (target) => {
+    let paths = [];
+    while (target) {
+        paths.push(target);
+        target = target.parentNode;
+    }
+    return paths;
+};
+
+let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let twowaybinding = __webpack_require__(53);
+let eventError = __webpack_require__(54);
+
+module.exports = {
+    twowaybinding,
+    eventError
+};
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    get, set
+} = __webpack_require__(4);
+
+module.exports = (obj, path) => (tagName, attributes, childExp) => {
+    let value = get(obj, path, '');
+    if (tagName === 'input') {
+        attributes.value = value;
+    } else {
+        childExp.unshift(value);
+    }
+
+    if (!attributes.oninput) {
+        attributes.oninput = (e) => {
+            set(obj, path, e.target.value);
+        };
+    }
+};
+
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = (catcher) => (tagName, attributes) => {
+    for (let name in attributes) {
+        let item = attributes[name];
+        if (name.indexOf('on') === 0) {
+            if (typeof item === 'function') {
+                attributes[name] = wrapEventHandler(item, catcher);
+            }
+        }
+    }
+};
+
+let wrapEventHandler = (fun, catcher) => {
+    return function () {
+        try {
+            let ret = fun.apply(this, arguments);
+            ret = Promise.resolve(ret);
+            ret.catch(catcher);
+            return ret;
+        } catch (err) {
+            return catcher(err);
+        }
+    };
+};
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    set
+} = __webpack_require__(4);
+
+let {
+    isObject, isFunction, likeArray
+} = __webpack_require__(1);
+
+let {
+    forEach
+} = __webpack_require__(0);
+
+let replace = __webpack_require__(56);
+
+/**
+ * render function: (data) => node
+ */
+
+// TODO observable for update, append
+
+// class level
+let View = (view, construct, {
+    afterRender
+} = {}) => {
+    // TODO class level API
+    // instance level
+    let viewer = (obj, initor) => {
+        // create context
+        let ctx = createCtx({
+            view, afterRender
+        });
+
+        return createView(ctx, obj, initor, construct);
+    };
+
+    let viewerOps = (viewer) => {
+        viewer.create = (handler) => {
+            let ctx = createCtx({
+                view, afterRender
+            });
+
+            handler && handler(ctx);
+
+            let inst = (obj, initor) => {
+                return createView(ctx, obj, initor, construct);
+            };
+
+            inst.ctx = ctx;
+
+            return inst;
+        };
+
+        // extend some context
+        viewer.expand = (ctxMap = {}) => {
+            let newViewer = (...args) => {
+                let obj = args[0];
+                args[0] = View.ext(obj, ctxMap);
+
+                return viewer(...args);
+            };
+
+            viewerOps(newViewer);
+            return newViewer;
+        };
+    };
+
+    viewerOps(viewer);
+
+    return viewer;
+};
+
+View.ext = (data, ctxMap = {}) => (ctx) => {
+    for (let name in ctxMap) {
+        ctx[name] = ctxMap[name];
+    }
+    if (isFunction(data)) {
+        return data(ctx);
+    }
+    return data;
+};
+
+let createView = (ctx, obj, initor, construct) => {
+    let data = ctx.initData(obj, ctx);
+    // only run initor when construct view
+    initor && initor(data, ctx);
+    construct && construct(data, ctx);
+
+    // render node
+    return ctx.replaceView();
+};
+
+let createCtx = ({
+    view, afterRender
+}) => {
+    let node = null,
+        data = null,
+        render = null;
+
+    let update = (...args) => {
+        if (!args.length) return replaceView();
+        if (args.length === 1 && likeArray(args[0])) {
+            let arg = args[0];
+            forEach(arg, (item) => {
+                set(data, item[0], item[1]);
+            });
+            return replaceView();
+        } else {
+            let [path, value] = args;
+
+            // function is a special data
+            if (isFunction(value)) {
+                value = value(data);
+            }
+
+            set(data, path, value);
+            return replaceView();
+        }
+    };
+
+    let append = (item, viewFun) => {
+        if (node) {
+            node.appendChild(viewFun(item));
+        }
+    };
+
+    let replaceView = () => {
+        let newNode = getNewNode();
+
+        // type check for newNode
+
+        node = replace(node, newNode);
+
+        afterRender && afterRender(ctx);
+
+        if (node) node.ctx = ctx;
+        return node;
+    };
+
+    let getNewNode = () => {
+        if (!render) render = view;
+        let ret = render(data, ctx);
+        if (isFunction(ret)) {
+            render = ret;
+            return render(data, ctx);
+        } else {
+            return ret;
+        }
+    };
+
+    let initData = (obj = {}) => {
+        data = generateData(obj, ctx);
+        return data;
+    };
+
+    let getNode = () => node;
+
+    let getData = () => data;
+
+    let getCtx = () => ctx;
+
+    // TODO refator
+    let transferCtx = (newNode) => {
+        node = newNode;
+        newNode.ctx = ctx;
+    };
+
+    let ctx = {
+        update,
+        getNode,
+        getData,
+        transferCtx,
+        initData,
+        replaceView,
+        append,
+        getCtx
+    };
+
+    return ctx;
+};
+
+let generateData = (obj, ctx) => {
+    let data = null;
+    // data generator
+    if (isFunction(obj)) {
+        data = obj(ctx);
+    } else {
+        data = obj;
+    }
+
+    // TODO need mount event
+    if (!isObject(data)) {
+        throw new TypeError(`Expect object, but got ${data}. Type is ${typeof data}`);
+    }
+    return data;
+};
+
+module.exports = View;
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    toArray
+} = __webpack_require__(4);
+
+let {
+    isNode
+} = __webpack_require__(1);
+
+let {
+    forEach
+} = __webpack_require__(0);
+
+let applyAttibutes = __webpack_require__(57);
+
+let replaceDirectly = (node, newNode) => {
+    let parent = node.parentNode;
+    if (parent) {
+        // replace
+        parent.replaceChild(newNode, node);
+        return newNode;
+    } else {
+        return node;
+    }
+};
+
+let removeOldNode = (oldNode) => {
+    let parent = oldNode.parentNode;
+    if (parent) {
+        parent.removeChild(oldNode);
+    }
+};
+
+// TODO using key
+let diffNode = (node, newNode) => {
+    if (!newNode) {
+        return removeOldNode(node);
+    }
+
+    if (node.nodeType === 3 && newNode.nodeType === 3) {
+        node.textContent = newNode.textContent;
+    }
+
+    if (isNode(node) && isNode(newNode)) {
+        if (node.nodeType === 3 && newNode.nodeType === 3) {
+            node.textContent = newNode.textContent;
+            return node;
+        }
+
+        if (node.tagName !== newNode.tagName ||
+            node.tagName === 'INPUT'
+        ) {
+            // TODO problems performance
+            // TODO nodetype problem
+            return replaceDirectly(node, newNode);
+        } else {
+            editNode(node, newNode);
+        }
+    }
+    return node;
+};
+
+let editNode = (node, newNode) => {
+    // attributes
+    applyAttibutes(node, newNode);
+
+    // transfer context
+    if (newNode.ctx) {
+        newNode.ctx.transferCtx(node);
+    }
+
+    // transfer event map
+    if (newNode.__eventMap) {
+        node.__eventMap = newNode.__eventMap;
+    }
+
+    let orinChildNodes = toArray(node.childNodes);
+    let newChildNodes = toArray(newNode.childNodes);
+
+    // TODO using key
+    convertLists(orinChildNodes, newChildNodes, node);
+};
+
+let convertLists = (orinChildNodes, newChildNodes, parent) => {
+    removeExtra(orinChildNodes, newChildNodes);
+
+    // diff
+    forEach(orinChildNodes, (orinChild, i) => {
+        diffNode(orinChild, newChildNodes[i]);
+    });
+
+    appendMissing(orinChildNodes, newChildNodes, parent);
+    return orinChildNodes;
+};
+
+let removeExtra = (orinChildNodes, newChildNodes) => {
+    // remove
+    for (let i = newChildNodes.length; i < orinChildNodes.length; i++) {
+        removeOldNode(orinChildNodes[i]);
+    }
+};
+
+let appendMissing = (orinChildNodes, newChildNodes, parent) => {
+    // append
+    for (let i = orinChildNodes.length; i < newChildNodes.length; i++) {
+        let newChild = newChildNodes[i];
+        parent.appendChild(newChild);
+    }
+};
+
+module.exports = (node, newNode) => {
+    let ret = null;
+
+    if (!node) {
+        ret = newNode;
+    } else if (!newNode) {
+        removeOldNode(node);
+        ret = null;
+    } else {
+        ret = diffNode(node, newNode);
+    }
+
+    return ret;
+};
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    getAttributeMap
+} = __webpack_require__(5);
+
+let {
+    hasOwnProperty
+} = __webpack_require__(4);
+
+let {
+    forEach
+} = __webpack_require__(0);
+
+let applyAttibutes = (node, newNode) => {
+    // attributes
+    let orinAttrMap = getAttributeMap(node.attributes);
+    let newAttrMap = getAttributeMap(newNode.attributes);
+
+    // update and remove
+    forEach(orinAttrMap, (orinValue, name) => {
+        if (hasOwnProperty(newAttrMap, name)) {
+            let newValue = newAttrMap[name];
+            if (newValue !== orinValue) {
+                node.setAttribute(name, newValue);
+            }
+        } else {
+            node.removeAttribute(name);
+        }
+    });
+
+    // append
+    forEach(newAttrMap, (newAttr, name) => {
+        if (!hasOwnProperty(orinAttrMap, name)) {
+            node.setAttribute(name, newAttr);
+        }
+    });
+};
+
+module.exports = applyAttibutes;
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    attachDocument
+} = __webpack_require__(16);
+
+let {
+    isNode
+} = __webpack_require__(1);
+
+let {
+    flat, forEach
+} = __webpack_require__(0);
+
+/**
+ * @param parentNode
+ *      the dom node used hook node we rendered
+ */
+module.exports = (kabaneryRoots, parentNode) => {
+    kabaneryRoots = flat(kabaneryRoots);
+    forEach(kabaneryRoots, (item) => {
+        if (isNode(item)) {
+            parentNode.appendChild(item);
+        }
+    });
+
+    // attach to document
+    attachDocument(getDoc(parentNode));
+};
+
+let getDoc = (node) => {
+    while (node.parentNode) {
+        node = node.parentNode;
+    }
+    return node;
+};
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n
+} = __webpack_require__(14);
+
+let {
+    isArray, isFunction, isObject
+} = __webpack_require__(1);
+
+let {
+    map
+} = __webpack_require__(0);
+
+module.exports = (...args) => {
+    let tagName = args[0],
+        attrs = {},
+        childs = [];
+    if (isArray(args[1])) {
+        childs = args[1];
+    } else if (isFunction(args[1])) {
+        childs = [args[1]];
+    } else {
+        if (isObject(args[1])) {
+            attrs = args[1];
+            if (isArray(args[2])) {
+                childs = args[2];
+            } else if (isFunction(args[2])) {
+                childs = [args[2]];
+            }
+        }
+    }
+
+    return (...params) => {
+        let renderList = (list) => {
+            return map(list, (viewer) => {
+                if (isArray(viewer)) {
+                    return renderList(viewer);
+                } else if (isFunction(viewer)) {
+                    return viewer(...params);
+                } else {
+                    return viewer;
+                }
+            });
+        };
+
+        return n(tagName, attrs, renderList(childs));
+    };
+};
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const STATUS_NOT_STARTED = 'not_started';
+const STATUS_WORKING = 'working';
+const STATUS_FINISHED = 'finished';
+const STATUS_DISCARDED = 'discarded';
+
+const STATUS_LIST = [STATUS_NOT_STARTED, STATUS_WORKING, STATUS_FINISHED, STATUS_DISCARDED];
+
+module.exports = {
+    STATUS_LIST,
+    STATUS_NOT_STARTED,
+    STATUS_WORKING,
+    STATUS_FINISHED,
+    STATUS_DISCARDED
+};
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view,
+    n
+} = __webpack_require__(2);
+let queryString = __webpack_require__(11);
+let TaskEditor = __webpack_require__(62);
+let Notice = __webpack_require__(63);
+
+let PageView = view(({
+    taskData,
+    planConfigPath,
+    filePath,
+    name,
+    notice
+}, {
+    update
+}) => {
+    return n('div', {
+        style: {
+            padding: 8
+        }
+    }, [
+        n('button', {
+            onclick: () => {
+                // TODO check pfc grammer
+                fetch('/api/task/update/code', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        code: taskData.data.code,
+                        planConfigPath,
+                        filePath,
+                        name
+                    })
+                }).then(res => res.json()).then(({
+                    errno,
+                    errMsg
+                }) => {
+                    // TODO notify
+                    if (errno === 0) {
+                        update([
+                            ['notice.title', 'saved!'],
+                            ['notice.disappear', false]
+                        ]);
+                    } else {
+                        update([
+                            ['notice.title', errMsg],
+                            ['notice.disappear', false]
+                        ]);
+                    }
+                }).catch(err => {
+                    // TODO notify
+                    update([
+                        ['notice.title', err.toString()],
+                        ['notice.disappear', false]
+                    ]);
+
+                });
+            }
+        }, 'save'),
+
+        taskData && (taskData.errno === 0 ? TaskEditor({
+            code: taskData.data.code,
+            onchange: (newCode) => {
+                taskData.data.code = newCode;
+            }
+        }) : n('div', taskData.errMsg)),
+
+        Notice(notice)
+    ]);
+});
+
+module.exports = () => {
+    let qs = queryString.parse(window.location.search.substring(1));
+
+    let pageView = PageView({
+        taskData: null,
+        planConfigPath: qs.planConfigPath,
+        filePath: qs.filePath,
+        name: qs.name,
+        notice: {
+            disappear: true,
+            autoHide: true
+        }
+    });
+
+    fetch(`/api/task?planConfigPath=${qs.planConfigPath}&filePath=${qs.filePath}&name=${qs.name}`).then((res) => res.json()).then((taskData) => {
+        pageView.ctx.update('taskData', taskData);
+    });
+
+    return pageView;
+};
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n,
+    view
+} = __webpack_require__(2);
+
+module.exports = view((data) => {
+    return n('div', {
+        style: {
+            padding: 8
+        }
+    }, [
+        n('textarea placeholder="task content" wrap="off"', {
+            style: {
+                width: '100%',
+                height: 400,
+                outline: 'none',
+                resize: 'none',
+                overflow: 'auto',
+                border: '1px solid #888',
+                borderRadius: 5,
+                fontSize: 16
+            },
+
+            oninput: (e) => {
+                data.code = e.target.value;
+                data.onchange && data.onchange(data.code);
+            }
+        }, data.code)
+    ]);
+});
+
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let modal = __webpack_require__(64);
+
+let {
+    view, n
+} = __webpack_require__(2);
+
+/**
+ * data = {
+ *    title,
+ *    disappear,
+ *    autoHide
+ * }
+ */
+
+module.exports = view(({
+    title,
+    disappear,
+    autoHide
+}) => {
+    return modal({
+        disappear,
+        autoHide,
+        content: [
+            n('form', {
+                onclick: (e) => {
+                    e.preventDefault();
+                }
+            }, [
+                n('h4', title)
+            ])
+        ]
+    });
+});
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    view, n
+} = __webpack_require__(2);
+
+/**
+ * data = {
+ *      content,
+ *      disappear,
+ *      autoHide
+ * }
+ */
+module.exports = view((data, {
+    update
+}) => {
+    if (data.autoHide === undefined) data.autoHide = true;
+    if (data.disappear) return null;
+    return n('div', {
+        style: {
+            backgroundColor: 'rgba(60, 60, 60, 0.4)',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: 100000,
+            width: '100%',
+            height: '100%',
+            textAlign: 'center',
+            overflow: 'auto'
+        },
+        onclick: () => {
+            if (data.autoHide) {
+                update('disappear', true);
+            }
+        }
+    }, [
+        n('div', {
+            style: {
+                margin: '0 auto',
+                display: 'inline-block',
+                marginTop: 150,
+                borderRadius: 4
+            },
+            onclick: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, [data.content])
+    ]);
+});
 
 
 /***/ })
