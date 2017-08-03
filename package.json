@@ -28,14 +28,18 @@
   "homepage": "https://github.com/LoveKino/planfor#readme",
   "devDependencies": {
     "jsenhance": "0.0.3",
-    "mocha": "^3.4.2"
+    "mocha": "^3.4.2",
+    "webpack": "^3.4.1"
   },
   "dependencies": {
     "cl-requestor": "0.0.3",
     "crude-server": "0.0.1",
     "es6-promisify": "^5.0.0",
+    "kabanery": "^0.2.4",
+    "kabanery-spa": "0.0.16",
     "lodash": "^4.17.4",
     "nodemailer": "^4.0.1",
+    "quick-steady-theme": "0.0.2",
     "text-flow-pfc-compiler": "^0.1.1",
     "yargs": "^8.0.2"
   }

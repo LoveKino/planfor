@@ -6,7 +6,9 @@ let promisify = require('es6-promisify');
 let interval = require('./interval');
 let sandboxer = require('./sandboxer');
 let {
-    parseStrToAst, checkASTWithContext, executeAST
+    parseStrToAst,
+    checkASTWithContext,
+    executeAST
 } = require('text-flow-pfc-compiler');
 let sendMail = require('./sendMail');
 let _ = require('lodash');
@@ -30,24 +32,80 @@ module.exports = ({
 
         // parse plan files to tasks
         let {
-            tasks, focus
+            tasks,
+            focus,
+            planTaskMap,
         } = await parsePlanToTasks(planIndexFile);
 
         log(tasks);
         log(focus);
 
-        // run tasks
         tasksMap[planConfigPath] = {
             tasks,
             planConfig,
-            focus
+            focus,
+            planTaskMap
         };
+    };
+
+    let getFocusData = async(planConfigPath) => {
+        if (!planConfigPath) {
+            throw new Error('must specify plan config path');
+        }
+        let plan = tasksMap[planConfigPath];
+        if (!plan) {
+            throw new Error(`no plan for ${planConfigPath}`);
+        }
+
+        let {
+            focus,
+            planTaskMap
+        } = plan;
+
+        return _.map(focus, (item) => {
+            item = _.cloneDeep(item);
+            if (item.type === 'pfc' && item.value.type === 'linkTask') {
+                let {
+                    planFile,
+                    name
+                } = item.value;
+                let sourceTask = planTaskMap[planFile][name];
+                item.value.sourceTask = sourceTask;
+            }
+
+            return item;
+        });
+    };
+
+    let getDailyTasks = (planConfigPath) => {
+        if (!planConfigPath) {
+            throw new Error('must specify plan config path');
+        }
+
+        let plan = tasksMap[planConfigPath];
+
+        if (!plan) {
+            throw new Error(`no plan for ${planConfigPath}`);
+        }
+
+        let {
+            tasks
+        } = plan;
+
+        return _.filter(tasks, ({
+            moment: {
+                event
+            }
+        }) => {
+            return event.type === 'daily';
+        });
     };
 
     interval(1000, (prevTime, curTime) => {
         for (let name in tasksMap) {
             let {
-                tasks, planConfig
+                tasks,
+                planConfig
             } = tasksMap[name];
             for (let i = 0; i < tasks.length; i++) {
                 let {
@@ -66,7 +124,9 @@ module.exports = ({
     });
 
     return {
-        reloadPlan
+        reloadPlan,
+        getFocusData,
+        getDailyTasks
     };
 };
 
@@ -90,7 +150,9 @@ let isTimeMoment = (prevTime, curTime, event) => {
         let prevHours = prevDate.getHours();
         let curHours = curDate.getHours();
         let {
-            hour, minute, second
+            hour,
+            minute,
+            second
         } = event;
 
         if (curHours < prevHours) { // which means cross 0:00
@@ -172,7 +234,7 @@ let parsePlanToTasks = async(indexPlanFile) => {
         prev[filePath] = _.reduce(fileItems, (pre, item) => {
             if (item.type === 'pfc' && item.value.type === 'task') {
                 // check repeated name
-                if(pre[item.value.name]) {
+                if (pre[item.value.name]) {
                     throw new Error(`Repeated task names in a same plan file. Task info: ${filePath}, ${item.value.name}.`);
                 }
                 pre[item.value.name] = item;
@@ -220,5 +282,5 @@ let parsePlanFocus = async(filePath, planTaskMap) => {
 
     let fileItems = executeAST(ast, contexter);
 
-    return fileItems.filter((item) => item.type === 'pfc');
+    return fileItems;
 };
