@@ -7,6 +7,7 @@ let {
 let queryString = require('queryString');
 let _ = require('lodash');
 let TaskListView = require('../view/taskListView');
+let DailyTaskListView = require('../view/dailyTaskView');
 
 let FocusTaskListView = view((data) => {
     return n('ul', [
@@ -23,15 +24,6 @@ let FocusTaskListView = view((data) => {
                 return prev;
             }, []),
 
-            planConfigPath: data.planConfigPath
-        })
-    ]);
-});
-
-let DailyTaskListView = view((data) => {
-    return n('ul', [
-        TaskListView({
-            taskList: data.dailyList,
             planConfigPath: data.planConfigPath
         })
     ]);

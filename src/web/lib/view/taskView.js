@@ -7,7 +7,9 @@ let {
 let Fold = require('kabanery-fold');
 let FoldArrow = require('kabanery-fold/lib/foldArrow');
 let _ = require('lodash');
-
+let {
+    displayClock
+} = require('../util/time');
 let {
     STATUS_WAITING,
     STATUS_FINISHED,
@@ -34,7 +36,7 @@ module.exports = view(({
     }, [
         line('name', taskValue.name),
         line('filePath', prettyFilePath(taskValue.filePath)),
-        line('moment', taskValue.moment.event.type),
+        line('moment', displayMoment(taskValue)),
         line('status', taskValue.status),
         taskValue.description && line('description', taskValue.description),
         taskValue.progress && lineBlock('progress', displayProgress(taskValue.progress), taskValue.status === STATUS_WORKING),
@@ -54,7 +56,13 @@ let line = (key, value) => {
             padding: '4px 0'
         }
     }, [
-        n('strong', `${key}:`), n('span style="padding-left:8px"', value)
+        n('span', {
+            style: {
+                display: 'inline-block',
+                width: 80,
+                fontWeight: 'bold'
+            }
+        }, key), n('span', value)
     ]);
 };
 
@@ -127,6 +135,17 @@ let displayAtomAction = (actionType, info) => {
     }
 
     return n('span', `${actionType}: ${info? JSON.stringify(info): '...'}`);
+};
+
+let displayMoment = (taskValue) => {
+    let event = taskValue.moment.event;
+    let type = taskValue.moment.event.type;
+
+    if (type === 'daily') {
+        return n('span', `${type} ${displayClock(event.hour, event.minute)}`);
+    }
+
+    return n('span', type);
 };
 
 let atomActionDisplayMap = {

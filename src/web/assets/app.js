@@ -20183,6 +20183,7 @@ let {
 let queryString = __webpack_require__(11);
 let _ = __webpack_require__(12);
 let TaskListView = __webpack_require__(65);
+let DailyTaskListView = __webpack_require__(66);
 
 let FocusTaskListView = view((data) => {
     return n('ul', [
@@ -20199,15 +20200,6 @@ let FocusTaskListView = view((data) => {
                 return prev;
             }, []),
 
-            planConfigPath: data.planConfigPath
-        })
-    ]);
-});
-
-let DailyTaskListView = view((data) => {
-    return n('ul', [
-        TaskListView({
-            taskList: data.dailyList,
             planConfigPath: data.planConfigPath
         })
     ]);
@@ -20491,7 +20483,9 @@ let {
 let Fold = __webpack_require__(45);
 let FoldArrow = __webpack_require__(46);
 let _ = __webpack_require__(12);
-
+let {
+    displayClock
+} = __webpack_require__(67);
 let {
     STATUS_WAITING,
     STATUS_FINISHED,
@@ -20518,7 +20512,7 @@ module.exports = view(({
     }, [
         line('name', taskValue.name),
         line('filePath', prettyFilePath(taskValue.filePath)),
-        line('moment', taskValue.moment.event.type),
+        line('moment', displayMoment(taskValue)),
         line('status', taskValue.status),
         taskValue.description && line('description', taskValue.description),
         taskValue.progress && lineBlock('progress', displayProgress(taskValue.progress), taskValue.status === STATUS_WORKING),
@@ -20538,7 +20532,13 @@ let line = (key, value) => {
             padding: '4px 0'
         }
     }, [
-        n('strong', `${key}:`), n('span style="padding-left:8px"', value)
+        n('span', {
+            style: {
+                display: 'inline-block',
+                width: 80,
+                fontWeight: 'bold'
+            }
+        }, key), n('span', value)
     ]);
 };
 
@@ -20611,6 +20611,17 @@ let displayAtomAction = (actionType, info) => {
     }
 
     return n('span', `${actionType}: ${info? JSON.stringify(info): '...'}`);
+};
+
+let displayMoment = (taskValue) => {
+    let event = taskValue.moment.event;
+    let type = taskValue.moment.event.type;
+
+    if (type === 'daily') {
+        return n('span', `${type} ${displayClock(event.hour, event.minute)}`);
+    }
+
+    return n('span', type);
 };
 
 let atomActionDisplayMap = {
@@ -22039,6 +22050,79 @@ let listTask = (tasks, planConfigPath) => {
             });
         })
     ]);
+};
+
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+let {
+    n,
+    view
+} = __webpack_require__(2);
+let TaskListView = __webpack_require__(65);
+let {
+    displayClock
+} = __webpack_require__(67);
+
+module.exports = view((data) => {
+    let dailyList = data.dailyList;
+
+    dailyList.sort((item1, item2) => {
+        let h1 = item1.moment.event.hour;
+        let m1 = item1.moment.event.minute;
+        let h2 = item2.moment.event.hour;
+        let m2 = item2.moment.event.minute;
+
+        if (h1 > h2) return 1;
+        if (h1 < h2) return -1;
+        if (m1 > m2) return 1;
+        if (m1 < m2) return -1;
+        return 0;
+    });
+
+    return n('ul', [
+        TimeView(),
+        TaskListView({
+            taskList: dailyList,
+            planConfigPath: data.planConfigPath
+        })
+    ]);
+});
+
+let TimeView = view(({
+    duration = 5000
+} = {}, {
+    update
+}) => {
+    let date = new Date();
+    setInterval(() => {
+        date = new Date();
+        update();
+    }, duration);
+
+    return () => n('div', `${displayClock(date.getHours(), date.getMinutes())}`);
+});
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let displayClock = (hour, minute) => {
+    if (hour < 10) hour = '0' + hour;
+    if (minute < 10) minute = '0' + minute;
+    return hour + ':' + minute;
+};
+
+module.exports = {
+    displayClock
 };
 
 
