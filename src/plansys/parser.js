@@ -5,7 +5,8 @@ let promisify = require('es6-promisify');
 let {
     parseStrToAst,
     checkASTWithContext,
-    executeAST
+    executeAST,
+    astToSource
 } = require('text-flow-pfc-compiler');
 let sandboxer = require('./sandboxer');
 let path = require('path');
@@ -109,6 +110,21 @@ let parsePlanFocus = async(filePath, planTaskMap) => {
                     planFile,
                     name
                 };
+            },
+
+            expectationTime: (from, to) => {
+                return {
+                    type: 'expectationTime',
+                    from: new Date(from),
+                    to: new Date(to)
+                };
+            },
+
+            slogon: (text) => {
+                return {
+                    type: 'slogon',
+                    text
+                };
             }
         };
     };
@@ -120,19 +136,8 @@ let parsePlanFocus = async(filePath, planTaskMap) => {
     return fileItems;
 };
 
-let recoveryPlanFile = (planItems, {
-    startDelimiter = '{:',
-    endDelimiter = ':}'
-} = {}) => {
-    return _.reduce(planItems, (prev, item) => {
-        if (item.type === 'text') {
-            prev += item.text;
-        } else if (item.type === 'pfc') {
-            prev += `${startDelimiter}${item.code}${endDelimiter}`;
-        }
-
-        return prev;
-    }, '');
+let recoveryPlanFile = (planItems) => {
+    return astToSource(planItems);
 };
 
 module.exports = {

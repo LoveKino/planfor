@@ -60,121 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 32);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    isObject, funType, or, isString, isFalsy, likeArray
-} = __webpack_require__(1);
-
-let iterate = __webpack_require__(9);
-
-let {
-    map, reduce, find, findIndex, forEach, filter, any, exist, compact
-} = __webpack_require__(24);
-
-let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
-
-let difference = (list1, list2, fopts) => {
-    return reduce(list1, (prev, item) => {
-        if (!contain(list2, item, fopts) &&
-            !contain(prev, item, fopts)) {
-            prev.push(item);
-        }
-        return prev;
-    }, []);
-};
-
-let union = (list1, list2, fopts) => deRepeat(list2, fopts, deRepeat(list1, fopts));
-
-let mergeMap = (map1 = {}, map2 = {}) => reduce(map2, setValueKey, reduce(map1, setValueKey, {}));
-
-let setValueKey = (obj, value, key) => {
-    obj[key] = value;
-    return obj;
-};
-
-let interset = (list1, list2, fopts) => {
-    return reduce(list1, (prev, cur) => {
-        if (contain(list2, cur, fopts)) {
-            prev.push(cur);
-        }
-        return prev;
-    }, []);
-};
-
-let deRepeat = (list, fopts, init = []) => {
-    return reduce(list, (prev, cur) => {
-        if (!contain(prev, cur, fopts)) {
-            prev.push(cur);
-        }
-        return prev;
-    }, init);
-};
-
-/**
- * a.b.c
- */
-let get = funType((sandbox, name = '') => {
-    name = name.trim();
-    let parts = !name ? [] : name.split('.');
-    return reduce(parts, getValue, sandbox, invertLogic);
-}, [
-    isObject,
-    or(isString, isFalsy)
-]);
-
-let getValue = (obj, key) => obj[key];
-
-let invertLogic = v => !v;
-
-let delay = (time) => new Promise((resolve) => {
-    setTimeout(resolve, time);
-});
-
-let flat = (list) => {
-    if (likeArray(list) && !isString(list)) {
-        return reduce(list, (prev, item) => {
-            prev = prev.concat(flat(item));
-            return prev;
-        }, []);
-    } else {
-        return [list];
-    }
-};
-
-module.exports = {
-    flat,
-    contain,
-    difference,
-    union,
-    interset,
-    map,
-    reduce,
-    iterate,
-    find,
-    findIndex,
-    deRepeat,
-    forEach,
-    filter,
-    any,
-    exist,
-    get,
-    delay,
-    mergeMap,
-    compact
-};
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -400,13 +290,123 @@ module.exports = {
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isObject, funType, or, isString, isFalsy, likeArray
+} = __webpack_require__(0);
+
+let iterate = __webpack_require__(14);
+
+let {
+    map, reduce, find, findIndex, forEach, filter, any, exist, compact
+} = __webpack_require__(38);
+
+let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
+
+let difference = (list1, list2, fopts) => {
+    return reduce(list1, (prev, item) => {
+        if (!contain(list2, item, fopts) &&
+            !contain(prev, item, fopts)) {
+            prev.push(item);
+        }
+        return prev;
+    }, []);
+};
+
+let union = (list1, list2, fopts) => deRepeat(list2, fopts, deRepeat(list1, fopts));
+
+let mergeMap = (map1 = {}, map2 = {}) => reduce(map2, setValueKey, reduce(map1, setValueKey, {}));
+
+let setValueKey = (obj, value, key) => {
+    obj[key] = value;
+    return obj;
+};
+
+let interset = (list1, list2, fopts) => {
+    return reduce(list1, (prev, cur) => {
+        if (contain(list2, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, []);
+};
+
+let deRepeat = (list, fopts, init = []) => {
+    return reduce(list, (prev, cur) => {
+        if (!contain(prev, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, init);
+};
+
+/**
+ * a.b.c
+ */
+let get = funType((sandbox, name = '') => {
+    name = name.trim();
+    let parts = !name ? [] : name.split('.');
+    return reduce(parts, getValue, sandbox, invertLogic);
+}, [
+    isObject,
+    or(isString, isFalsy)
+]);
+
+let getValue = (obj, key) => obj[key];
+
+let invertLogic = v => !v;
+
+let delay = (time) => new Promise((resolve) => {
+    setTimeout(resolve, time);
+});
+
+let flat = (list) => {
+    if (likeArray(list) && !isString(list)) {
+        return reduce(list, (prev, item) => {
+            prev = prev.concat(flat(item));
+            return prev;
+        }, []);
+    } else {
+        return [list];
+    }
+};
+
+module.exports = {
+    flat,
+    contain,
+    difference,
+    union,
+    interset,
+    map,
+    reduce,
+    iterate,
+    find,
+    findIndex,
+    deRepeat,
+    forEach,
+    filter,
+    any,
+    exist,
+    get,
+    delay,
+    mergeMap,
+    compact
+};
+
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(23);
+module.exports = __webpack_require__(37);
 
 /**
  * @readme-quick-run
@@ -498,32 +498,53 @@ module.exports = __webpack_require__(23);
 
 
 let {
-    reduce
+    isObject, funType, or, isString, isFalsy, likeArray
 } = __webpack_require__(0);
-let {
-    funType, isObject, or, isString, isFalsy
-} = __webpack_require__(1);
 
-let defineProperty = (obj, key, opts) => {
-    if (Object.defineProperty) {
-        Object.defineProperty(obj, key, opts);
-    } else {
-        obj[key] = opts.value;
-    }
+let iterate = __webpack_require__(31);
+
+let {
+    map, reduce, find, findIndex, forEach, filter, any, exist, compact, reverse, overArgs
+} = __webpack_require__(93);
+
+let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
+
+let difference = (list1, list2, fopts) => {
+    return reduce(list1, (prev, item) => {
+        if (!contain(list2, item, fopts) &&
+            !contain(prev, item, fopts)) {
+            prev.push(item);
+        }
+        return prev;
+    }, []);
+};
+
+let union = (list1, list2, fopts) => deRepeat(list2, fopts, deRepeat(list1, fopts));
+
+let mergeMap = (map1 = {}, map2 = {}) => reduce(map2, setValueKey, reduce(map1, setValueKey, {}));
+
+let setValueKey = (obj, value, key) => {
+    obj[key] = value;
     return obj;
 };
 
-let hasOwnProperty = (obj, key) => {
-    if (obj.hasOwnProperty) {
-        return obj.hasOwnProperty(key);
-    }
-    for (var name in obj) {
-        if (name === key) return true;
-    }
-    return false;
+let interset = (list1, list2, fopts) => {
+    return reduce(list1, (prev, cur) => {
+        if (contain(list2, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, []);
 };
 
-let toArray = (v = []) => Array.prototype.slice.call(v);
+let deRepeat = (list, fopts, init = []) => {
+    return reduce(list, (prev, cur) => {
+        if (!contain(prev, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, init);
+};
 
 /**
  * a.b.c
@@ -541,108 +562,43 @@ let getValue = (obj, key) => obj[key];
 
 let invertLogic = v => !v;
 
-let set = (sandbox, name = '', value) => {
-    name = name.trim();
-    let parts = !name ? [] : name.split('.');
-    let parent = sandbox;
-    if (!isObject(parent)) return;
-    if (!parts.length) return;
-    for (let i = 0; i < parts.length - 1; i++) {
-        let part = parts[i];
-        parent = parent[part];
-        // avoid exception
-        if (!isObject(parent)) return null;
-    }
-
-    parent[parts[parts.length - 1]] = value;
-    return true;
-};
-
-/**
- * provide property:
- *
- * 1. read props freely
- *
- * 2. change props by provide token
- */
-
-let authProp = (token) => {
-    let set = (obj, key, value) => {
-        let temp = null;
-
-        if (!hasOwnProperty(obj, key)) {
-            defineProperty(obj, key, {
-                enumerable: false,
-                configurable: false,
-                set: (value) => {
-                    if (isObject(value)) {
-                        if (value.token === token) {
-                            // save
-                            temp = value.value;
-                        }
-                    }
-                },
-                get: () => {
-                    return temp;
-                }
-            });
-        }
-
-        setProp(obj, key, value);
-    };
-
-    let setProp = (obj, key, value) => {
-        obj[key] = {
-            token,
-            value
-        };
-    };
-
-    return {
-        set
-    };
-};
-
-let evalCode = (code) => {
-    if (typeof code !== 'string') return code;
-    return eval(`(function(){
-    try {
-        ${code}
-    } catch(err) {
-        console.log('Error happened, when eval code.');
-        throw err;
-    }
-})()`);
-};
-
 let delay = (time) => new Promise((resolve) => {
     setTimeout(resolve, time);
 });
 
-let runSequence = (list, params = [], context, stopV) => {
-    if (!list.length) {
-        return Promise.resolve();
+let flat = (list) => {
+    if (likeArray(list) && !isString(list)) {
+        return reduce(list, (prev, item) => {
+            prev = prev.concat(flat(item));
+            return prev;
+        }, []);
+    } else {
+        return [list];
     }
-    let fun = list[0];
-    let v = fun && fun.apply(context, params);
-    if (stopV && v === stopV) {
-        return Promise.resolve(stopV);
-    }
-    return Promise.resolve(v).then(() => {
-        return runSequence(list.slice(1), params, context, stopV);
-    });
 };
 
 module.exports = {
-    defineProperty,
-    hasOwnProperty,
-    toArray,
+    flat,
+    contain,
+    difference,
+    union,
+    interset,
+    map,
+    reduce,
+    iterate,
+    find,
+    findIndex,
+    deRepeat,
+    forEach,
+    filter,
+    any,
+    exist,
     get,
-    set,
-    authProp,
-    evalCode,
     delay,
-    runSequence
+    mergeMap,
+    compact,
+    reverse,
+    overArgs
 };
 
 
@@ -655,10 +611,10 @@ module.exports = {
 
 let {
     reduce
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 let {
     funType, isObject, or, isString, isFalsy
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let defineProperty = (obj, key, opts) => {
     if (Object.defineProperty) {
@@ -809,9 +765,212 @@ module.exports = {
 "use strict";
 
 
-let shadowFrame = __webpack_require__(21);
+let {
+    reduce
+} = __webpack_require__(1);
+let {
+    funType, isObject, or, isString, isFalsy
+} = __webpack_require__(0);
 
-let startMomenter = __webpack_require__(22);
+let defineProperty = (obj, key, opts) => {
+    if (Object.defineProperty) {
+        Object.defineProperty(obj, key, opts);
+    } else {
+        obj[key] = opts.value;
+    }
+    return obj;
+};
+
+let hasOwnProperty = (obj, key) => {
+    if (obj.hasOwnProperty) {
+        return obj.hasOwnProperty(key);
+    }
+    for (var name in obj) {
+        if (name === key) return true;
+    }
+    return false;
+};
+
+let toArray = (v = []) => Array.prototype.slice.call(v);
+
+/**
+ * a.b.c
+ */
+let get = funType((sandbox, name = '') => {
+    name = name.trim();
+    let parts = !name ? [] : name.split('.');
+    return reduce(parts, getValue, sandbox, invertLogic);
+}, [
+    isObject,
+    or(isString, isFalsy)
+]);
+
+let getValue = (obj, key) => obj[key];
+
+let invertLogic = v => !v;
+
+let set = (sandbox, name = '', value) => {
+    name = name.trim();
+    let parts = !name ? [] : name.split('.');
+    let parent = sandbox;
+    if (!isObject(parent)) return;
+    if (!parts.length) return;
+    for (let i = 0; i < parts.length - 1; i++) {
+        let part = parts[i];
+        parent = parent[part];
+        // avoid exception
+        if (!isObject(parent)) return null;
+    }
+
+    parent[parts[parts.length - 1]] = value;
+    return true;
+};
+
+/**
+ * provide property:
+ *
+ * 1. read props freely
+ *
+ * 2. change props by provide token
+ */
+
+let authProp = (token) => {
+    let set = (obj, key, value) => {
+        let temp = null;
+
+        if (!hasOwnProperty(obj, key)) {
+            defineProperty(obj, key, {
+                enumerable: false,
+                configurable: false,
+                set: (value) => {
+                    if (isObject(value)) {
+                        if (value.token === token) {
+                            // save
+                            temp = value.value;
+                        }
+                    }
+                },
+                get: () => {
+                    return temp;
+                }
+            });
+        }
+
+        setProp(obj, key, value);
+    };
+
+    let setProp = (obj, key, value) => {
+        obj[key] = {
+            token,
+            value
+        };
+    };
+
+    return {
+        set
+    };
+};
+
+let evalCode = (code) => {
+    if (typeof code !== 'string') return code;
+    return eval(`(function(){
+    try {
+        ${code}
+    } catch(err) {
+        console.log('Error happened, when eval code.');
+        throw err;
+    }
+})()`);
+};
+
+let delay = (time) => new Promise((resolve) => {
+    setTimeout(resolve, time);
+});
+
+let runSequence = (list, params = [], context, stopV) => {
+    if (!list.length) {
+        return Promise.resolve();
+    }
+    let fun = list[0];
+    let v = fun && fun.apply(context, params);
+    if (stopV && v === stopV) {
+        return Promise.resolve(stopV);
+    }
+    return Promise.resolve(v).then(() => {
+        return runSequence(list.slice(1), params, context, stopV);
+    });
+};
+
+module.exports = {
+    defineProperty,
+    hasOwnProperty,
+    toArray,
+    get,
+    set,
+    authProp,
+    evalCode,
+    delay,
+    runSequence
+};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ *
+ * @readme-quick-run
+ *
+ * ## test tar=js r_c=FSM
+ *
+ *
+ * let {
+ *     stateGraphDSL, fsm, WAIT, MATCH
+ * } = FSM;
+ *
+ * let {
+ *     g, c, union, range, sequence, circle, left, repeat
+ * } = stateGraphDSL;
+ *
+ * let hexDigit = union(range('0', '9'), range('A', 'F'), range('a', 'f'));
+ *
+ * let escapeSymbols = union('"', '\\', '\/', 'b', 'f', 'n', 'r', 't');
+ *
+ * let stringDFA = g(
+ *     c('"', g('enter',
+ *         c('\\', g(
+ *             c(escapeSymbols, 'enter'),
+ *             c('u',
+ *                 g(repeat(hexDigit, 4, 'enter'))
+ *             ))),
+ *         c('"', 'accept'),
+ *         c(left(), 'enter')
+ *     )));
+ *
+ * let m = fsm(stringDFA);
+ * console.log(m('"').type === WAIT);
+ * console.log(m('a').type === WAIT);
+ * console.log(m('b').type === WAIT);
+ * console.log(m('"').type === MATCH);
+ *
+ **/
+module.exports = __webpack_require__(81);
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let shadowFrame = __webpack_require__(35);
+
+let startMomenter = __webpack_require__(36);
 
 let getX = (elem) => {
     var x = 0;
@@ -894,7 +1053,7 @@ module.exports = {
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -902,12 +1061,12 @@ module.exports = {
 
 let {
     map
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 let {
     isObject, isNode
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
-let parseArgs = __webpack_require__(25);
+let parseArgs = __webpack_require__(39);
 
 const KABANERY_NODE = 'kabanery_node';
 
@@ -1008,7 +1167,7 @@ module.exports = {
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1016,19 +1175,19 @@ module.exports = {
 
 let {
     createElement, createSvgElement
-} = __webpack_require__(33);
+} = __webpack_require__(47);
 
 let {
     bindEvents
-} = __webpack_require__(8);
+} = __webpack_require__(10);
 
 let {
     map
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let {
     isKabaneryNode
-} = __webpack_require__(6);
+} = __webpack_require__(8);
 
 let reduceNode = (node) => {
     if (isKabaneryNode(node)) {
@@ -1050,13 +1209,13 @@ module.exports = reduceNode;
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let EventMatrix = __webpack_require__(34);
+let EventMatrix = __webpack_require__(48);
 
 let {
     listenEventType,
@@ -1081,172 +1240,7 @@ module.exports = {
 
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    likeArray, isObject, funType, isFunction, isUndefined, or, isNumber, isFalsy, mapType
-} = __webpack_require__(1);
-
-/**
- *
- * preidcate: chose items to iterate
- * limit: when to stop iteration
- * transfer: transfer item
- * output
- */
-let iterate = funType((domain = [], opts = {}) => {
-    let {
-        predicate, transfer, output, limit, def
-    } = opts;
-
-    opts.predicate = predicate || truthy;
-    opts.transfer = transfer || id;
-    opts.output = output || toList;
-    if (limit === undefined) limit = domain && domain.length;
-    limit = opts.limit = stopCondition(limit);
-
-    let rets = def;
-    let count = 0;
-
-    if (likeArray(domain)) {
-        for (let i = 0; i < domain.length; i++) {
-            let itemRet = iterateItem(domain, i, count, rets, opts);
-            rets = itemRet.rets;
-            count = itemRet.count;
-            if (itemRet.stop) return rets;
-        }
-    } else if (isObject(domain)) {
-        for (let name in domain) {
-            let itemRet = iterateItem(domain, name, count, rets, opts);
-            rets = itemRet.rets;
-            count = itemRet.count;
-            if (itemRet.stop) return rets;
-        }
-    }
-
-    return rets;
-}, [
-    or(isObject, isFunction, isFalsy),
-    or(isUndefined, mapType({
-        predicate: or(isFunction, isFalsy),
-        transfer: or(isFunction, isFalsy),
-        output: or(isFunction, isFalsy),
-        limit: or(isUndefined, isNumber, isFunction)
-    }))
-]);
-
-let iterateItem = (domain, name, count, rets, {
-    predicate, transfer, output, limit
-}) => {
-    let item = domain[name];
-    if (limit(rets, item, name, domain, count)) {
-        // stop
-        return {
-            stop: true,
-            count,
-            rets
-        };
-    }
-
-    if (predicate(item)) {
-        rets = output(rets, transfer(item, name, domain, rets), name, domain);
-        count++;
-    }
-    return {
-        stop: false,
-        count,
-        rets
-    };
-};
-
-let stopCondition = (limit) => {
-    if (isUndefined(limit)) {
-        return falsy;
-    } else if (isNumber(limit)) {
-        return (rets, item, name, domain, count) => count >= limit;
-    } else {
-        return limit;
-    }
-};
-
-let toList = (prev, v) => {
-    prev.push(v);
-    return prev;
-};
-
-let truthy = () => true;
-
-let falsy = () => false;
-
-let id = v => v;
-
-module.exports = iterate;
-
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let {
-    attachDocument
-} = __webpack_require__(8);
-
-let {
-    isNode
-} = __webpack_require__(1);
-
-let {
-    flat, forEach
-} = __webpack_require__(0);
-
-let reduceNode = __webpack_require__(7);
-
-/**
- * @param parentNode
- *      the dom node used hook node we rendered
- */
-module.exports = (kabaneryRoots, parentNode) => {
-    kabaneryRoots = flat(kabaneryRoots);
-
-    forEach(kabaneryRoots, (item) => {
-        item = reduceNode(item);
-        if (isNode(item)) {
-            parentNode.appendChild(item);
-        }
-    });
-
-    // attach to document
-    attachDocument(getDoc(parentNode));
-};
-
-let getDoc = (node) => {
-    while (node.parentNode) {
-        node = node.parentNode;
-    }
-    return node;
-};
-
-
-/***/ }),
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.decode = exports.parse = __webpack_require__(40);
-exports.encode = exports.stringify = __webpack_require__(41);
-
-
-/***/ }),
-/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -18335,7 +18329,21 @@ exports.encode = exports.stringify = __webpack_require__(41);
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(43)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(56), __webpack_require__(57)(module)))
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    WAIT: 2,
+    MATCH: 1,
+    QUIT: 0
+};
+
 
 /***/ }),
 /* 13 */
@@ -18344,7 +18352,413 @@ exports.encode = exports.stringify = __webpack_require__(41);
 "use strict";
 
 
-module.exports = __webpack_require__(49);
+let {
+    reduce
+} = __webpack_require__(3);
+
+/**
+ *
+ * valide LR(1) item: LR(1) item [A→α.β, a] is valide for prefix ρ=δα, if exists:
+ *      S *⇒ δAω ⇒ δαβω
+ *
+ * inference: if [A→α.Bβ,a] is valide for ρ=δα, and B→θ is a production, then for any b ϵ FIRST(βa), [B→.θ,b] is valide for predix ρ=δα
+ *
+ * LR(1) item: [head, body, dotPosition, [...forward]]
+ *
+ * important: when closure is builded, it's immutable
+ */
+
+let buildClosure = (items, grammer, LR1Grammer) => {
+    let appendedItems = items;
+    let itemsMap = {};
+    let prefixMap = {};
+
+    for (let i = 0; i < items.length; i++) {
+        let item = items[i];
+        itemsMap[item.serialize()] = true;
+        prefixMap[item.serializePrefix()] = item;
+    }
+
+    while (true) { // eslint-disable-line
+        let newAppendedItems = reduce(appendedItems, (prev, item) => {
+            let newItems = LR1Grammer.expandItem(item);
+            return prev.concat(newItems);
+        }, []);
+
+        let noRepeatedNewItems = [];
+
+        for (let i = 0; i < newAppendedItems.length; i++) {
+            let item = newAppendedItems[i];
+            let itemId = item.serialize();
+
+            if (!itemsMap[itemId]) {
+                // add new item
+                noRepeatedNewItems.push(item);
+                itemsMap[item.serialize()] = true;
+                let prefixCacheItem = prefixMap[item.serializePrefix()];
+                if (prefixCacheItem) {
+                    prefixMap[item.serializePrefix()] = prefixCacheItem.concatForwards(item.getForwards());
+                } else {
+                    prefixMap[item.serializePrefix()] = item;
+                }
+            }
+        }
+
+        if (!noRepeatedNewItems.length) break;
+
+        items = items.concat(noRepeatedNewItems);
+        appendedItems = noRepeatedNewItems;
+    }
+
+    let serializedText = JSON.stringify(Object.keys(itemsMap).sort());
+
+    let result = [];
+
+    for (let name in prefixMap) {
+        result.push(prefixMap[name]);
+    }
+
+    return {
+        items: result,
+        serializedText
+    };
+};
+
+let sameClosure = (closure1, closure2) => closure1.serializedText === closure2.serializedText;
+
+module.exports = {
+    buildClosure,
+    sameClosure
+};
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    likeArray, isObject, funType, isFunction, isUndefined, or, isNumber, isFalsy, mapType
+} = __webpack_require__(0);
+
+/**
+ *
+ * preidcate: chose items to iterate
+ * limit: when to stop iteration
+ * transfer: transfer item
+ * output
+ */
+let iterate = funType((domain = [], opts = {}) => {
+    let {
+        predicate, transfer, output, limit, def
+    } = opts;
+
+    opts.predicate = predicate || truthy;
+    opts.transfer = transfer || id;
+    opts.output = output || toList;
+    if (limit === undefined) limit = domain && domain.length;
+    limit = opts.limit = stopCondition(limit);
+
+    let rets = def;
+    let count = 0;
+
+    if (likeArray(domain)) {
+        for (let i = 0; i < domain.length; i++) {
+            let itemRet = iterateItem(domain, i, count, rets, opts);
+            rets = itemRet.rets;
+            count = itemRet.count;
+            if (itemRet.stop) return rets;
+        }
+    } else if (isObject(domain)) {
+        for (let name in domain) {
+            let itemRet = iterateItem(domain, name, count, rets, opts);
+            rets = itemRet.rets;
+            count = itemRet.count;
+            if (itemRet.stop) return rets;
+        }
+    }
+
+    return rets;
+}, [
+    or(isObject, isFunction, isFalsy),
+    or(isUndefined, mapType({
+        predicate: or(isFunction, isFalsy),
+        transfer: or(isFunction, isFalsy),
+        output: or(isFunction, isFalsy),
+        limit: or(isUndefined, isNumber, isFunction)
+    }))
+]);
+
+let iterateItem = (domain, name, count, rets, {
+    predicate, transfer, output, limit
+}) => {
+    let item = domain[name];
+    if (limit(rets, item, name, domain, count)) {
+        // stop
+        return {
+            stop: true,
+            count,
+            rets
+        };
+    }
+
+    if (predicate(item)) {
+        rets = output(rets, transfer(item, name, domain, rets), name, domain);
+        count++;
+    }
+    return {
+        stop: false,
+        count,
+        rets
+    };
+};
+
+let stopCondition = (limit) => {
+    if (isUndefined(limit)) {
+        return falsy;
+    } else if (isNumber(limit)) {
+        return (rets, item, name, domain, count) => count >= limit;
+    } else {
+        return limit;
+    }
+};
+
+let toList = (prev, v) => {
+    prev.push(v);
+    return prev;
+};
+
+let truthy = () => true;
+
+let falsy = () => false;
+
+let id = v => v;
+
+module.exports = iterate;
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    attachDocument
+} = __webpack_require__(10);
+
+let {
+    isNode
+} = __webpack_require__(0);
+
+let {
+    flat, forEach
+} = __webpack_require__(1);
+
+let reduceNode = __webpack_require__(9);
+
+/**
+ * @param parentNode
+ *      the dom node used hook node we rendered
+ */
+module.exports = (kabaneryRoots, parentNode) => {
+    kabaneryRoots = flat(kabaneryRoots);
+
+    forEach(kabaneryRoots, (item) => {
+        item = reduceNode(item);
+        if (isNode(item)) {
+            parentNode.appendChild(item);
+        }
+    });
+
+    // attach to document
+    attachDocument(getDoc(parentNode));
+};
+
+let getDoc = (node) => {
+    while (node.parentNode) {
+        node = node.parentNode;
+    }
+    return node;
+};
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.decode = exports.parse = __webpack_require__(54);
+exports.encode = exports.stringify = __webpack_require__(55);
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n,
+    view
+} = __webpack_require__(2);
+let _ = __webpack_require__(11);
+let TaskView = __webpack_require__(58);
+let Fold = __webpack_require__(18);
+let FoldArrow = __webpack_require__(19);
+
+let {
+    STATUS_WORKING,
+    STATUS_FINISHED,
+    STATUS_DISCARDED,
+    STATUS_WAITING
+} = __webpack_require__(25);
+
+module.exports = view(({
+    taskList,
+    planConfigPath
+}) => {
+    let groups = _.reduce(taskList, (prev, task) => {
+        if (task.status === STATUS_WORKING) {
+            prev.working.push(task);
+        } else if (task.status === STATUS_FINISHED) {
+            prev.finished.push(task);
+        } else if (task.status === STATUS_WAITING) {
+            prev.waiting.push(task);
+        } else if (task.status === STATUS_DISCARDED) {
+            prev.discarded.push(task);
+        }
+        return prev;
+    }, {
+        working: [],
+        finished: [],
+        waiting: [],
+        discarded: []
+    });
+
+    return n('ul', [
+        groups.working.length && foldTaskList(groups.working, 'working', false, planConfigPath),
+        groups.waiting.length && foldTaskList(groups.waiting, 'waiting', true, planConfigPath),
+        groups.finished.length && foldTaskList(groups.finished, 'finished', true, planConfigPath),
+        groups.discarded.length && foldTaskList(groups.discarded, 'discarded', true, planConfigPath)
+    ]);
+});
+
+let foldTaskList = (tasks, title, hide, planConfigPath) => {
+    return Fold({
+        head: (ops) => {
+            return n('div', {
+                onclick: () => {
+                    ops.toggle();
+                },
+
+                style: {
+                    cursor: 'pointer',
+                    padding: 5
+                }
+            }, [
+                FoldArrow(ops),
+                n('strong style="padding-left:10px"', title),
+            ]);
+        },
+
+        body: () => listTask(tasks, planConfigPath),
+
+        hide
+    });
+};
+
+let listTask = (tasks, planConfigPath) => {
+    return n('ul', [
+        _.map(tasks, (value) => {
+            return TaskView({
+                taskValue: value,
+                planConfigPath
+            });
+        })
+    ]);
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n, view
+} = __webpack_require__(2);
+
+/**
+ * data = {
+ *    hide,
+ *    head,
+ *    body
+ * }
+ */
+module.exports = view((data, {
+    update
+}) => {
+    if (data.hide === undefined) data.hide = true;
+
+    let hide = () => update('hide', true);
+    let show = () => update('hide', false);
+    let toggle = () => update('hide', !data.hide);
+    let isHide = () => data.hide;
+
+    let ops = {
+        hide, show, toggle, isHide
+    };
+
+    return n('div', [
+        data.head(ops), !isHide() && data.body(ops)
+    ]);
+});
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n
+} = __webpack_require__(2);
+
+let angle = __webpack_require__(59);
+
+module.exports = (ops) => {
+    return n('span', {
+        style: {
+            display: 'inline-block',
+            paddingRight: 8
+        }
+    }, angle({
+        direction: ops.isHide() ? 'bottom' : 'top',
+        length: 5,
+        color: '#666666'
+    }));
+};
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = __webpack_require__(61);
 
 /**
  * @readme-quick-run
@@ -18407,7 +18821,7 @@ module.exports = __webpack_require__(49);
 
 
 /***/ }),
-/* 14 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18415,11 +18829,11 @@ module.exports = __webpack_require__(49);
 
 let {
     createElement, createSvgElement, parseArgs, nodeGener
-} = __webpack_require__(15);
+} = __webpack_require__(22);
 
 let {
     bindEvents
-} = __webpack_require__(16);
+} = __webpack_require__(23);
 
 // TODO general proxy n way
 
@@ -18492,20 +18906,20 @@ module.exports = {
 
 
 /***/ }),
-/* 15 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(50);
+module.exports = __webpack_require__(62);
 
 
 /***/ }),
-/* 16 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let EventMatrix = __webpack_require__(52);
+let EventMatrix = __webpack_require__(64);
 
 let {
     listenEventType,
@@ -18528,7 +18942,33 @@ module.exports = {
 
 
 /***/ }),
-/* 17 */
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let displayClock = (hour, minute) => {
+    if (hour < 10) hour = '0' + hour;
+    if (minute < 10) minute = '0' + minute;
+    return hour + ':' + minute;
+};
+
+let displayDate = (d) => `${d.getFullYear()}-${completeNum(d.getMonth() + 1)}-${completeNum(d.getDate())}`;
+
+let completeNum = (num) => {
+    if (num < 10) return '0' + num;
+    return num + '';
+};
+
+module.exports = {
+    displayClock,
+    displayDate
+};
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18551,7 +18991,574 @@ module.exports = {
 
 
 /***/ }),
-/* 18 */
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ *
+ * @readme-quick-run
+ *
+ * ## test tar=js r_c=streamTokenSpliter
+ *
+ * let {
+ *     parser, WAIT, QUIT, MATCH
+ * } = streamTokenSpliter;
+
+ * let spliter = parser([{
+ *     priority: 1,
+ *     match: (prefix) => {
+ *         if (/^\w*$/.test(prefix)) return MATCH;
+ *         return QUIT;
+ *     },
+ *     name: 'word'
+ * }, {
+ *     priority: 0,
+ *     match: (prefix) => {
+ *         if (/^.$/.test(prefix)) return MATCH;
+ *         return QUIT;
+ *     },
+ *     name: 'trash'
+ * }]);
+ *
+ * let tokens1 = spliter('today=is __'); // chunk1
+ * let tokens2 = spliter('a good day'); // chunk2
+ * let tokens3 = spliter(null); // null means end of stream
+ *
+ * console.log(tokens1);
+ * console.log('\n');
+ * console.log(tokens2);
+ * console.log('\n');
+ * console.log(tokens3);
+ */
+module.exports = __webpack_require__(80);
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isObject
+} = __webpack_require__(0);
+
+/**
+ * basic action types and compose actions
+ *
+ * action = {
+ *   actionType
+ * }
+ */
+
+const __basic_action_type__ = '7e942534-ea8b-4c75-90fd-705aec328d00';
+
+const LEFT_TYPE = 'left',
+    RANGE_TYPE = 'range',
+    UNION_TYPE = 'union',
+    NORMAL_TYPE = 'normal',
+    EPSILON_TYPE = 'epsilon';
+
+let toAction = (v) => {
+    if (isAction(v)) return v;
+    if (v === null) return {
+        content: v,
+        actionType: EPSILON_TYPE,
+        __basic_action_type__
+
+    };
+    return {
+        content: v,
+        actionType: NORMAL_TYPE,
+        __basic_action_type__
+    };
+};
+
+let left = () => {
+    return {
+        actionType: LEFT_TYPE,
+        __basic_action_type__
+    };
+};
+
+let range = (start, end) => {
+    return {
+        actionType: RANGE_TYPE,
+        start,
+        end,
+        __basic_action_type__
+    };
+};
+
+// union two actions to get a new action
+let union = (...actions) => {
+    for (let i = 0; i < actions.length; i++) {
+        let action = actions[i];
+        if (!isAction(action)) {
+            actions[i] = toAction(action);
+        }
+    }
+
+    return {
+        actionType: UNION_TYPE,
+        actions,
+        __basic_action_type__
+    };
+};
+
+let isAction = (v) => {
+    return isObject(v) && v.__basic_action_type__ === __basic_action_type__;
+};
+
+let isLeftAction = (v) => isAction(v) && v.actionType === LEFT_TYPE;
+
+let isRangeAction = (v) => isAction(v) && v.actionType === RANGE_TYPE;
+
+let isUnionAction = (v) => isAction(v) && v.actionType === UNION_TYPE;
+
+let isNormalAction = (v) => isAction(v) && v.actionType === NORMAL_TYPE;
+
+let isEpsilonAction = (v) => isAction(v) && v.actionType === EPSILON_TYPE;
+
+module.exports = {
+    isAction,
+    isLeftAction,
+    isRangeAction,
+    isUnionAction,
+    isNormalAction,
+    isEpsilonAction,
+
+    left,
+    range,
+    toAction,
+    union
+};
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isObject, funType, or, isString, isFalsy, likeArray
+} = __webpack_require__(0);
+
+let iterate = __webpack_require__(29);
+
+let {
+    map, reduce, find, findIndex, forEach, filter, any, exist, compact, reverse, overArgs
+} = __webpack_require__(85);
+
+let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
+
+let difference = (list1, list2, fopts) => {
+    return reduce(list1, (prev, item) => {
+        if (!contain(list2, item, fopts) &&
+            !contain(prev, item, fopts)) {
+            prev.push(item);
+        }
+        return prev;
+    }, []);
+};
+
+let union = (list1, list2, fopts) => deRepeat(list2, fopts, deRepeat(list1, fopts));
+
+let mergeMap = (map1 = {}, map2 = {}) => reduce(map2, setValueKey, reduce(map1, setValueKey, {}));
+
+let setValueKey = (obj, value, key) => {
+    obj[key] = value;
+    return obj;
+};
+
+let interset = (list1, list2, fopts) => {
+    return reduce(list1, (prev, cur) => {
+        if (contain(list2, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, []);
+};
+
+let deRepeat = (list, fopts, init = []) => {
+    return reduce(list, (prev, cur) => {
+        if (!contain(prev, cur, fopts)) {
+            prev.push(cur);
+        }
+        return prev;
+    }, init);
+};
+
+/**
+ * a.b.c
+ */
+let get = funType((sandbox, name = '') => {
+    name = name.trim();
+    let parts = !name ? [] : name.split('.');
+    return reduce(parts, getValue, sandbox, invertLogic);
+}, [
+    isObject,
+    or(isString, isFalsy)
+]);
+
+let getValue = (obj, key) => obj[key];
+
+let invertLogic = v => !v;
+
+let delay = (time) => new Promise((resolve) => {
+    setTimeout(resolve, time);
+});
+
+let flat = (list) => {
+    if (likeArray(list) && !isString(list)) {
+        return reduce(list, (prev, item) => {
+            prev = prev.concat(flat(item));
+            return prev;
+        }, []);
+    } else {
+        return [list];
+    }
+};
+
+module.exports = {
+    flat,
+    contain,
+    difference,
+    union,
+    interset,
+    map,
+    reduce,
+    iterate,
+    find,
+    findIndex,
+    deRepeat,
+    forEach,
+    filter,
+    any,
+    exist,
+    get,
+    delay,
+    mergeMap,
+    compact,
+    reverse,
+    overArgs
+};
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isPromise, likeArray, isObject, funType, isFunction, isUndefined, or, isNumber, isFalsy, isReadableStream, mapType
+} = __webpack_require__(0);
+
+/**
+ * @param opts
+ *      preidcate: chose items to iterate
+ *      limit: when to stop iteration
+ *      transfer: transfer item
+ *      output
+ *      def: default result
+ */
+let iterate = funType((domain, opts = {}) => {
+    domain = domain || [];
+    if (isPromise(domain)) {
+        return domain.then(list => {
+            return iterate(list, opts);
+        });
+    }
+    return iterateList(domain, opts);
+}, [
+    or(isPromise, isObject, isFunction, isFalsy),
+    or(isUndefined, mapType({
+        predicate: or(isFunction, isFalsy),
+        transfer: or(isFunction, isFalsy),
+        output: or(isFunction, isFalsy),
+        limit: or(isUndefined, isNumber, isFunction)
+    }))
+]);
+
+let iterateList = (domain, opts) => {
+    opts = initOpts(opts, domain);
+
+    let rets = opts.def;
+    let count = 0; // iteration times
+
+    if (isReadableStream(domain)) {
+        let index = -1;
+
+        return new Promise((resolve, reject) => {
+            domain.on('data', (chunk) => {
+                // TODO try cache error
+                let itemRet = iterateItem(chunk, domain, ++index, count, rets, opts);
+                rets = itemRet.rets;
+                count = itemRet.count;
+                if (itemRet.stop) {
+                    resolve(rets);
+                }
+            });
+            domain.on('end', () => {
+                resolve(rets);
+            });
+            domain.on('error', (err) => {
+                reject(err);
+            });
+        });
+    } else if (likeArray(domain)) {
+        for (let i = 0; i < domain.length; i++) {
+            let item = domain[i];
+            let itemRet = iterateItem(item, domain, i, count, rets, opts);
+            rets = itemRet.rets;
+            count = itemRet.count;
+            if (itemRet.stop) return rets;
+        }
+    } else if (isObject(domain)) {
+        for (let name in domain) {
+            let item = domain[name];
+            let itemRet = iterateItem(item, domain, name, count, rets, opts);
+            rets = itemRet.rets;
+            count = itemRet.count;
+            if (itemRet.stop) return rets;
+        }
+    }
+
+    return rets;
+};
+
+let initOpts = (opts, domain) => {
+    let {
+        predicate, transfer, output, limit
+    } = opts;
+
+    opts.predicate = predicate || truthy;
+    opts.transfer = transfer || id;
+    opts.output = output || toList;
+    if (limit === undefined) limit = domain && domain.length;
+    limit = opts.limit = stopCondition(limit);
+    return opts;
+};
+
+let iterateItem = (item, domain, name, count, rets, {
+    predicate, transfer, output, limit
+}) => {
+    if (limit(rets, item, name, domain, count)) {
+        // stop
+        return {
+            stop: true,
+            count,
+            rets
+        };
+    }
+
+    if (predicate(item)) {
+        rets = output(rets, transfer(item, name, domain, rets), name, domain);
+        count++;
+    }
+    return {
+        stop: false,
+        count,
+        rets
+    };
+};
+
+let stopCondition = (limit) => {
+    if (isUndefined(limit)) {
+        return falsy;
+    } else if (isNumber(limit)) {
+        return (rets, item, name, domain, count) => count >= limit;
+    } else {
+        return limit;
+    }
+};
+
+let toList = (prev, v) => {
+    prev.push(v);
+    return prev;
+};
+
+let truthy = () => true;
+
+let falsy = () => false;
+
+let id = v => v;
+
+module.exports = {
+    iterate
+};
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    END_SYMBOL: '$',
+    EXPAND_START_SYMBOL: 'S`',
+    EPSILON: null
+};
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isPromise, likeArray, isObject, funType, isFunction, isUndefined, or, isNumber, isFalsy, isReadableStream, mapType
+} = __webpack_require__(0);
+
+/**
+ * @param opts
+ *      preidcate: chose items to iterate
+ *      limit: when to stop iteration
+ *      transfer: transfer item
+ *      output
+ *      def: default result
+ */
+let iterate = funType((domain, opts = {}) => {
+    domain = domain || [];
+    if (isPromise(domain)) {
+        return domain.then(list => {
+            return iterate(list, opts);
+        });
+    }
+    return iterateList(domain, opts);
+}, [
+    or(isPromise, isObject, isFunction, isFalsy),
+    or(isUndefined, mapType({
+        predicate: or(isFunction, isFalsy),
+        transfer: or(isFunction, isFalsy),
+        output: or(isFunction, isFalsy),
+        limit: or(isUndefined, isNumber, isFunction)
+    }))
+]);
+
+let iterateList = (domain, opts) => {
+    opts = initOpts(opts, domain);
+
+    let rets = opts.def;
+    let count = 0; // iteration times
+
+    if (isReadableStream(domain)) {
+        let index = -1;
+
+        return new Promise((resolve, reject) => {
+            domain.on('data', (chunk) => {
+                // TODO try cache error
+                let itemRet = iterateItem(chunk, domain, ++index, count, rets, opts);
+                rets = itemRet.rets;
+                count = itemRet.count;
+                if (itemRet.stop) {
+                    resolve(rets);
+                }
+            });
+            domain.on('end', () => {
+                resolve(rets);
+            });
+            domain.on('error', (err) => {
+                reject(err);
+            });
+        });
+    } else if (likeArray(domain)) {
+        for (let i = 0; i < domain.length; i++) {
+            let item = domain[i];
+            let itemRet = iterateItem(item, domain, i, count, rets, opts);
+            rets = itemRet.rets;
+            count = itemRet.count;
+            if (itemRet.stop) return rets;
+        }
+    } else if (isObject(domain)) {
+        for (let name in domain) {
+            let item = domain[name];
+            let itemRet = iterateItem(item, domain, name, count, rets, opts);
+            rets = itemRet.rets;
+            count = itemRet.count;
+            if (itemRet.stop) return rets;
+        }
+    }
+
+    return rets;
+};
+
+let initOpts = (opts, domain) => {
+    let {
+        predicate, transfer, output, limit
+    } = opts;
+
+    opts.predicate = predicate || truthy;
+    opts.transfer = transfer || id;
+    opts.output = output || toList;
+    if (limit === undefined) limit = domain && domain.length;
+    limit = opts.limit = stopCondition(limit);
+    return opts;
+};
+
+let iterateItem = (item, domain, name, count, rets, {
+    predicate, transfer, output, limit
+}) => {
+    if (limit(rets, item, name, domain, count)) {
+        // stop
+        return {
+            stop: true,
+            count,
+            rets
+        };
+    }
+
+    if (predicate(item)) {
+        rets = output(rets, transfer(item, name, domain, rets), name, domain);
+        count++;
+    }
+    return {
+        stop: false,
+        count,
+        rets
+    };
+};
+
+let stopCondition = (limit) => {
+    if (isUndefined(limit)) {
+        return falsy;
+    } else if (isNumber(limit)) {
+        return (rets, item, name, domain, count) => count >= limit;
+    } else {
+        return limit;
+    }
+};
+
+let toList = (prev, v) => {
+    prev.push(v);
+    return prev;
+};
+
+let truthy = () => true;
+
+let falsy = () => false;
+
+let id = v => v;
+
+module.exports = {
+    iterate
+};
+
+
+/***/ }),
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18560,13 +19567,13 @@ module.exports = {
 let {
     router,
     queryPager
-} = __webpack_require__(19);
+} = __webpack_require__(33);
 let {
     n,
     mount
 } = __webpack_require__(2);
-let focusPage = __webpack_require__(39);
-let editTaskPage = __webpack_require__(61);
+let focusPage = __webpack_require__(53);
+let editTaskPage = __webpack_require__(74);
 
 mount(n('div id="pager"'), document.body);
 
@@ -18587,13 +19594,13 @@ forward(window.location.href);
 
 
 /***/ }),
-/* 19 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(20);
+module.exports = __webpack_require__(34);
 
 /**
  * @readme-quick-run
@@ -18630,7 +19637,7 @@ module.exports = __webpack_require__(20);
 
 
 /***/ }),
-/* 20 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18638,13 +19645,13 @@ module.exports = __webpack_require__(20);
 
 let {
     removeChilds
-} = __webpack_require__(5);
+} = __webpack_require__(7);
 
 let {
     mount
 } = __webpack_require__(2);
 
-let querystring = __webpack_require__(36);
+let querystring = __webpack_require__(50);
 
 const SINGLE_JUMP_PREFIX = 'single://';
 
@@ -18826,7 +19833,7 @@ module.exports = {
 
 
 /***/ }),
-/* 21 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18881,7 +19888,7 @@ module.exports = shadowFrame;
 
 
 /***/ }),
-/* 22 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18937,7 +19944,7 @@ module.exports = startMomenter;
 
 
 /***/ }),
-/* 23 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18945,19 +19952,19 @@ module.exports = startMomenter;
 
 let {
     n, svgn, bindPlugs, toHTML, parseArgs, isKabaneryNode, cn
-} = __webpack_require__(6);
+} = __webpack_require__(8);
 
-let plugs = __webpack_require__(27);
+let plugs = __webpack_require__(41);
 
-let view = __webpack_require__(30);
+let view = __webpack_require__(44);
 
-let mount = __webpack_require__(10);
+let mount = __webpack_require__(15);
 
-let N = __webpack_require__(35);
+let N = __webpack_require__(49);
 
-let reduceNode = __webpack_require__(7);
+let reduceNode = __webpack_require__(9);
 
-let {dispatchEvent} = __webpack_require__(8);
+let {dispatchEvent} = __webpack_require__(10);
 
 module.exports = {
     n,
@@ -18978,13 +19985,13 @@ module.exports = {
 
 
 /***/ }),
-/* 24 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let iterate = __webpack_require__(9);
+let iterate = __webpack_require__(14);
 
 let defauls = {
     eq: (v1, v2) => v1 === v2
@@ -19083,17 +20090,17 @@ module.exports = {
 
 
 /***/ }),
-/* 25 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let parseAttribute = __webpack_require__(26);
+let parseAttribute = __webpack_require__(40);
 
 let {
     isString, isObject, isNode, likeArray, isNumber, isBool
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let parseArgs = (args) => {
     let tagName,
@@ -19169,7 +20176,7 @@ module.exports = parseArgs;
 
 
 /***/ }),
-/* 26 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19177,11 +20184,11 @@ module.exports = parseArgs;
 
 let {
     isString, isObject
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     mergeMap
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 const ITEM_REG = /([\w-]+)\s*=\s*(([\w-]+)|('.*?')|(".*?"))/;
 
@@ -19281,14 +20288,14 @@ module.exports = parseAttribute;
 
 
 /***/ }),
-/* 27 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let twowaybinding = __webpack_require__(28);
-let eventError = __webpack_require__(29);
+let twowaybinding = __webpack_require__(42);
+let eventError = __webpack_require__(43);
 
 module.exports = {
     twowaybinding,
@@ -19297,7 +20304,7 @@ module.exports = {
 
 
 /***/ }),
-/* 28 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19305,7 +20312,7 @@ module.exports = {
 
 let {
     get, set
-} = __webpack_require__(3);
+} = __webpack_require__(4);
 
 module.exports = (obj, path) => (tagName, attributes, childExp) => {
     let value = get(obj, path, '');
@@ -19324,7 +20331,7 @@ module.exports = (obj, path) => (tagName, attributes, childExp) => {
 
 
 /***/ }),
-/* 29 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19356,7 +20363,7 @@ let wrapEventHandler = (fun, catcher) => {
 
 
 /***/ }),
-/* 30 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19364,21 +20371,21 @@ let wrapEventHandler = (fun, catcher) => {
 
 let {
     set
-} = __webpack_require__(3);
+} = __webpack_require__(4);
 
 let {
     isObject, isFunction, likeArray
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     forEach
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
-let replace = __webpack_require__(31);
+let replace = __webpack_require__(45);
 
-let reduceNode = __webpack_require__(7);
+let reduceNode = __webpack_require__(9);
 
-let mount = __webpack_require__(10);
+let mount = __webpack_require__(15);
 
 /**
  * render function: (data) => node
@@ -19567,7 +20574,7 @@ module.exports = View;
 
 
 /***/ }),
-/* 31 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19575,17 +20582,17 @@ module.exports = View;
 
 let {
     toArray
-} = __webpack_require__(3);
+} = __webpack_require__(4);
 
 let {
     isNode
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     forEach
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
-let applyAttibutes = __webpack_require__(32);
+let applyAttibutes = __webpack_require__(46);
 
 let replaceDirectly = (node, newNode) => {
     let parent = node.parentNode;
@@ -19699,7 +20706,7 @@ module.exports = (node, newNode) => {
 
 
 /***/ }),
-/* 32 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19707,15 +20714,15 @@ module.exports = (node, newNode) => {
 
 let {
     getAttributeMap
-} = __webpack_require__(5);
+} = __webpack_require__(7);
 
 let {
     hasOwnProperty
-} = __webpack_require__(3);
+} = __webpack_require__(4);
 
 let {
     forEach
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let applyAttibutes = (node, newNode) => {
     // attributes
@@ -19746,7 +20753,7 @@ module.exports = applyAttibutes;
 
 
 /***/ }),
-/* 33 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19754,7 +20761,7 @@ module.exports = applyAttibutes;
 
 let {
     isNode
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 const svgNS = 'http://www.w3.org/2000/svg';
 
@@ -19793,7 +20800,7 @@ module.exports = {
 
 
 /***/ }),
-/* 34 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19801,7 +20808,7 @@ module.exports = {
 
 let {
     contain
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 module.exports = () => {
     let docs = [];
@@ -19920,7 +20927,7 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 
 /***/ }),
-/* 35 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19928,15 +20935,15 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 let {
     n
-} = __webpack_require__(6);
+} = __webpack_require__(8);
 
 let {
     isArray, isFunction, isObject
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     map
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 module.exports = (...args) => {
     let tagName = args[0],
@@ -19976,18 +20983,18 @@ module.exports = (...args) => {
 
 
 /***/ }),
-/* 36 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(37);
-exports.encode = exports.stringify = __webpack_require__(38);
+exports.decode = exports.parse = __webpack_require__(51);
+exports.encode = exports.stringify = __webpack_require__(52);
 
 
 /***/ }),
-/* 37 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20078,7 +21085,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 38 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20170,7 +21177,7 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 39 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20180,10 +21187,13 @@ let {
     n,
     view
 } = __webpack_require__(2);
-let queryString = __webpack_require__(11);
-let _ = __webpack_require__(12);
-let TaskListView = __webpack_require__(65);
-let DailyTaskListView = __webpack_require__(66);
+let queryString = __webpack_require__(16);
+let _ = __webpack_require__(11);
+let TaskListView = __webpack_require__(17);
+let DailyTaskListView = __webpack_require__(73);
+let {
+    displayDate
+} = __webpack_require__(24);
 
 let FocusTaskListView = view((data) => {
     return n('ul', [
@@ -20205,7 +21215,17 @@ let FocusTaskListView = view((data) => {
     ]);
 });
 
+let getFocusItemValue = (focusItems, type) => {
+    let list = _.filter(focusItems, (item) => item.type === 'pfc' && item.value.type === type);
+
+    return list && list[0].value;
+};
+
 let PageView = view((pageData) => {
+    let focusList = pageData.focusData && _.filter(pageData.focusData.data, (item) => item.type === 'pfc' && item.value.type === 'linkTask');
+    let expectationTime = pageData.focusData && getFocusItemValue(pageData.focusData.data, 'expectationTime');
+    let slogon = pageData.focusData && getFocusItemValue(pageData.focusData.data, 'slogon');
+
     return n('page', [
         n('div', {
             style: {
@@ -20214,8 +21234,22 @@ let PageView = view((pageData) => {
         }, [
             n('h3', 'plan focus'),
 
+            slogon && n('div', {
+                style: {
+                    padding: 10,
+                    fontSize: 20
+                }
+            }, slogon.text),
+
+            expectationTime && n('div', {
+                style: {
+                    padding: 10,
+                    fontSize: 18
+                }
+            }, `expectation time ${displayDate(new Date(expectationTime.from))} - ${displayDate(new Date(expectationTime.to))}`),
+
             pageData.focusData && (pageData.focusData.errno === 0 ? FocusTaskListView({
-                focusList: pageData.focusData.data,
+                focusList,
                 planConfigPath: pageData.planConfigPath
             }) : n('div', pageData.focusData.errMsg))
         ]),
@@ -20257,7 +21291,7 @@ module.exports = () => {
 
 
 /***/ }),
-/* 40 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20344,7 +21378,7 @@ module.exports = function(qs, sep, eq, options) {
 
 
 /***/ }),
-/* 41 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20415,7 +21449,7 @@ module.exports = function(obj, sep, eq, name) {
 
 
 /***/ }),
-/* 42 */
+/* 56 */
 /***/ (function(module, exports) {
 
 var g;
@@ -20442,7 +21476,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 43 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -20470,7 +21504,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 44 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20480,17 +21514,18 @@ let {
     view,
     n
 } = __webpack_require__(2);
-let Fold = __webpack_require__(45);
-let FoldArrow = __webpack_require__(46);
-let _ = __webpack_require__(12);
+let Fold = __webpack_require__(18);
+let FoldArrow = __webpack_require__(19);
+let _ = __webpack_require__(11);
 let {
     displayClock
-} = __webpack_require__(67);
+} = __webpack_require__(24);
+let AtomActionView = __webpack_require__(105);
 let {
     STATUS_WAITING,
     STATUS_FINISHED,
     STATUS_WORKING
-} = __webpack_require__(17);
+} = __webpack_require__(25);
 
 let colorMap = {
     [STATUS_WAITING]: '#999999',
@@ -20584,7 +21619,9 @@ let displayProgress = (progress) => {
                     'list-style': 'square !important'
                 }
             }, [
-                displayAtomAction(actionType, info)
+                AtomActionView({
+                    actionType, info
+                })
             ]);
         })
     ]);
@@ -20605,14 +21642,6 @@ let compactAction = (action) => {
     }
 };
 
-let displayAtomAction = (actionType, info) => {
-    if (atomActionDisplayMap[actionType]) {
-        return n('span', atomActionDisplayMap[actionType](info));
-    }
-
-    return n('span', `${actionType}: ${info? JSON.stringify(info): '...'}`);
-};
-
 let displayMoment = (taskValue) => {
     let event = taskValue.moment.event;
     let type = taskValue.moment.event.type;
@@ -20624,87 +21653,18 @@ let displayMoment = (taskValue) => {
     return n('span', type);
 };
 
-let atomActionDisplayMap = {
-    'textAction': (info) => info.text
-};
-
 
 /***/ }),
-/* 45 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let {
-    n, view
-} = __webpack_require__(2);
-
-/**
- * data = {
- *    hide,
- *    head,
- *    body
- * }
- */
-module.exports = view((data, {
-    update
-}) => {
-    if (data.hide === undefined) data.hide = true;
-
-    let hide = () => update('hide', true);
-    let show = () => update('hide', false);
-    let toggle = () => update('hide', !data.hide);
-    let isHide = () => data.hide;
-
-    let ops = {
-        hide, show, toggle, isHide
-    };
-
-    return n('div', [
-        data.head(ops), !isHide() && data.body(ops)
-    ]);
-});
-
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
+let line = __webpack_require__(60);
 let {
     n
-} = __webpack_require__(2);
-
-let angle = __webpack_require__(47);
-
-module.exports = (ops) => {
-    return n('span', {
-        style: {
-            display: 'inline-block',
-            paddingRight: 8
-        }
-    }, angle({
-        direction: ops.isHide() ? 'bottom' : 'top',
-        length: 5,
-        color: '#666666'
-    }));
-};
-
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let line = __webpack_require__(48);
-let {
-    n
-} = __webpack_require__(13);
+} = __webpack_require__(20);
 
 module.exports = ({
     length = 10, bold = 1, color = 'black', angle = 0, direction
@@ -20748,7 +21708,7 @@ module.exports = ({
 
 
 /***/ }),
-/* 48 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20756,7 +21716,7 @@ module.exports = ({
 
 let {
     n
-} = __webpack_require__(13);
+} = __webpack_require__(20);
 
 module.exports = ({
     color = 'black', bold = 3, length = 20, direction = 'vertical', angle = 0
@@ -20781,7 +21741,7 @@ module.exports = ({
 
 
 /***/ }),
-/* 49 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20789,19 +21749,19 @@ module.exports = ({
 
 let {
     n, svgn, bindPlugs
-} = __webpack_require__(14);
+} = __webpack_require__(21);
 
 let {
     parseArgs
-} = __webpack_require__(15);
+} = __webpack_require__(22);
 
-let plugs = __webpack_require__(53);
+let plugs = __webpack_require__(65);
 
-let view = __webpack_require__(56);
+let view = __webpack_require__(68);
 
-let mount = __webpack_require__(59);
+let mount = __webpack_require__(71);
 
-let N = __webpack_require__(60);
+let N = __webpack_require__(72);
 
 module.exports = {
     n,
@@ -20817,7 +21777,7 @@ module.exports = {
 
 
 /***/ }),
-/* 50 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20825,9 +21785,9 @@ module.exports = {
 
 let {
     isString, isObject, isNode, likeArray, isNumber, isBool
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
-let parseAttribute = __webpack_require__(51);
+let parseAttribute = __webpack_require__(63);
 
 const svgNS = 'http://www.w3.org/2000/svg';
 
@@ -20953,7 +21913,7 @@ module.exports = {
 
 
 /***/ }),
-/* 51 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20961,11 +21921,11 @@ module.exports = {
 
 let {
     isString, isObject
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     mergeMap
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 const ITEM_REG = /([\w-]+)\s*=\s*(([\w-]+)|('.*?')|(".*?"))/;
 
@@ -21065,7 +22025,7 @@ module.exports = parseAttribute;
 
 
 /***/ }),
-/* 52 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21073,7 +22033,7 @@ module.exports = parseAttribute;
 
 let {
     contain
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 module.exports = () => {
     let docs = [];
@@ -21168,14 +22128,14 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 
 /***/ }),
-/* 53 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let twowaybinding = __webpack_require__(54);
-let eventError = __webpack_require__(55);
+let twowaybinding = __webpack_require__(66);
+let eventError = __webpack_require__(67);
 
 module.exports = {
     twowaybinding,
@@ -21184,7 +22144,7 @@ module.exports = {
 
 
 /***/ }),
-/* 54 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21192,7 +22152,7 @@ module.exports = {
 
 let {
     get, set
-} = __webpack_require__(4);
+} = __webpack_require__(5);
 
 module.exports = (obj, path) => (tagName, attributes, childExp) => {
     let value = get(obj, path, '');
@@ -21211,7 +22171,7 @@ module.exports = (obj, path) => (tagName, attributes, childExp) => {
 
 
 /***/ }),
-/* 55 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21243,7 +22203,7 @@ let wrapEventHandler = (fun, catcher) => {
 
 
 /***/ }),
-/* 56 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21251,17 +22211,17 @@ let wrapEventHandler = (fun, catcher) => {
 
 let {
     set
-} = __webpack_require__(4);
+} = __webpack_require__(5);
 
 let {
     isObject, isFunction, likeArray
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     forEach
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
-let replace = __webpack_require__(57);
+let replace = __webpack_require__(69);
 
 /**
  * render function: (data) => node
@@ -21449,7 +22409,7 @@ module.exports = View;
 
 
 /***/ }),
-/* 57 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21457,17 +22417,17 @@ module.exports = View;
 
 let {
     toArray
-} = __webpack_require__(4);
+} = __webpack_require__(5);
 
 let {
     isNode
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     forEach
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
-let applyAttibutes = __webpack_require__(58);
+let applyAttibutes = __webpack_require__(70);
 
 let replaceDirectly = (node, newNode) => {
     let parent = node.parentNode;
@@ -21581,7 +22541,7 @@ module.exports = (node, newNode) => {
 
 
 /***/ }),
-/* 58 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21589,15 +22549,15 @@ module.exports = (node, newNode) => {
 
 let {
     getAttributeMap
-} = __webpack_require__(5);
+} = __webpack_require__(7);
 
 let {
     hasOwnProperty
-} = __webpack_require__(4);
+} = __webpack_require__(5);
 
 let {
     forEach
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 let applyAttibutes = (node, newNode) => {
     // attributes
@@ -21628,7 +22588,7 @@ module.exports = applyAttibutes;
 
 
 /***/ }),
-/* 59 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21636,15 +22596,15 @@ module.exports = applyAttibutes;
 
 let {
     attachDocument
-} = __webpack_require__(16);
+} = __webpack_require__(23);
 
 let {
     isNode
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     flat, forEach
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 /**
  * @param parentNode
@@ -21671,7 +22631,7 @@ let getDoc = (node) => {
 
 
 /***/ }),
-/* 60 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21679,15 +22639,15 @@ let getDoc = (node) => {
 
 let {
     n
-} = __webpack_require__(14);
+} = __webpack_require__(21);
 
 let {
     isArray, isFunction, isObject
-} = __webpack_require__(1);
+} = __webpack_require__(0);
 
 let {
     map
-} = __webpack_require__(0);
+} = __webpack_require__(1);
 
 module.exports = (...args) => {
     let tagName = args[0],
@@ -21727,7 +22687,62 @@ module.exports = (...args) => {
 
 
 /***/ }),
-/* 61 */
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+let {
+    n,
+    view
+} = __webpack_require__(2);
+let TaskListView = __webpack_require__(17);
+let {
+    displayClock
+} = __webpack_require__(24);
+
+module.exports = view((data) => {
+    let dailyList = data.dailyList;
+
+    dailyList.sort((item1, item2) => {
+        let h1 = item1.moment.event.hour;
+        let m1 = item1.moment.event.minute;
+        let h2 = item2.moment.event.hour;
+        let m2 = item2.moment.event.minute;
+
+        if (h1 > h2) return 1;
+        if (h1 < h2) return -1;
+        if (m1 > m2) return 1;
+        if (m1 < m2) return -1;
+        return 0;
+    });
+
+    return n('ul', [
+        TimeView(),
+        TaskListView({
+            taskList: dailyList,
+            planConfigPath: data.planConfigPath
+        })
+    ]);
+});
+
+let TimeView = view(({
+    duration = 5000
+} = {}, {
+    update
+}) => {
+    let date = new Date();
+    setInterval(() => {
+        date = new Date();
+        update();
+    }, duration);
+
+    return () => n('div', `${displayClock(date.getHours(), date.getMinutes())}`);
+});
+
+
+/***/ }),
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21737,9 +22752,9 @@ let {
     view,
     n
 } = __webpack_require__(2);
-let queryString = __webpack_require__(11);
-let TaskEditor = __webpack_require__(62);
-let Notice = __webpack_require__(63);
+let queryString = __webpack_require__(16);
+let TaskEditor = __webpack_require__(75);
+let Notice = __webpack_require__(103);
 
 let PageView = view(({
     taskData,
@@ -21827,7 +22842,7 @@ module.exports = () => {
 
 
 /***/ }),
-/* 62 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21838,7 +22853,13 @@ let {
     view
 } = __webpack_require__(2);
 
+let {
+    format
+} = __webpack_require__(76);
+
 module.exports = view((data) => {
+    data.code = format(data.code);
+
     return n('div', {
         style: {
             padding: 8
@@ -21853,7 +22874,8 @@ module.exports = view((data) => {
                 overflow: 'auto',
                 border: '1px solid #888',
                 borderRadius: 5,
-                fontSize: 16
+                fontSize: 16,
+                padding: 5
             },
 
             oninput: (e) => {
@@ -21866,13 +22888,2781 @@ module.exports = view((data) => {
 
 
 /***/ }),
-/* 63 */
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(77);
+
+/**
+ *
+ * @readme-quick-run
+ *
+ * ## test tar=js r_c=pfcFormatter
+ *
+ * let {format} = pfcFormatter;
+ *
+ * let ret = format("f1(f2(f3(4, 5), 5), s(7, 8))");
+ *
+ * console.log(ret);
+ */
+
+
+/***/ }),
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let modal = __webpack_require__(64);
+let {
+    parseStrToAst
+} = __webpack_require__(78);
+
+let format = (source, {
+    indent = 4
+} = {}) => {
+    if (!source) return '';
+
+    let root = parseStrToAst(source);
+
+    let sourceStack = [{
+        node: root,
+        visited: false,
+        depth: 0
+    }];
+
+    let valueStack = [];
+
+    while (sourceStack.length) {
+        let sourceNode = sourceStack[sourceStack.length - 1];
+        let {
+            node,
+            visited,
+            depth
+        } = sourceNode;
+        if (node.type === 'function') {
+            if (!visited) {
+                let params = node.params;
+                for (let i = 0; i < params.length; i++) {
+                    sourceStack.push({
+                        node: params[i],
+                        visited: false,
+                        depth: depth + 1
+                    });
+                }
+                sourceNode.visited = true;
+            } else {
+                // pop from valueStack
+                let len = node.params.length;
+                let paramValues = [];
+                for (let i = 0; i < len; i++) {
+                    paramValues.push(valueStack.pop());
+                }
+                let code = formatFunction(node.name, paramValues, depth, indent);
+
+                sourceStack.pop();
+                valueStack.push(code);
+            }
+        } else if (node.type === 'atom') {
+            sourceStack.pop();
+            valueStack.push(formatAtom(node.value, depth, indent));
+        } else if (node.type === 'variable') {
+            sourceStack.pop();
+            valueStack.push(formatVariable(node.name, depth, indent));
+        }
+    }
+
+    return valueStack[0];
+};
+
+let formatAtom = (value, depth, indent) => {
+    return getBlanks(depth * indent) + JSON.stringify(value);
+};
+
+let formatVariable = (value, depth, indent) => {
+    return getBlanks(depth * indent) + value;
+};
+
+let formatFunction = (funName, params, depth, indent) => {
+    let blanks = getBlanks(depth * indent);
+    let head = blanks + funName + '(';
+
+    if(!params.length) return `${head})`;
+
+    let body = params.join(',\n');
+    let foot = blanks + ')';
+
+    return head + '\n' + body + '\n' + foot;
+};
+
+let getBlanks = (len) => {
+    let str = '';
+    for (let i = 0; i < len; i++) {
+        str += ' ';
+    }
+    return str;
+};
+
+module.exports = {
+    format
+};
+
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// make PFC as simple as possible
+module.exports = __webpack_require__(79);
+
+/**
+ *
+ * @readme-quick-run
+ *
+ * ## test tar=js r_c=pfcCompiler
+ *
+ * let {parseStrToAst, checkASTWithContext, executeAST} = pfcCompiler;
+ *
+ * let ast = parseStrToAst('f1(1, 2, g("234", v2))');
+ *
+ * let context = {
+ *   f1: (a, b, c) => a + b + c,
+ *   g: (str1, str2) => Number(str1 + str2),
+ *   v2: "5"
+ * };
+ *
+ * checkASTWithContext(ast, context); // you can check pfc code at development duration.
+ *
+ * let ret = executeAST(ast, context);
+ *
+ * console.log(ret);
+ */
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let streamTokenSpliter = __webpack_require__(26);
+
+let {
+    LR
+} = __webpack_require__(89);
+
+let {
+    ACTION, GOTO
+} = __webpack_require__(100);
+
+let tokenTypes = __webpack_require__(101);
+
+// ignore whitespace
+let processTokens = (rawTokens) => {
+    let tokens = [];
+    for (let i = 0; i < rawTokens.length; i++) {
+        let {
+            text, tokenType
+        } = rawTokens[i];
+
+        let name = tokenType.name;
+
+        if (name !== 'whitespace') { // ignore white space
+            tokens.push({
+                text,
+                name
+            });
+        }
+    }
+
+    return tokens;
+};
+
+let parser = () => {
+    let tokenSpliter = streamTokenSpliter.parser(tokenTypes);
+
+    let lrParse = LR(ACTION, GOTO, {
+        // when reduce prodcution, translate at the sametime
+        reduceHandler: (production, midNode) => {
+            switch (getProductionId(production)) {
+                case 'PROGRAM := EXPRESSION':
+                    midNode.value = midNode.children[0].value;
+                    break;
+                case 'EXPRESSION := variable':
+                    var v1 = midNode.children[0].token.text;
+                    midNode.value = {
+                        type: 'variable',
+                        name: v1
+                    };
+                    break;
+                case 'EXPRESSION := true':
+                    midNode.value = {
+                        type: 'atom',
+                        value: true
+                    };
+                    break;
+                case 'EXPRESSION := false':
+                    midNode.value = {
+                        type: 'atom',
+                        value: false
+                    };
+                    break;
+                case 'EXPRESSION := null':
+                    midNode.value = {
+                        type: 'atom',
+                        value: null
+                    };
+                    break;
+                case 'EXPRESSION := string':
+                    var text = midNode.children[0].token.text;
+                    midNode.value = {
+                        type: 'atom',
+                        value: text.substring(1, text.length - 1)
+                    };
+                    break;
+                case 'EXPRESSION := number':
+                    var numText = midNode.children[0].token.text;
+                    midNode.value = {
+                        type: 'atom',
+                        value: Number(numText)
+                    };
+                    break;
+                case 'EXPRESSION := variable ( )':
+                    var f1Text = midNode.children[0].token.text;
+                    midNode.value = {
+                        type: 'function',
+                        name: f1Text,
+                        params: []
+                    };
+                    break;
+                case 'EXPRESSION := variable ( EXP_LIST )':
+                    var f2Text = midNode.children[0].token.text;
+                    midNode.value = {
+                        type: 'function',
+                        name: f2Text,
+                        params: midNode.children[2].value
+                    };
+                    break;
+                case 'EXP_LIST := EXPRESSION':
+                    midNode.value = [midNode.children[0].value];
+                    break;
+                case 'EXP_LIST := EXPRESSION , EXP_LIST':
+                    midNode.value = [midNode.children[0].value].concat(midNode.children[2].value);
+                    break;
+            }
+        }
+    });
+
+    // handle chunk data
+    return (chunk) => {
+        let str = chunk && chunk.toString();
+        let tokens = processTokens(tokenSpliter(str));
+
+        for (let i = 0; i < tokens.length; i++) {
+            lrParse(tokens[i]);
+        }
+
+        // means finished chunks
+        if (chunk === null) {
+            let ast = lrParse(null);
+            return ast.children[0].value;
+        }
+    };
+};
+
+// static check
+let checkASTWithContext = (mid, variableMap = {}) => {
+    let stack = [mid];
+
+    while (stack.length) {
+        let top = stack.pop();
+        let midType = top.type;
+
+        if (midType === 'variable') {
+            let varName = top.name;
+            if (!variableMap.hasOwnProperty(varName)) {
+                throw new Error(`missing variable ${varName}`);
+            }
+        } else if (midType === 'function') { // function
+            let name = top.name;
+            let fun = variableMap[name];
+            if (!fun || typeof fun !== 'function') {
+                throw new Error(`missing function ${name}, please check your variable map. Current variable map has keys [${Object.keys(variableMap).join(', ')}].`);
+            }
+            // push params
+            let params = top.params;
+            let paramLen = params.length;
+            for (let i = 0; i < paramLen; i++) {
+                stack.push(params[i]);
+            }
+        }
+    }
+
+    return variableMap;
+};
+
+let executeAST = (mid, variableMap = {}) => {
+    let root = {
+        mid
+    };
+    let stack = [root],
+        traceTable = [];
+
+    while (stack.length) {
+        let top = stack[stack.length - 1];
+        let topMid = top.mid;
+        let midType = topMid.type;
+
+        if (midType === 'atom') {
+            top.value = topMid.value;
+            traceTable.push(stack.pop());
+        } else if (midType === 'variable') {
+            let varName = topMid.name;
+
+            top.value = variableMap[varName];
+            traceTable.push(stack.pop());
+        } else { // function
+            if (!top.visited) {
+                top.visited = true;
+                // push params
+                let params = topMid.params;
+                let paramLen = params.length;
+                for (let i = 0; i < paramLen; i++) {
+                    stack.push({
+                        mid: params[i]
+                    });
+                }
+            } else {
+                let name = topMid.name;
+                let fun = variableMap[name];
+
+                let paramValues = [];
+                let paramLen = topMid.params.length;
+                let traceTableLen = traceTable.length;
+                let stopPos = traceTableLen - paramLen;
+                for (let i = traceTableLen - 1; i >= stopPos; i--) {
+                    paramValues.push(traceTable.pop().value);
+                }
+                top.value = fun(...paramValues);
+
+                traceTable.push(stack.pop());
+            }
+        }
+    }
+
+    return root.value;
+};
+
+let parseStrToAst = (str) => {
+    let handleChunk = parser();
+    if (str) {
+        handleChunk(str);
+    }
+    return handleChunk(null);
+};
+
+let getProductionId = (production) => {
+    return `${production[0]} := ${production[1].join(' ')}`;
+};
+
+module.exports = {
+    parser,
+    parseStrToAst,
+    executeAST,
+    checkASTWithContext
+};
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isString, funType, listType, isFunction, mapType, isFalsy, isNumber, or
+} = __webpack_require__(0);
+
+let {
+    WAIT, MATCH, QUIT
+} = __webpack_require__(12);
+
+let {
+    stateGraphDSL
+} = __webpack_require__(6);
+
+let buildFSM = __webpack_require__(86);
+
+let {
+    map
+} = __webpack_require__(1);
+
+let {
+    getMatch
+} = __webpack_require__(87);
+
+let {
+    findToken,
+    filterTypes
+} = __webpack_require__(88);
+
+/**
+ *
+ * A token spliter used to split stream string.
+ *
+ * When accept a chunk, parsing it at the same time.
+ *
+ * ## options
+ *
+ * tokenTypes = [
+ *  {
+ *      name,
+ *      priority,
+ *      match
+ *  }
+ * ]
+ *
+ * - priority
+ *
+ *    When meets ambiguity, priority will be helpful.
+ *
+ *    Assume we got two types: \w*, \s. When split "today is a good day". If we set \s has a higher priority, we will get ["t", "o", "d", "a", "y", " ", "i", "s", " ", "a", " ", "g", "o", "o", "d", " ", "d", "a", "y"], just one token. If we set \w* has a higher priority, we will get ["today", " ", "is", " ", "a", " ", "good", " ", "day"].
+ *
+ * - match (letter, prefix) -> WAIT | MATCH | QUIT
+ *
+ *     Because we are handling chunks, we need to know finished a chunk or not.
+ *
+ * ## rules
+ *
+ * - priority rule
+ *
+ * - longest matching
+ *
+ * eg: four rules a(def, 1), b(default[s?], 2), c(/\w\w+/, 0), d(_, 2)
+ *
+ * ```
+ * input     isPart     match
+ * d         (a, b, c)  ()
+ * de        (a, b, c)  (c:0)
+ * def       (a, b, c)  (a:1, c:0)
+ * defa      (b, c)     (c:0)
+ * defau     (b, c)     (c:0)
+ * defaul    (b, c)     (c:0)
+ * default   (b, c)     (b:2, c:0)
+ * defaults  (b, c)     (b:2, c:0)
+ * defaults_ ()         ()
+ * ```
+ *
+ * When empty situation happend, analysis the process.
+ *
+ * ```
+ * 1. possible situations
+ *    de        (a, b, c)  (c:0)
+ *    def       (a, b, c)  (a:1, c:0)
+ *    defa      (b, c)     (c:0)
+ *    defau     (b, c)     (c:0)
+ *    defaul    (b, c)     (c:0)
+ *    default   (b, c)     (b:2, c:0)
+ *    defaults  (b, c)     (b:2, c:0)
+ *
+ * 2. for any rule (a, b, c) only consider it's biggest matching situation. (longest matching rule)
+ *    def       (a, b, c)  (a:1)            longest for a
+ *    defaults  (b, c)     (b:2, c:0)       longest for b and c
+ *
+ * 3. choose the highest priority rule. (priority rule)
+ *    defaults (b:2)
+ * ```
+ */
+
+let parser = funType((tokenTypes) => {
+    tokenTypes = map(tokenTypes, (tokenType) => {
+        let {
+            priority, name, independent, match
+        } = tokenType;
+
+        name = name || (match && match.toString());
+
+        match = getMatch(match);
+
+        if (!isFunction(match)) {
+            throw new Error(`Error match in token type ${strTokenType(tokenType)}`);
+        }
+
+        return {
+            priority: priority || 0,
+            name: name,
+            match,
+            independent
+        };
+    });
+
+    let stock = '';
+
+    return (chunk) => {
+        if (chunk === null) { // means finished
+            let tokens = splitTokensToEnd(stock, tokenTypes);
+
+            stock = '';
+            return tokens;
+        }
+        stock += chunk.toString();
+        let {
+            rest, tokens
+        } = splitTokens(stock, tokenTypes);
+
+        stock = rest;
+
+        return tokens;
+    };
+}, [
+    listType(mapType({
+        priority: or(isFalsy, isNumber),
+        name: or(isFalsy, isString)
+    }))
+]);
+
+let strTokenType = ({
+    priority, match, name, independent
+}) => {
+    return `{
+        priority: ${priority},
+        match: ${match},
+        name: ${name},
+        independent: ${independent}
+    }`;
+};
+
+parser.parse = (str, tokenTypes) => {
+    let parse = parser(tokenTypes);
+    return parse(str).concat(parse(null));
+};
+
+let splitTokensToEnd = (stock, tokenTypes) => {
+    let {
+        tokens
+    } = splitTokens(stock, tokenTypes, 'end');
+    return tokens;
+};
+
+let splitTokens = (stock, tokenTypes, type) => {
+    let ret;
+    let tokens = [];
+    while (stock && (ret = getToken(stock, tokenTypes, type))) {
+        let {
+            token, rest
+        } = ret;
+        stock = rest;
+
+        tokens.push(token);
+    }
+
+    return {
+        tokens,
+        rest: stock
+    };
+};
+
+/**
+ * type = 'mid' | 'end'
+ *
+ * get toke from stock based on tokenTypes
+ */
+let getToken = (stock, tokenTypes, type = 'mid') => {
+    let next = stock;
+
+    let prefix = ''; // used to store current prefix
+    let retMatrix = [];
+
+    let restTypes = tokenTypes;
+
+    while (next) {
+        let nextLetter = next[0];
+        prefix += nextLetter;
+
+        // shorten next
+        next = next.substring(1);
+        let [partTypes, matchTypes, independentType] = filterTypes(nextLetter, prefix, restTypes);
+
+        restTypes = partTypes; // reduce types
+
+        // see if there is a independent token type
+        // find independent token
+
+        if (independentType) {
+            return splitTokenRet(
+                assembleToken(independentType, prefix),
+                stock
+            );
+        }
+
+        // obey longest match rule
+        // no matchs futher, means look forward more won't get any matchs
+        if (!partTypes.length && !matchTypes.length) {
+            return fetchToken(stock, retMatrix, prefix);
+        } else {
+            retMatrix.push({
+                partTypes,
+                matchTypes,
+                prefix
+            });
+        }
+    }
+
+    // if this is end, fetchToken
+    if (prefix === stock && type === 'end') { // match stop point
+        return fetchToken(stock, retMatrix, prefix);
+    }
+
+    return null;
+};
+
+let fetchToken = (stock, retMatrix, prefix) => {
+    // empty
+    let token = findToken(retMatrix);
+    if (!token) {
+        throw new Error(`Can not find token from prefix "${prefix}". And prefix is not any part of token. stock is "${stock}".`);
+    }
+    return splitTokenRet(token, stock);
+};
+
+let splitTokenRet = (token, stock) => {
+    return {
+        token,
+        rest: stock.substring(token.text.length)
+    };
+};
+
+let assembleToken = (tokenType, prefix) => {
+    return {
+        tokenType,
+        text: prefix
+    };
+};
+
+module.exports = {
+    parser, WAIT, QUIT, MATCH, stateGraphDSL, buildFSM
+};
+
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    QUIT, WAIT, MATCH
+} = __webpack_require__(82);
+
+let stateGraphDSL = __webpack_require__(83);
+
+const START_STATE = '__start__state__';
+
+let fsm = (stateMap) => {
+    // parse stateMap
+    let {
+        transitions, acceptStateMap
+    } = stateGraphDSL.transitionMaper(
+        stateGraphDSL.g(START_STATE,
+            stateGraphDSL.c(null, stateMap)));
+
+    let dfa = new DFA(transitions, acceptStateMap);
+
+    // matching function
+    return (letter) => {
+        return dfa.transit(letter);
+    };
+};
+
+let DFA = function(stateMap, acceptStateMap) {
+    this.currentState = START_STATE;
+    this.stateMap = stateMap;
+    this.acceptStateMap = acceptStateMap;
+};
+
+let proto = DFA.prototype;
+
+proto.transit = function(letter) {
+    let subMap = this.stateMap[this.currentState];
+    if (!subMap) return {
+        type: QUIT,
+        state: this.currentState
+    };
+
+    // transit to target state
+    let targetState = subMap(letter);
+
+    if (stateGraphDSL.isEpsilonTransition(targetState)) {
+        this.currentState = targetState.state; // epsilon transition
+        return this.transit(letter);
+    }
+
+    if (targetState === undefined) {
+        return {
+            type: QUIT,
+            state: this.currentState
+        };
+    }
+
+    this.currentState = targetState;
+    if (this.acceptStateMap[targetState]) return {
+        type: MATCH,
+        state: this.currentState
+    };
+
+    return {
+        type: WAIT,
+        state: this.currentState
+    };
+};
+
+module.exports = {
+    fsm,
+    stateGraphDSL,
+    DFA,
+    QUIT,
+    WAIT,
+    MATCH
+};
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    WAIT: 2,
+    MATCH: 1,
+    QUIT: 0
+};
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let actionDSL = __webpack_require__(27);
+
+let {
+    isNormalAction, isRangeAction, isUnionAction, isLeftAction, isEpsilonAction
+} = actionDSL;
+
+let {
+    graph,
+    connect,
+
+    repeat,
+    sequence,
+
+    circle,
+
+    isEpsilonTransition
+} = __webpack_require__(84);
+
+let {
+    mergeMap
+} = __webpack_require__(28);
+
+let transitionMaper = (graph) => {
+    let transitions = {};
+    let {
+        transitionMap
+    } = graph;
+
+    let accepts = getEndStates(graph);
+
+    let leftMap = getLeftActionMap(transitionMap);
+    let epsilonMap = getEpsilonActionMap(transitionMap);
+
+    for (let stateName in transitionMap) {
+        let transitList = transitionMap[stateName];
+
+        transitions[stateName] = (letter) => {
+            for (let i = transitList.length - 1; i >= 0; i--) {
+                let {
+                    state, action
+                } = transitList[i];
+
+                if (matchAction(action, letter)) return state;
+            }
+
+            // check rest
+            if (leftMap[stateName]) return leftMap[stateName];
+
+            if (epsilonMap[stateName]) {
+                return {
+                    type: 'deliver',
+                    state: epsilonMap[stateName]
+                };
+            }
+        };
+    }
+
+    return {
+        transitions,
+        acceptStateMap: getAcceptStateMap(epsilonMap, accepts)
+    };
+};
+
+/**
+ * a end state's out-degree = 0
+ */
+let getEndStates = (graph) => {
+    let outDegreeMap = getOutDegreeMap(graph);
+    let ends = [];
+    for (let name in outDegreeMap) {
+        if (outDegreeMap[name] === 0) {
+            ends.push(name);
+        }
+    }
+
+    return ends;
+};
+
+let getOutDegreeMap = (graph) => {
+    let outDegreeMap = {};
+    let {
+        transitionMap
+    } = graph;
+    for (let stateName in transitionMap) {
+        let transitList = transitionMap[stateName];
+        outDegreeMap[stateName] = transitList.length;
+        for (let i = 0; i < transitList.length; i++) {
+            let {
+                state
+            } = transitList[i];
+            outDegreeMap[state] = outDegreeMap[state] || 0;
+        }
+    }
+
+    return outDegreeMap;
+};
+
+/**
+ * epsilon chain
+ */
+let getAcceptStateMap = (epsilonMap, accepts) => {
+    let acceptStateMap = {};
+
+    let reverseEpsilonMap = {};
+    for (let name in epsilonMap) {
+        let tar = epsilonMap[name];
+        reverseEpsilonMap[tar] = reverseEpsilonMap[tar] || [];
+        reverseEpsilonMap[tar].push(name);
+    }
+
+    for (let i = 0; i < accepts.length; i++) {
+        let accept = accepts[i];
+        acceptStateMap[accept] = true;
+    }
+
+    let count = 0;
+
+    while (true) { // eslint-disable-line
+        let prevCount = count;
+
+        for (let name in acceptStateMap) {
+            let list = reverseEpsilonMap[name];
+            if (list) {
+                for (let j = 0; j < list.length; j++) {
+                    if (!acceptStateMap[list[j]]) {
+                        acceptStateMap[list[j]] = true;
+                        count++;
+                    }
+                }
+            }
+        }
+
+        if (count === prevCount) { // no more
+            break;
+        }
+    }
+
+    return acceptStateMap;
+};
+
+let matchAction = (action, letter) => {
+    if (isNormalAction(action) && action.content === letter) return true;
+    if (isRangeAction(action) && action.start <= letter && letter <= action.end) return true;
+    if (isUnionAction(action)) {
+        let {
+            actions
+        } = action;
+
+        for (let i = 0; i < actions.length; i++) {
+            if (matchAction(actions[i], letter)) return true;
+        }
+    }
+
+    return false;
+};
+
+let getEpsilonActionMap = (transitionMap) => {
+    let map = {};
+
+    for (let stateName in transitionMap) {
+        let transitList = transitionMap[stateName];
+        let tarState = findActionState(transitList, isEpsilonAction);
+        if (tarState) {
+            map[stateName] = tarState;
+        }
+    }
+
+    return map;
+};
+
+let getLeftActionMap = (transitionMap) => {
+    let map = {};
+    for (let stateName in transitionMap) {
+        let transitList = transitionMap[stateName];
+        let tarState = findActionState(transitList, isLeftAction);
+        if (tarState) {
+            map[stateName] = tarState;
+        }
+    }
+    return map;
+};
+
+let findActionState = (transitList, type) => {
+    for (let i = transitList.length - 1; i >= 0; i--) {
+        let {
+            action, state
+        } = transitList[i];
+        if (containActionType(action, type)) {
+            return state;
+        }
+    }
+};
+
+let containActionType = (action, type) => {
+    if (isUnionAction(action)) {
+        let {
+            actions
+        } = action;
+
+        for (let i = 0; i < actions.length; i++) {
+            if (containActionType(actions[i], type)) return true;
+        }
+    } else {
+        return type(action);
+    }
+
+    return false;
+};
+
+module.exports = mergeMap(actionDSL, {
+    graph,
+    connect,
+
+    transitionMaper,
+    repeat,
+    sequence,
+
+    circle,
+
+    isEpsilonTransition,
+
+    g: graph, c: connect
+});
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isString, isObject
+} = __webpack_require__(0);
+
+let actionDSL = __webpack_require__(27);
+
+let {
+    toAction
+} = actionDSL;
+
+let {
+    mergeMap
+} = __webpack_require__(28);
+
+/**
+ * graph definition DSL
+ *
+ * state    action
+ *
+ * transition: (startState, action, nextState)
+ *
+ */
+
+/**
+ * graph(s1,
+ *     connect(a1, graph(s2,
+ *         connect(a3, s4),
+ *         connect(a4, s5)
+ *     )),
+ *
+ *     connect(a2, s3)
+ *  )
+ */
+
+let count = 0;
+let autoGraphState = () => {
+    return `__auto_state_name_${count++}`;
+};
+
+/**
+ * graph data = {
+ *    transitions: [
+ *      [action, nextGraph]
+ *    ],
+ *    state
+ * }
+ */
+let graph = (...args) => {
+    let state = null,
+        lines = null;
+
+    if (isString(args[0])) {
+        state = args[0];
+        lines = args.slice(1);
+    } else {
+        state = autoGraphState();
+        lines = args;
+    }
+
+    let transitionMap = {};
+
+    transitionMap[state] = [];
+
+    for (let i = 0; i < lines.length; i++) {
+        let {
+            action, nextGraph
+        } = lines[i];
+
+        let nextState = isString(nextGraph) ? nextGraph : nextGraph.state;
+
+        transitionMap[state].push({
+            action,
+            state: nextState
+        });
+
+        // merge transitionMap
+        for (let name in nextGraph.transitionMap) {
+            if (transitionMap[name]) {
+                throw new Error(`repeated state name for different state, name is ${name}`);
+            }
+            transitionMap[name] = nextGraph.transitionMap[name];
+        }
+    }
+
+    return {
+        state,
+        transitionMap
+    };
+};
+
+let connect = (action, nextGraph) => {
+    action = toAction(action);
+    if(!nextGraph) nextGraph = autoGraphState();
+    return {
+        action,
+        nextGraph
+    };
+};
+
+/**
+ * circle: repeat at least 0 times
+ */
+let circle = (action, nextGraph) => {
+    let stateName = autoGraphState();
+
+    return graph(stateName,
+        connect(action, stateName),
+        connect(null, nextGraph)
+    );
+};
+
+let repeat = (action, times, nextGraph) => {
+    let args = [];
+    for (let i = 0; i < times; i++) {
+        args.push(action);
+    }
+    args.push(nextGraph);
+
+    return sequence(...args);
+};
+
+let sequence = (...args) => {
+    let actions = args.slice(0, -1);
+    let nextGraph = args[args.length - 1];
+    let action = actions[0];
+    if (actions.length <= 1) {
+        return connect(action, nextGraph);
+    }
+
+    let nexts = actions.slice(1).concat([nextGraph]);
+
+    return connect(action, graph(sequence(...nexts)));
+};
+
+let isEpsilonTransition = (v) => {
+    return isObject(v) && v.type === 'deliver';
+};
+
+module.exports = mergeMap(actionDSL, {
+    graph,
+    connect,
+
+    repeat,
+    sequence,
+
+    circle,
+
+    isEpsilonTransition
+});
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    iterate
+} = __webpack_require__(29);
+
+let {
+    isFunction
+} = __webpack_require__(0);
+
+let defauls = {
+    eq: (v1, v2) => v1 === v2
+};
+
+let setDefault = (opts, defauls) => {
+    for (let name in defauls) {
+        opts[name] = opts[name] || defauls[name];
+    }
+};
+
+let forEach = (list, handler) => iterate(list, {
+    limit: (rets) => {
+        if (rets === true) return true;
+        return false;
+    },
+    transfer: handler,
+    output: (prev, cur) => cur,
+    def: false
+});
+
+let map = (list, handler, limit) => iterate(list, {
+    transfer: handler,
+    def: [],
+    limit
+});
+
+let reduce = (list, handler, def, limit) => iterate(list, {
+    output: handler,
+    def,
+    limit
+});
+
+let filter = (list, handler, limit) => reduce(list, (prev, cur, index, list) => {
+    handler && handler(cur, index, list) && prev.push(cur);
+    return prev;
+}, [], limit);
+
+let find = (list, item, fopts) => {
+    let index = findIndex(list, item, fopts);
+    if (index === -1) return undefined;
+    return list[index];
+};
+
+let any = (list, handler) => reduce(list, (prev, cur, index, list) => {
+    let curLogic = handler && handler(cur, index, list);
+    return prev && originLogic(curLogic);
+}, true, falsyIt);
+
+let exist = (list, handler) => reduce(list, (prev, cur, index, list) => {
+    let curLogic = handler && handler(cur, index, list);
+    return prev || originLogic(curLogic);
+}, false, originLogic);
+
+let findIndex = (list, item, fopts = {}) => {
+    setDefault(fopts, defauls);
+
+    let {
+        eq
+    } = fopts;
+    let predicate = isFunction(item) ? item : (v) => eq(item, v);
+    let ret = iterate(list, {
+        transfer: indexTransfer,
+        limit: onlyOne,
+        predicate,
+        def: []
+    });
+    if (!ret.length) return -1;
+    return ret[0];
+};
+
+let compact = (list) => reduce(list, (prev, cur) => {
+    if (cur) prev.push(cur);
+    return prev;
+}, []);
+
+let reverse = (list) => reduce(list, (prev, cur) => {
+    prev.unshift(cur);
+    return prev;
+}, []);
+
+let indexTransfer = (item, index) => index;
+
+let onlyOne = (rets, item, name, domain, count) => count >= 1;
+
+let falsyIt = v => !v;
+
+let originLogic = v => !!v;
+
+let overArgs = (func, transform) => {
+    return (...args) => {
+        let newArgs = transform(...args);
+        return func(...newArgs);
+    };
+};
+
+module.exports = {
+    overArgs,
+    map,
+    forEach,
+    reduce,
+    find,
+    findIndex,
+    filter,
+    any,
+    exist,
+    compact,
+    reverse
+};
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+const START_STATE = '__start__state__';
+
+let {
+    stateGraphDSL, DFA
+} = __webpack_require__(6);
+
+/**
+ * build a fda to do the matching work
+ *
+ * transit: (currentState, letter) -> nextState
+ */
+module.exports = (stateMap, accepts) => {
+    let m = null;
+
+    // parse stateMap
+    let {
+        transitions, acceptStateMap
+    } = stateGraphDSL.transitionMaper(
+        stateGraphDSL.g(START_STATE,
+            stateGraphDSL.c(null, stateMap)),
+        accepts);
+
+    return (prefix, letter) => {
+        if (prefix.length === 1) {
+            m = new DFA(transitions, acceptStateMap);
+            return m.transit(letter).type;
+        } else {
+            return m.transit(letter).type;
+        }
+    };
+};
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    isString, isFunction
+} = __webpack_require__(0);
+
+let {
+    MATCH, WAIT, QUIT
+} = __webpack_require__(12);
+
+let stringMatch = (word) => (prefix) => {
+    if (word === prefix) return MATCH;
+    if (word.indexOf(prefix) !== -1) return WAIT;
+    return QUIT;
+};
+
+let getMatch = (match) => {
+    if (isFunction(match)) return match;
+    if (isString(match)) return stringMatch(match);
+    // TODO analysis regular expression
+};
+
+module.exports = {
+    getMatch
+};
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    WAIT, MATCH
+} = __webpack_require__(12);
+
+let filterTypes = (nextLetter, prefix, tokenTypes) => {
+    let parts = [],
+        matchs = [],
+        independentType = null;
+
+    let len = tokenTypes.length;
+
+    for (let i = 0; i < len; i++) {
+        let tokenType = tokenTypes[i];
+        let ret = tokenType.match(prefix, nextLetter);
+
+        if (ret === WAIT) {
+            parts.push(tokenType);
+        } else if (ret === MATCH) { // matched
+            matchs.push(tokenType);
+            parts.push(tokenType);
+            if (!independentType && tokenType.independent) {
+                independentType = tokenType;
+            }
+        }
+    }
+
+    return [parts, matchs, independentType];
+};
+
+let findToken = (retMatrix) => {
+    let prev = null;
+
+    for (let i = 0; i < retMatrix.length; i++) {
+        let {
+            prefix, matchTypes
+        } = retMatrix[i];
+
+        for (let j = 0; j < matchTypes.length; j++) {
+            let tokenType = matchTypes[j];
+            if (!prev ||
+                tokenType.priority > prev.tokenType.priority ||
+                (tokenType.priority === prev.tokenType.priority && prefix.length > prev.text.length)
+            ) {
+                prev = {
+                    tokenType,
+                    text: prefix
+                };
+            }
+        }
+    }
+
+    return prev;
+};
+
+module.exports = {
+    findToken,
+    filterTypes
+};
+
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @readme-quick-run
+ *
+ * build LR1 table
+ *
+ * ## test tar=js r_c=syntaxer
+ *
+ * let {buildLR1Table} = syntaxer;
+ * let lr1Table = buildLR1Table({
+ *     startSymbol: 'S',
+ *     N: ['S'],
+ *     T: ['a'],
+ *     productions: [
+ *         ['S', ['a']] // s -> a
+ *     ]
+ * });
+ * console.log(JSON.stringify(lr1Table, null, 4));
+ */
+
+/**
+ * @readme-quick-run
+ *
+ * generate ast from LR table
+ *
+ * ## test tar=js r_c=syntaxer
+ *
+ * let {buildLR1Table, LR} = syntaxer;
+ * let {ACTION, GOTO} = buildLR1Table({
+ *     startSymbol: 'S',
+ *     N: ['S'],
+ *     T: ['a'],
+ *     productions: [
+ *         ['S', ['a']] // s -> a
+ *     ]
+ * });
+ * let lrParse = LR(ACTION, GOTO);
+ * lrParse({ // accept a token
+ *   name: 'a',
+ *   text: 'abc'
+ * });
+ * let ast = lrParse(null); // null as end symbol
+ * console.log(JSON.stringify(ast, null, 4));
+ */
+module.exports = __webpack_require__(90);
+
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * syntax analysis
+ *
+ * background knowledge
+ *
+ * 1. context free grammer
+ *    terminal symbol
+ *    non-terminal symbol
+ *    begin symbol
+ *    production
+ *          left -> right
+ * 2. shift-in reduce
+ */
+
+let LR = __webpack_require__(91);
+let LR1Table = __webpack_require__(94);
+let ctxFreeGrammer = __webpack_require__(99);
+let {
+    forEach
+} = __webpack_require__(3);
+
+/**
+ * just used for testing
+ */
+let parse = (g, handlers) => {
+    let {
+        ACTION, GOTO
+    } = LR1Table(ctxFreeGrammer(g));
+
+    return (tokens) => {
+        let parser = LR(ACTION, GOTO, handlers);
+        forEach(tokens, parser);
+        return parser(null);
+    };
+};
+
+let buildLR1Table = (g) => {
+    let grammer = ctxFreeGrammer(g);
+    return LR1Table(grammer);
+};
+
+module.exports = {
+    LR, LR1Table, parse, ctxFreeGrammer, buildLR1Table
+};
+
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * LR ananlysis algorithm
+ *
+ * input: grammer G's analysis table and a string ω
+ * output: if ω ϵ L(G), get the bottom-up analysis, otherwise error
+ *
+ * - init: (S₀, a₁a₂...an$)
+ *
+ * - assume current configuration is (S₀X₁S₁...Sm, aiai₊₁...an$)
+ *
+ *    (1) if action[Sm, ai] = shift S, S = GOTO[Sm, ai], then we got new configuration:
+ *          (S₀X₁S₁..XmSm ai S, ai₊₁...an$)
+ *    (2) if action[Sm, ai] = reduce by A → β, |β| = r,then:
+ *          S = GOTO[Sm₋r, A];
+ *          (S₀X₁S₁...Xm₋rSm₋rAS, aiai₊₁...an$)
+ *    (3) if action[Sm, ai] = accept, success
+ *    (4) if action[Sm, ai] = error, error
+ */
+
+let {
+    END_SYMBOL, EXPAND_START_SYMBOL
+} = __webpack_require__(30);
+
+let {
+    initAST,
+    reduceAST,
+    appendToken
+} = __webpack_require__(92);
+
+/**
+ * configuration = [stack, tokens]
+ *
+ * stack = [S₀X₁S₁...XmSm], Xi ϵ T U N, Si stands for state
+ *
+ * @param action function (state, termalSymbol) -> shift | reduce | accept | error
+ *      return of action function, is a object: {type, production, errorMsg}
+ *      production = [head, body:[]]
+ */
+module.exports = (ACTION, GOTO, {
+    reduceHandler,
+    acceptHandler
+} = {}) => {
+    // initial configuration
+    let configuration = initConfiguration();
+
+    // initial ast
+    let ast = initAST(EXPAND_START_SYMBOL);
+
+    let action = (state, token) => {
+        let act = ACTION[state][token.name];
+        if (!act) {
+            return {
+                type: 'error',
+                errorMsg: `unexpected symbol ${token.name}, token is ${token.text}.`
+            };
+        } else {
+            return act;
+        }
+    };
+
+    let goTo = (state, token) => {
+        let nextState = GOTO[state][token.name];
+        if (nextState === undefined) {
+            throw new Error(`fail to goto state from ${state} and symbol is ${token.name}, token is ${token.text}.`);
+        }
+        return nextState;
+    };
+
+    let analysis = () => {
+        let topState = getTopState(configuration);
+        let token = getNextInputToken(configuration);
+        // look up action
+        let ret = action(topState, token);
+
+        switch (ret.type) {
+            case 'shift':
+                shift(configuration, ret.state, token);
+                ast = appendToken(ast, token);
+                break;
+            case 'reduce':
+                // reduce production
+                ast = reduce(ast, ret.production, configuration, goTo, reduceHandler);
+                break;
+            case 'error':
+                // error handle
+                throw new Error(ret.errorMsg);
+            case 'accept':
+                // clear configration
+                configuration[1] = [];
+                acceptHandler && acceptHandler(ast); // accept handle
+                break;
+            default:
+                throw new Error(`unexpected action type ${ret.type}, when try to recoginise from [${topState}, ${token.name}]. Token is ${token.text}`);
+        }
+    };
+
+    /**
+     * @param token Object
+     *   accept token as stream
+     *   token = {
+     *        name,
+     *        other...
+     *   }
+     *
+     *   if toke is null, means end of input
+     */
+    return (token) => {
+        if (token === null) {
+            // check state of the configuration
+            configuration[1].push({
+                name: END_SYMBOL
+            });
+            while (configuration[1].length) {
+                analysis();
+            }
+
+            return ast;
+        } else {
+            // add token to configuration
+            configuration[1].push(token);
+            while (configuration[1].length > 1) {
+                analysis();
+            }
+        }
+    };
+};
+
+let initConfiguration = () => {
+    // initial configuration
+    return [
+        [0], // stack
+        [] // input
+    ];
+};
+
+// (S₀X₁S₁..XmSm, aiai₊₁...an$) -> (S₀X₁S₁..XmSm ai S, ai₊₁...an$)
+// S = GOTO(Sm, ai);
+let shift = (configuration, state, token) => {
+    let stack = configuration[0];
+    let tokens = configuration[1];
+    stack.push(token, state);
+    tokens.shift();
+};
+
+// (S₀X₁S₁..XmSm, aiai₊₁...an$) -> (S₀X₁S₁...Xm₋rSm₋rAS, aiai₊₁...an$)
+// A → β, r = |β|
+// S = GOTO(Sm₋r, A)
+let reduce = (ast, [head, body], configuration, goTo, reduceHandler) => {
+    let stack = configuration[0];
+    let reducedTokens = [];
+    for (let i = 0; i < body.length; i++) {
+        stack.pop(); // pop state
+        reducedTokens.push(stack.pop()); // pop token
+    }
+    let top = getTopState(configuration);
+    stack.push(head);
+    stack.push(goTo(top, {
+        name: head,
+        text: `[none terminal symbol] ${head}`
+    }));
+
+    let {newAst, midNode} = reduceAST(ast,
+        ast.children.length - body.length, // start position
+        ast.children.length - 1, // end position
+        head);
+
+    reduceHandler && reduceHandler([head, body], midNode, reducedTokens, ast);
+    return newAst;
+};
+
+let getTopState = (configuration) => {
+    let stack = configuration[0];
+    return stack[stack.length - 1];
+};
+
+let getNextInputToken = (configuration) => {
+    let tokens = configuration[1];
+    return tokens[0];
+};
+
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * reduce production to generate a AST
+ *
+ * s *rm=> αAω *rm=> αβω
+ *
+ * reduce from αβω to αAω by A → β
+ *
+ * current AST:
+ *           S
+ *        /  |  \
+ *       /  / \  \
+ *      α    β    ω
+ *     / \  / \  / \
+ *     ...  ...  ...
+ *
+ * reduce by A → β
+ *
+ * result AST:
+ *           S
+ *        /  |  \
+ *       /   A   \
+ *      /   / \   \
+ *     α     β     ω
+ *    / \   / \   / \
+ *    ...   ...   ...
+ *
+ * AST data structure
+ * node = {
+ *      type: terminal | none-terminal,
+ *      symbol,
+ *      token,
+ *      children: [node]
+ * }
+ *
+ * reduce start point: a token list
+ * reduce end point: S → r
+ *
+ * 1. init AST from a list of token
+ *
+ * 2. reduce production to expand AST
+ */
+
+let {
+    map
+} = __webpack_require__(3);
+
+const TERMINAL_TYPE = 'terminal';
+const NONE_TERMINAL_TYPE = 'none-terminal';
+
+/**
+ * @param startSymbol String
+ * @param tokens Array
+ *
+ * @return ast Object
+ *
+ * tokens = [{
+ *     name,
+ *     text
+ * }]
+ */
+let initAST = (startSymbol, tokens = []) => {
+    return {
+        type: NONE_TERMINAL_TYPE,
+        symbol: startSymbol,
+        children: map(tokens, tokenToLeaf)
+    };
+};
+
+let tokenToLeaf = (token) => {
+    return {
+        type: TERMINAL_TYPE,
+        symbol: token.name,
+        token
+    };
+};
+
+/**
+ * s *rm=> αAω *rm=> αβω
+ *
+ * reduce from αβω to αAω by A → β
+ *
+ * @param ast
+ * @param start
+ * @param end
+ * @param leftSymbol
+ *
+ * @return ast
+ *
+ * β = ast.children[start] ~ ast.children[end]
+ *
+ * 1. remove β from ast, replace with A
+ * 2. make every elements of β as A's child
+ */
+let reduceAST = (ast, start = 0, end = 0, leftSymbol) => {
+    // generate a new middle node, which will hang beta nodes
+    let midNode = {
+        type: NONE_TERMINAL_TYPE,
+        symbol: leftSymbol
+    };
+
+    let beta = ast.children.splice(start, end - start + 1, midNode);
+    midNode.children = beta;
+
+    return {newAst: ast, midNode};
+};
+
+/**
+ * @param ast
+ * @param token
+ */
+let appendToken = (ast, token) => {
+    ast.children.push(tokenToLeaf(token));
+    return ast;
+};
+
+module.exports = {
+    initAST,
+    reduceAST,
+    appendToken
+};
+
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    iterate
+} = __webpack_require__(31);
+
+let {
+    isFunction
+} = __webpack_require__(0);
+
+let defauls = {
+    eq: (v1, v2) => v1 === v2
+};
+
+let setDefault = (opts, defauls) => {
+    for (let name in defauls) {
+        opts[name] = opts[name] || defauls[name];
+    }
+};
+
+let forEach = (list, handler) => iterate(list, {
+    limit: (rets) => {
+        if (rets === true) return true;
+        return false;
+    },
+    transfer: handler,
+    output: (prev, cur) => cur,
+    def: false
+});
+
+let map = (list, handler, limit) => iterate(list, {
+    transfer: handler,
+    def: [],
+    limit
+});
+
+let reduce = (list, handler, def, limit) => iterate(list, {
+    output: handler,
+    def,
+    limit
+});
+
+let filter = (list, handler, limit) => reduce(list, (prev, cur, index, list) => {
+    handler && handler(cur, index, list) && prev.push(cur);
+    return prev;
+}, [], limit);
+
+let find = (list, item, fopts) => {
+    let index = findIndex(list, item, fopts);
+    if (index === -1) return undefined;
+    return list[index];
+};
+
+let any = (list, handler) => reduce(list, (prev, cur, index, list) => {
+    let curLogic = handler && handler(cur, index, list);
+    return prev && originLogic(curLogic);
+}, true, falsyIt);
+
+let exist = (list, handler) => reduce(list, (prev, cur, index, list) => {
+    let curLogic = handler && handler(cur, index, list);
+    return prev || originLogic(curLogic);
+}, false, originLogic);
+
+let findIndex = (list, item, fopts = {}) => {
+    setDefault(fopts, defauls);
+
+    let {
+        eq
+    } = fopts;
+    let predicate = isFunction(item) ? item : (v) => eq(item, v);
+    let ret = iterate(list, {
+        transfer: indexTransfer,
+        limit: onlyOne,
+        predicate,
+        def: []
+    });
+    if (!ret.length) return -1;
+    return ret[0];
+};
+
+let compact = (list) => reduce(list, (prev, cur) => {
+    if (cur) prev.push(cur);
+    return prev;
+}, []);
+
+let reverse = (list) => reduce(list, (prev, cur) => {
+    prev.unshift(cur);
+    return prev;
+}, []);
+
+let indexTransfer = (item, index) => index;
+
+let onlyOne = (rets, item, name, domain, count) => count >= 1;
+
+let falsyIt = v => !v;
+
+let originLogic = v => !!v;
+
+let overArgs = (func, transform) => {
+    return (...args) => {
+        let newArgs = transform(...args);
+        return func(...newArgs);
+    };
+};
+
+module.exports = {
+    overArgs,
+    map,
+    forEach,
+    reduce,
+    find,
+    findIndex,
+    filter,
+    any,
+    exist,
+    compact,
+    reverse
+};
+
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let LR1CanonicalCollection = __webpack_require__(95);
+let {
+    forEach, findIndex
+} = __webpack_require__(3);
+let GO = __webpack_require__(96);
+let {
+    LR1Itemer
+} = __webpack_require__(97);
+let {
+    sameClosure
+} = __webpack_require__(13);
+
+module.exports = (grammer) => {
+    let {
+        END_SYMBOL, isTerminalSymbol, N
+    } = grammer;
+
+    let ACTION = [], // action table
+        GOTO = []; // goto table
+
+    let LR1Grammer = LR1Itemer(grammer);
+    let go = GO(grammer, LR1Grammer);
+
+    let C = LR1CanonicalCollection(grammer, LR1Grammer, go);
+
+    forEach(C, (I, index) => {
+        ACTION[index] = ACTION[index] || {};
+
+        // item = [head, body, dotPosition, forwards]
+
+        forEach(I.items, (item) => {
+            // [S`→ S., $] ϵ Ii
+            if (LR1Grammer.isAcceptItem(item)) {
+                //
+                ACTION[index][END_SYMBOL] = {
+                    type: 'accept'
+                };
+            } else if (item.isReduceItem()) { // [A → α., a] ϵ Ii, A≠S`
+                forEach(item.getForwards(), (a) => {
+                    ACTION[index][a] = {
+                        type: 'reduce',
+                        production: item.getProduction()
+                    };
+                });
+            } else if (isTerminalSymbol(item.getNextSymbol())) {
+                let Ij = go(I, item.getNextSymbol());
+
+                if (Ij && Ij.items.length) {
+                    ACTION[index][item.getNextSymbol()] = {
+                        type: 'shift',
+                        state: getStateIndex(C, Ij)
+                    };
+                }
+            }
+        });
+    });
+
+    forEach(C, (I, index) => {
+        GOTO[index] = GOTO[index] || {};
+        forEach(N, (A) => {
+            let Ij = go(I, A);
+            if (Ij && Ij.items.length) {
+                GOTO[index][A] = getStateIndex(C, Ij);
+            }
+        });
+    });
+
+    return {
+        GOTO,
+        ACTION
+    };
+};
+
+let getStateIndex = (C, I) => findIndex(C, I, {
+    eq: sameClosure
+});
+
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    buildClosure
+} = __webpack_require__(13);
+let {
+    reduce
+} = __webpack_require__(3);
+
+/**
+ * input: grammer G
+ *
+ * output: LR(0) canonical collection
+ *
+ * item = [head, body, dotPosition];
+ *
+ * item set = [viable prefix, items]
+ */
+module.exports = (grammer, LR1Grammer, go) => {
+    let {
+        symbols
+    } = grammer;
+
+    let initClosure = buildClosure([
+        LR1Grammer.initItem(grammer)
+    ], grammer, LR1Grammer);
+
+    let C = [initClosure];
+    let canonicalCollectionMap = {};
+    canonicalCollectionMap[initClosure.serializedText] = true;
+
+    let appendedC = C;
+
+    while (true) { // eslint-disable-line
+        let newAppendedC = [];
+
+        for (let i = 0; i < appendedC.length; i++) {
+            let I = appendedC[i];
+            let gotoSet = getGoToSymbolsSet(symbols, I, go);
+
+            for (let j = 0; j < gotoSet.length; j++) {
+                let state = gotoSet[j];
+                let serializedText = state.serializedText;
+
+                if (!canonicalCollectionMap[serializedText]) {
+                    // add new state
+                    newAppendedC.push(state);
+                    canonicalCollectionMap[serializedText] = true;
+                }
+            }
+        }
+
+        if (!newAppendedC.length) break;
+
+        appendedC = newAppendedC;
+        C = C.concat(appendedC);
+    }
+
+    return C;
+};
+
+let getGoToSymbolsSet = (symbols, I, go) => {
+    // for every symbol
+    let set = reduce(symbols, (pre, X) => {
+        let newState = go(I, X);
+
+        if (newState && newState.items.length) {
+            pre.push(newState);
+        }
+        return pre;
+    }, []);
+
+    return set;
+};
+
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    reduce, filter
+} = __webpack_require__(3);
+
+let {
+    buildClosure
+} = __webpack_require__(13);
+
+/**
+ * jump
+ *
+ * A→αX.β => A→α.Xβ
+ *
+ * J = go(I, X) = closure({A→αX.β | A→α.Xβ ϵ I})
+ *
+ * if one viable prefix of A→αX.β  of I is ρ=δα, then A→α.Xβ in J has viable prefix δαX.
+ *
+ * @param I
+ *    [head, body, dotPosition]
+ *
+ * @param X
+ *    symbol
+ *
+ * @param productions
+ */
+module.exports = (grammer, LR1Grammer) => {
+    let getStartItems = (I, X) => {
+        let nextSymbolX = filter(I.items, (item) => {
+            return item.getNextSymbol() === X;
+        });
+
+        let startItems = reduce(nextSymbolX, (prev, item) => { // eslint-disable-line
+            if (item.restIsNotEmpty()) {
+                prev.push(item.nextPositionItem());
+            }
+
+            return prev;
+        }, []);
+
+        return startItems;
+    };
+
+    return (I, X) => {
+        let targetClosure = null;
+
+        I.cache_GOTO = I.cache_GOTO || {};
+
+        if (I.cache_GOTO[X]) {
+            targetClosure = I.cache_GOTO[X];
+        } else {
+            let startItems = getStartItems(I, X);
+
+            targetClosure = buildClosure(
+                startItems,
+
+                grammer,
+
+                LR1Grammer
+            );
+
+            I.cache_GOTO[X] = targetClosure;
+        }
+
+        return targetClosure;
+    };
+};
+
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let First = __webpack_require__(98);
+
+let {
+    union, reduce, filter, flat, map
+} = __webpack_require__(3);
+
+let LR1Itemer = (grammer) => {
+    let {
+        END_SYMBOL,
+        isNoneTerminalSymbol,
+        getProductionsOf
+    } = grammer;
+
+    let first = First(grammer);
+
+    let buildLR1Item = (production, dotPosition, forwards) => {
+        let {
+            getHead, getBody, isTerminalSymbol, isEndSymbol
+        } = grammer;
+
+        // [A → α.Bβ, a]
+        let getNextSymbol = () => {
+            return getBody(production)[dotPosition];
+        };
+
+        let getForwards = () => forwards;
+
+        let afterNextRest = () => getBody(production).slice(dotPosition + 1);
+
+        let list = () => [getHead(production), getBody(production), dotPosition, forwards];
+
+        // change the forwards
+        let concatForwards = (newForwards) => {
+            return buildLR1Item(production, dotPosition, union(forwards, newForwards));
+        };
+
+        let adjoints = null;
+
+        // [A → α.Bβ, a], FIRST(βa)
+        let getAdjoints = () => {
+            if (adjoints === null) {
+                let beta = afterNextRest();
+                let forwards = getForwards();
+
+                let ret = reduce(forwards, (prev, letter) => {
+                    let firstSet = beta.length ? first(beta.concat([letter])) : [letter];
+                    return prev.concat(filter(firstSet, (item) => isTerminalSymbol(item) || isEndSymbol(item)));
+                }, []);
+
+                adjoints = ret;
+
+                return ret;
+            } else {
+                return adjoints;
+            }
+        };
+
+        // rest = ε && a = $
+        let isReducedItem = () => {
+            return !afterNextRest().length && getForwards().length === 1 && isEndSymbol(getForwards()[0]);
+        };
+
+        let restIsNotEmpty = () => getBody(production).length && dotPosition < getBody(production).length;
+
+        let nextPositionItem = () => {
+            return buildLR1Item(production, dotPosition + 1, forwards, grammer);
+        };
+
+        let getGrammer = () => grammer;
+
+        // [A → α., a] ϵ Ii, A≠S`
+        let isReduceItem = () => {
+            return dotPosition === getBody(production).length;
+        };
+
+        let getProduction = () => production;
+
+        let serializeId = null;
+
+        let serialize = () => {
+            if (serializeId === null) {
+                serializeId = JSON.stringify([production, dotPosition, forwards.sort()]);
+            }
+            return serializeId;
+        };
+
+        let serializePrefixId = null;
+        let serializePrefix = () => {
+            if (serializePrefixId === null) {
+                serializePrefixId = JSON.stringify([production, dotPosition]);
+            }
+
+            return serializePrefixId;
+        };
+
+        return {
+            getNextSymbol,
+            getProduction,
+            getForwards,
+            afterNextRest,
+            list,
+            concatForwards,
+            getAdjoints,
+            isReducedItem,
+            restIsNotEmpty,
+            nextPositionItem,
+            getGrammer,
+            isReduceItem,
+            serialize,
+            serializePrefix
+        };
+    };
+
+    // S` -> S.
+    var acceptItem = () => {
+        return buildLR1Item([grammer.EXPAND_START_SYMBOL, [grammer.startSymbol]], 1, [grammer.END_SYMBOL]);
+    };
+
+    let isAcceptItem = (item) => {
+        return sameItem(acceptItem(item.getGrammer()), item);
+    };
+
+    var sameItem = (item1, item2) => {
+        return item1.serialize() === item2.serialize();
+    };
+
+    let initItem = () => {
+        let item = buildLR1Item(
+            [grammer.EXPAND_START_SYMBOL, [grammer.startSymbol]],
+            0, [grammer.END_SYMBOL]
+        );
+
+        return item;
+    };
+
+    let fromList = ([head, body, dotPosition, forwards]) => {
+        return buildLR1Item([head, body], dotPosition, forwards);
+    };
+
+    /**
+     * [B → .γ, b]
+     */
+    let supItem = (production, symbol) => {
+        return buildLR1Item(production, 0, [symbol]);
+    };
+
+    let expandCacheMap = {};
+    let expandItem = (item) => {
+        let serializeId = item.serialize();
+
+        if (expandCacheMap[serializeId]) {
+            return expandCacheMap[serializeId].slice(0);
+        }
+
+        let {
+            getNextSymbol,
+            getAdjoints,
+            isReducedItem
+        } = item;
+        let next = getNextSymbol();
+
+        if (!next || !isNoneTerminalSymbol(next)) return [];
+
+        let nextProductions = getProductionsOf(next);
+
+        let newItems = flat(map(nextProductions, (production) => isReducedItem() ? [
+            supItem(production, END_SYMBOL)
+        ] : map(getAdjoints(), (b) => supItem(production, b))));
+
+        expandCacheMap[serializeId] = newItems;
+
+        return newItems;
+    };
+
+    return {
+        expandItem,
+        buildLR1Item,
+        isAcceptItem,
+        sameItem,
+        initItem,
+        fromList,
+        supItem
+    };
+};
+
+module.exports = {
+    LR1Itemer
+};
+
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    contain, union, reduce, difference, forEach
+} = __webpack_require__(3);
+
+let {
+    isArray
+} = __webpack_require__(0);
+
+module.exports = (grammer) => {
+    // cache first set
+    let firstMap = {};
+
+    /**
+     * first set of sentential form
+     *
+     * α ϵ (T U N)*
+     *
+     * FIRST(α) = { a | α *=> a..., a ϵ T }
+     *
+     * if α *=> ε, then ε ϵ FIRST(α)
+     *
+     * A → ε => ['A', []]
+     *
+     * using null stand for ε
+     */
+
+    let first = (X) => {
+        if (firstMap[X]) return firstMap[X];
+        let ret = firstSet(X);
+        firstMap[X] = ret;
+        return ret;
+    };
+
+    let firstSet = (X) => {
+        let {
+            isTerminalSymbol,
+            getProductionsOf,
+            isEmptyProduction,
+            getBody,
+            EPSILON
+        } = grammer;
+
+        if (isTerminalSymbol(X)) {
+            return [X];
+        } else {
+            // find all productions start with X
+            let ps = getProductionsOf(X);
+
+            return reduce(ps, (prev, production) => {
+                let body = getBody(production);
+
+                if (isEmptyProduction(production)) {
+                    return union(prev, [EPSILON]); // union ε
+                } else {
+                    if (isTerminalSymbol(body[0])) {
+                        return union(prev, [body[0]]);
+                    } else {
+                        return union(prev, firstList(body, grammer));
+                    }
+                }
+            }, []);
+        }
+    };
+
+    let firstListMap = {};
+    /**
+     * [...ab...]
+     */
+    let firstList = (body) => {
+        let {
+            EPSILON, getBodyId
+        } = grammer;
+
+        let bodyId = getBodyId(body);
+        if (firstListMap[bodyId]) {
+            return firstListMap[bodyId];
+        }
+
+        let ret = [];
+        forEach(body, (y, index) => {
+            let set = first(y);
+
+            ret = union(ret, difference(set, [EPSILON]));
+            if (!contain(set, EPSILON)) { // stop
+                return true;
+            }
+
+            if (index === body.length - 1) {
+                ret = union(ret, [EPSILON]);
+            }
+        });
+
+        firstListMap[bodyId] = ret;
+        return ret;
+    };
+
+    return (alpha) => {
+        if (isArray(alpha)) {
+            return firstList(alpha);
+        } else {
+            return first(alpha);
+        }
+    };
+};
+
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * context free grammer
+ *    terminal symbol
+ *    non-terminal symbol
+ *    begin symbol
+ *    production
+ *    left -> right
+ *
+ * production = [head, body]
+ *
+ * TODO validate
+ */
+
+const {
+    END_SYMBOL, EXPAND_START_SYMBOL, EPSILON
+} = __webpack_require__(30);
+
+/**
+ * context free grammer is read-only
+ */
+
+module.exports = ({
+    startSymbol,
+    T, N,
+    productions
+}) => {
+    let symbols = T.concat(N);
+
+    // cache
+    let noneTerminalProductionMap = getNoneTerminalProductionMap(productions);
+    let terminalMap = listToExistMap(T);
+    let noneTerminalMap = listToExistMap(N);
+
+    let isTerminalSymbol = (symbol) => !!terminalMap[symbol];
+    let isNoneTerminalSymbol = (symbol) => !!noneTerminalMap[symbol];
+
+    /**
+     * get all the productions startSymbol with none terminal symbol
+     */
+    let getProductionsOf = (noneTerminal) => noneTerminalProductionMap[noneTerminal];
+
+    // A -> ε
+    let isEmptyProduction = (production) => { // eslint-disable-body
+        return !getBody(production).length;
+    };
+
+    let getBody = (production) => production[1];
+
+    let getHead = (production) => production[0];
+
+    let isEndSymbol = (v) => v === END_SYMBOL;
+
+    let getBodyId = (body) => JSON.stringify(body);
+
+    return {
+        isTerminalSymbol,
+        isNoneTerminalSymbol,
+        getProductionsOf,
+        isEmptyProduction,
+        getBody,
+        getBodyId,
+        getHead,
+        EPSILON,
+        END_SYMBOL,
+        EXPAND_START_SYMBOL,
+        startSymbol,
+        productions,
+        isEndSymbol,
+        symbols,
+        N
+    };
+};
+
+let listToExistMap = (arr) => {
+    let map = {};
+    let tLen = arr.length;
+    for (let i = 0; i < tLen; i++) {
+        map[arr[i]] = true;
+    }
+    return map;
+};
+
+/**
+ * get the production map, key is none terminal symbol, keys is the set of producitons
+ */
+let getNoneTerminalProductionMap = (producitons) => {
+    let productionMap = {};
+
+    let productionLen = producitons.length;
+    for (let i = 0; i < productionLen; i++) {
+        let production = producitons[i];
+        let head = production[0];
+        productionMap[head] = productionMap[head] || [];
+        productionMap[head].push(production);
+    }
+
+    return productionMap;
+};
+
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports) {
+
+module.exports={"GOTO":[{"PROGRAM":7,"EXPRESSION":8},{},{},{},{},{},{},{},{},{"EXPRESSION":17,"EXP_LIST":18},{},{},{},{},{},{},{},{},{},{"EXPRESSION":17,"EXP_LIST":23},{"EXPRESSION":17,"EXP_LIST":24},{},{},{},{},{}],"ACTION":[{"variable":{"type":"shift","state":1},"true":{"type":"shift","state":2},"false":{"type":"shift","state":3},"null":{"type":"shift","state":4},"string":{"type":"shift","state":5},"number":{"type":"shift","state":6}},{"$":{"type":"reduce","production":["EXPRESSION",["variable"]]},"(":{"type":"shift","state":9}},{"$":{"type":"reduce","production":["EXPRESSION",["true"]]}},{"$":{"type":"reduce","production":["EXPRESSION",["false"]]}},{"$":{"type":"reduce","production":["EXPRESSION",["null"]]}},{"$":{"type":"reduce","production":["EXPRESSION",["string"]]}},{"$":{"type":"reduce","production":["EXPRESSION",["number"]]}},{"$":{"type":"accept"}},{"$":{"type":"reduce","production":["PROGRAM",["EXPRESSION"]]}},{")":{"type":"shift","state":16},"variable":{"type":"shift","state":10},"true":{"type":"shift","state":11},"false":{"type":"shift","state":12},"null":{"type":"shift","state":13},"string":{"type":"shift","state":14},"number":{"type":"shift","state":15}},{")":{"type":"reduce","production":["EXPRESSION",["variable"]]},",":{"type":"reduce","production":["EXPRESSION",["variable"]]},"(":{"type":"shift","state":19}},{")":{"type":"reduce","production":["EXPRESSION",["true"]]},",":{"type":"reduce","production":["EXPRESSION",["true"]]}},{")":{"type":"reduce","production":["EXPRESSION",["false"]]},",":{"type":"reduce","production":["EXPRESSION",["false"]]}},{")":{"type":"reduce","production":["EXPRESSION",["null"]]},",":{"type":"reduce","production":["EXPRESSION",["null"]]}},{")":{"type":"reduce","production":["EXPRESSION",["string"]]},",":{"type":"reduce","production":["EXPRESSION",["string"]]}},{")":{"type":"reduce","production":["EXPRESSION",["number"]]},",":{"type":"reduce","production":["EXPRESSION",["number"]]}},{"$":{"type":"reduce","production":["EXPRESSION",["variable","(",")"]]}},{")":{"type":"reduce","production":["EXP_LIST",["EXPRESSION"]]},",":{"type":"shift","state":20}},{")":{"type":"shift","state":21}},{")":{"type":"shift","state":22},"variable":{"type":"shift","state":10},"true":{"type":"shift","state":11},"false":{"type":"shift","state":12},"null":{"type":"shift","state":13},"string":{"type":"shift","state":14},"number":{"type":"shift","state":15}},{"variable":{"type":"shift","state":10},"true":{"type":"shift","state":11},"false":{"type":"shift","state":12},"null":{"type":"shift","state":13},"string":{"type":"shift","state":14},"number":{"type":"shift","state":15}},{"$":{"type":"reduce","production":["EXPRESSION",["variable","(","EXP_LIST",")"]]}},{")":{"type":"reduce","production":["EXPRESSION",["variable","(",")"]]},",":{"type":"reduce","production":["EXPRESSION",["variable","(",")"]]}},{")":{"type":"shift","state":25}},{")":{"type":"reduce","production":["EXP_LIST",["EXPRESSION",",","EXP_LIST"]]}},{")":{"type":"reduce","production":["EXPRESSION",["variable","(","EXP_LIST",")"]]},",":{"type":"reduce","production":["EXPRESSION",["variable","(","EXP_LIST",")"]]}}]}
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    stringGraph, numberGraph
+} = __webpack_require__(102);
+
+let {
+    buildFSM
+} = __webpack_require__(26);
+
+let FSM = __webpack_require__(6);
+let {
+    stateGraphDSL
+} = FSM;
+
+let {
+    g, c, union, sequence, range, circle
+} = stateGraphDSL;
+
+let whitespace = union(' ', '\f', '\n', '\r', '\t', '\v', '\u00a0', '\u1680', '\u180e', '\u2000-', '\u200a', '\u2028', '\u2029', '\u202f', '\u205f', '\u3000', '\ufeff');
+
+let operations = union('+', '-', '*', '/', '>', '<');
+
+let variable = g(sequence(
+    union('_', '$', operations,
+        range('a', 'z'), range('A', 'Z')),
+    circle(union('_', operations, range('a', 'z'), range('A', 'Z'), range('0', '9')))
+));
+
+module.exports = [
+
+    {
+        priority: 0, // null, false, true etc has a higher priority
+        match: buildFSM(variable),
+        name: 'variable'
+    },
+
+    {
+        priority: 1,
+        match: '(',
+        name: '('
+    },
+
+    {
+        priority: 1,
+        match: ')',
+        name: ')'
+    }, {
+        priority: 1,
+        match: 'true',
+        name: 'true'
+    }, {
+        priority: 1,
+        match: 'false',
+        name: 'false'
+    }, {
+        priority: 1,
+        match: 'null',
+        name: 'null'
+    }, {
+        priority: 1,
+        match: buildFSM(stringGraph),
+        name: 'string'
+    }, {
+        priority: 1,
+        match: buildFSM(numberGraph),
+        name: 'number'
+    }, {
+        priority: 1,
+        match: ',',
+        name: ','
+    },
+
+    {
+        priority: 1,
+        match: buildFSM(g(
+            c(whitespace)
+        )),
+        name: 'whitespace'
+    }
+];
+
+
+/***/ }),
+/* 102 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    stateGraphDSL
+} = __webpack_require__(6);
+
+let {
+    g, c, union, range, sequence, circle, left, repeat
+} = stateGraphDSL;
+
+let numberGraph = g(c(union(null, '-'),
+    g(
+        c('0', g('decimal',
+            c('.', circle(range('0', '9'), 'science')),
+            c(null, g('science',
+                c(null, 'accept'),
+                sequence(
+                    union('e', 'E'),
+                    union('+', '-', null),
+                    range('0', '9'),
+                    circle(range('0', '9'), 'accept')
+                )
+            ))
+        )),
+
+        sequence(
+            range('1', '9'),
+            circle(range('0', '9'), 'decimal')
+        )
+    )
+));
+
+let hexDigit = union(range('0', '9'), range('A', 'F'), range('a', 'f'));
+
+let escapeSymbols = union('"', '\\', '\/', 'b', 'f', 'n', 'r', 't');
+
+let stringGraph = g(
+    c('"', g('enter',
+        c('\\', g(
+            c(escapeSymbols, 'enter'),
+            c('u',
+                g(repeat(hexDigit, 4, 'enter'))
+            ))),
+        c('"', 'accept'),
+        c(left(), 'enter')
+    )));
+
+module.exports = {
+    numberGraph,
+    stringGraph
+};
+
+
+/***/ }),
+/* 103 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let modal = __webpack_require__(104);
 
 let {
     view, n
@@ -21908,7 +25698,7 @@ module.exports = view(({
 
 
 /***/ }),
-/* 64 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21965,165 +25755,35 @@ module.exports = view((data, {
 
 
 /***/ }),
-/* 65 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 let {
-    n,
-    view
+    view,
+    n
 } = __webpack_require__(2);
-let _ = __webpack_require__(12);
-let TaskView = __webpack_require__(44);
-let Fold = __webpack_require__(45);
-let FoldArrow = __webpack_require__(46);
-
-let {
-    STATUS_WORKING,
-    STATUS_FINISHED,
-    STATUS_DISCARDED,
-    STATUS_WAITING
-} = __webpack_require__(17);
 
 module.exports = view(({
-    taskList,
-    planConfigPath
+    actionType,
+    info
 }) => {
-    let groups = _.reduce(taskList, (prev, task) => {
-        if (task.status === STATUS_WORKING) {
-            prev.working.push(task);
-        } else if (task.status === STATUS_FINISHED) {
-            prev.finished.push(task);
-        } else if (task.status === STATUS_WAITING) {
-            prev.waiting.push(task);
-        } else if (task.status === STATUS_DISCARDED) {
-            prev.discarded.push(task);
-        }
-        return prev;
-    }, {
-        working: [],
-        finished: [],
-        waiting: [],
-        discarded: []
-    });
+    if (actionType === 'textAction') {
+        return n('span', info.text);
+    }
 
-    return n('ul', [
-        groups.working.length && foldTaskList(groups.working, 'working', false, planConfigPath),
-        groups.waiting.length && foldTaskList(groups.waiting, 'waiting', true, planConfigPath),
-        groups.finished.length && foldTaskList(groups.finished, 'finished', true, planConfigPath),
-        groups.discarded.length && foldTaskList(groups.discarded, 'discarded', true, planConfigPath)
-    ]);
+    if(actionType === 'openUrl') {
+        return n('div', [
+            n('span', 'openUrl'),
+            n('span style="padding-left: 10px"'),
+            n(`a href="${info.url}" target="blank"`, info.url)
+        ]);
+    }
+
+    return n('span', `${actionType}: ${info? JSON.stringify(info): '...'}`);
 });
-
-let foldTaskList = (tasks, title, hide, planConfigPath) => {
-    return Fold({
-        head: (ops) => {
-            return n('div', {
-                onclick: () => {
-                    ops.toggle();
-                },
-
-                style: {
-                    cursor: 'pointer',
-                    padding: 5
-                }
-            }, [
-                FoldArrow(ops),
-                n('strong style="padding-left:10px"', title),
-            ]);
-        },
-
-        body: () => listTask(tasks, planConfigPath),
-
-        hide
-    });
-};
-
-let listTask = (tasks, planConfigPath) => {
-    return n('ul', [
-        _.map(tasks, (value) => {
-            return TaskView({
-                taskValue: value,
-                planConfigPath
-            });
-        })
-    ]);
-};
-
-
-/***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-let {
-    n,
-    view
-} = __webpack_require__(2);
-let TaskListView = __webpack_require__(65);
-let {
-    displayClock
-} = __webpack_require__(67);
-
-module.exports = view((data) => {
-    let dailyList = data.dailyList;
-
-    dailyList.sort((item1, item2) => {
-        let h1 = item1.moment.event.hour;
-        let m1 = item1.moment.event.minute;
-        let h2 = item2.moment.event.hour;
-        let m2 = item2.moment.event.minute;
-
-        if (h1 > h2) return 1;
-        if (h1 < h2) return -1;
-        if (m1 > m2) return 1;
-        if (m1 < m2) return -1;
-        return 0;
-    });
-
-    return n('ul', [
-        TimeView(),
-        TaskListView({
-            taskList: dailyList,
-            planConfigPath: data.planConfigPath
-        })
-    ]);
-});
-
-let TimeView = view(({
-    duration = 5000
-} = {}, {
-    update
-}) => {
-    let date = new Date();
-    setInterval(() => {
-        date = new Date();
-        update();
-    }, duration);
-
-    return () => n('div', `${displayClock(date.getHours(), date.getMinutes())}`);
-});
-
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-let displayClock = (hour, minute) => {
-    if (hour < 10) hour = '0' + hour;
-    if (minute < 10) minute = '0' + minute;
-    return hour + ':' + minute;
-};
-
-module.exports = {
-    displayClock
-};
 
 
 /***/ })

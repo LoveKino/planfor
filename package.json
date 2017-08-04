@@ -42,8 +42,9 @@
     "lodash": "^4.17.4",
     "nodemailer": "^4.0.1",
     "pfc-compiler": "^0.1.7",
+    "pfc-formatter": "0.0.1",
     "quick-steady-theme": "0.0.2",
-    "text-flow-pfc-compiler": "^0.1.2",
+    "text-flow-pfc-compiler": "^0.1.3",
     "yargs": "^8.0.2"
   }
 }

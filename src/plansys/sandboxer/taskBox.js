@@ -13,6 +13,7 @@ let {
     sequence,
     concurrent,
     sendEmail,
+    openUrl,
     textAction,
     doNothing
 } = require('./action');
@@ -132,6 +133,7 @@ module.exports = (filePath) => {
         anyTime,
         doNothing,
         sendEmail,
+        openUrl,
         textAction,
         sequence,
         concurrent

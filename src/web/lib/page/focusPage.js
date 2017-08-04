@@ -8,6 +8,9 @@ let queryString = require('queryString');
 let _ = require('lodash');
 let TaskListView = require('../view/taskListView');
 let DailyTaskListView = require('../view/dailyTaskView');
+let {
+    displayDate
+} = require('../util/time');
 
 let FocusTaskListView = view((data) => {
     return n('ul', [
@@ -29,7 +32,17 @@ let FocusTaskListView = view((data) => {
     ]);
 });
 
+let getFocusItemValue = (focusItems, type) => {
+    let list = _.filter(focusItems, (item) => item.type === 'pfc' && item.value.type === type);
+
+    return list && list[0].value;
+};
+
 let PageView = view((pageData) => {
+    let focusList = pageData.focusData && _.filter(pageData.focusData.data, (item) => item.type === 'pfc' && item.value.type === 'linkTask');
+    let expectationTime = pageData.focusData && getFocusItemValue(pageData.focusData.data, 'expectationTime');
+    let slogon = pageData.focusData && getFocusItemValue(pageData.focusData.data, 'slogon');
+
     return n('page', [
         n('div', {
             style: {
@@ -38,8 +51,22 @@ let PageView = view((pageData) => {
         }, [
             n('h3', 'plan focus'),
 
+            slogon && n('div', {
+                style: {
+                    padding: 10,
+                    fontSize: 20
+                }
+            }, slogon.text),
+
+            expectationTime && n('div', {
+                style: {
+                    padding: 10,
+                    fontSize: 18
+                }
+            }, `expectation time ${displayDate(new Date(expectationTime.from))} - ${displayDate(new Date(expectationTime.to))}`),
+
             pageData.focusData && (pageData.focusData.errno === 0 ? FocusTaskListView({
-                focusList: pageData.focusData.data,
+                focusList,
                 planConfigPath: pageData.planConfigPath
             }) : n('div', pageData.focusData.errMsg))
         ]),

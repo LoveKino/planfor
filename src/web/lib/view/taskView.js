@@ -10,6 +10,7 @@ let _ = require('lodash');
 let {
     displayClock
 } = require('../util/time');
+let AtomActionView = require('./atomActionView');
 let {
     STATUS_WAITING,
     STATUS_FINISHED,
@@ -108,7 +109,9 @@ let displayProgress = (progress) => {
                     'list-style': 'square !important'
                 }
             }, [
-                displayAtomAction(actionType, info)
+                AtomActionView({
+                    actionType, info
+                })
             ]);
         })
     ]);
@@ -129,14 +132,6 @@ let compactAction = (action) => {
     }
 };
 
-let displayAtomAction = (actionType, info) => {
-    if (atomActionDisplayMap[actionType]) {
-        return n('span', atomActionDisplayMap[actionType](info));
-    }
-
-    return n('span', `${actionType}: ${info? JSON.stringify(info): '...'}`);
-};
-
 let displayMoment = (taskValue) => {
     let event = taskValue.moment.event;
     let type = taskValue.moment.event.type;
@@ -146,8 +141,4 @@ let displayMoment = (taskValue) => {
     }
 
     return n('span', type);
-};
-
-let atomActionDisplayMap = {
-    'textAction': (info) => info.text
 };

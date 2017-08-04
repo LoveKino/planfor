@@ -5,7 +5,13 @@ let {
     view
 } = require('kabanery');
 
+let {
+    format
+} = require('pfc-formatter');
+
 module.exports = view((data) => {
+    data.code = format(data.code);
+
     return n('div', {
         style: {
             padding: 8
@@ -20,7 +26,8 @@ module.exports = view((data) => {
                 overflow: 'auto',
                 border: '1px solid #888',
                 borderRadius: 5,
-                fontSize: 16
+                fontSize: 16,
+                padding: 5
             },
 
             oninput: (e) => {

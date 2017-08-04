@@ -50,10 +50,17 @@ let sendEmail = (title, content) => {
     });
 };
 
+let openUrl = (url, auto = false) => {
+    return atomAction('openUrl', {
+        url,
+        auto
+    });
+};
+
 let textAction = (text) => {
     text = text || '';
     text = text.trim();
-    if(!text) {
+    if (!text) {
         throw new Error('text can not be empty in textAction');
     }
     return atomAction('textAction', {
@@ -71,6 +78,7 @@ module.exports = {
     sequence,
     concurrent,
     sendEmail,
+    openUrl,
     textAction,
     doNothing
 };
