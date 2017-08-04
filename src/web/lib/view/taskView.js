@@ -9,13 +9,13 @@ let FoldArrow = require('kabanery-fold/lib/foldArrow');
 let _ = require('lodash');
 
 let {
-    STATUS_NOT_STARTED,
+    STATUS_WAITING,
     STATUS_FINISHED,
     STATUS_WORKING
 } = require('../../../const');
 
 let colorMap = {
-    [STATUS_NOT_STARTED]: '#999999',
+    [STATUS_WAITING]: '#999999',
     [STATUS_FINISHED]: 'rgb(111,140,29)',
     [STATUS_WORKING]: 'white'
 };
@@ -95,6 +95,7 @@ let displayProgress = (progress) => {
         }) => {
             return n('li', {
                 style: {
+                    fontSize: 14,
                     marginLeft: 28,
                     'list-style': 'square !important'
                 }

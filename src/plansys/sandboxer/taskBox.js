@@ -2,7 +2,8 @@
 
 let {
     STATUS_LIST,
-    STATUS_NOT_STARTED
+    STATUS_WORKING,
+    STATUS_WAITING
 } = require('../../const');
 let _ = require('lodash');
 let {
@@ -76,7 +77,7 @@ let taskDef = (moment, progress, target, description = '') => {
 };
 
 let taskState = (status) => {
-    status = status || STATUS_NOT_STARTED;
+    status = status || STATUS_WAITING;
     checkStatus(status);
 
     return {
@@ -104,7 +105,7 @@ module.exports = (filePath) => {
             throw new Error('task must have a name.');
         }
         def = def || taskDef();
-        state = state || taskState();
+        state = state || taskState(def.moment.event.type === 'daily'? STATUS_WORKING: STATUS_WAITING);
 
         checkType(def, 'taskDef', `task location: (${filePath}, ${name})`);
         checkType(state, 'taskState', `task location: (${filePath}, ${name})`);

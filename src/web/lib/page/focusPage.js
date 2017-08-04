@@ -6,13 +6,7 @@ let {
 } = require('kabanery');
 let queryString = require('queryString');
 let _ = require('lodash');
-let TaskView = require('../view/taskView');
-let {
-    STATUS_WORKING,
-    STATUS_FINISHED,
-    STATUS_DISCARDED,
-    STATUS_NOT_STARTED
-} = require('../../../const');
+let TaskListView = require('../view/taskListView');
 
 let FocusTaskListView = view((data) => {
     return n('ul', [
@@ -39,38 +33,6 @@ let DailyTaskListView = view((data) => {
         TaskListView({
             taskList: data.dailyList,
             planConfigPath: data.planConfigPath
-        })
-    ]);
-});
-
-let TaskListView = view(({
-    taskList,
-    planConfigPath
-}) => {
-    let groups = _.reduce(taskList, (prev, task) => {
-        if (task.status === STATUS_WORKING) {
-            prev.working.push(task);
-        } else if (task.status === STATUS_FINISHED) {
-            prev.finished.push(task);
-        } else if (task.status === STATUS_NOT_STARTED) {
-            prev.notStarted.push(task);
-        } else if (task.status === STATUS_DISCARDED) {
-            prev.discarded.push(task);
-        }
-        return prev;
-    }, {
-        working: [],
-        finished: [],
-        notStarted: [],
-        discarded: []
-    });
-
-    return n('ul', [
-        _.map(groups.working.concat(groups.notStarted).concat(groups.finished).concat(groups.discarded), (value) => {
-            return TaskView({
-                taskValue: value,
-                planConfigPath
-            });
         })
     ]);
 });

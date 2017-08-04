@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,7 +78,7 @@ let iterate = __webpack_require__(9);
 
 let {
     map, reduce, find, findIndex, forEach, filter, any, exist, compact
-} = __webpack_require__(23);
+} = __webpack_require__(24);
 
 let contain = (list, item, fopts) => findIndex(list, item, fopts) !== -1;
 
@@ -406,7 +406,7 @@ module.exports = {
 "use strict";
 
 
-module.exports = __webpack_require__(22);
+module.exports = __webpack_require__(23);
 
 /**
  * @readme-quick-run
@@ -809,9 +809,9 @@ module.exports = {
 "use strict";
 
 
-let shadowFrame = __webpack_require__(20);
+let shadowFrame = __webpack_require__(21);
 
-let startMomenter = __webpack_require__(21);
+let startMomenter = __webpack_require__(22);
 
 let getX = (elem) => {
     var x = 0;
@@ -907,7 +907,7 @@ let {
     isObject, isNode
 } = __webpack_require__(1);
 
-let parseArgs = __webpack_require__(24);
+let parseArgs = __webpack_require__(25);
 
 const KABANERY_NODE = 'kabanery_node';
 
@@ -1016,7 +1016,7 @@ module.exports = {
 
 let {
     createElement, createSvgElement
-} = __webpack_require__(32);
+} = __webpack_require__(33);
 
 let {
     bindEvents
@@ -1056,7 +1056,7 @@ module.exports = reduceNode;
 "use strict";
 
 
-let EventMatrix = __webpack_require__(33);
+let EventMatrix = __webpack_require__(34);
 
 let {
     listenEventType,
@@ -1241,8 +1241,8 @@ let getDoc = (node) => {
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(39);
-exports.encode = exports.stringify = __webpack_require__(40);
+exports.decode = exports.parse = __webpack_require__(40);
+exports.encode = exports.stringify = __webpack_require__(41);
 
 
 /***/ }),
@@ -18335,7 +18335,7 @@ exports.encode = exports.stringify = __webpack_require__(40);
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41), __webpack_require__(42)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(42), __webpack_require__(43)(module)))
 
 /***/ }),
 /* 13 */
@@ -18344,7 +18344,7 @@ exports.encode = exports.stringify = __webpack_require__(40);
 "use strict";
 
 
-module.exports = __webpack_require__(48);
+module.exports = __webpack_require__(49);
 
 /**
  * @readme-quick-run
@@ -18495,7 +18495,7 @@ module.exports = {
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(49);
+module.exports = __webpack_require__(50);
 
 
 /***/ }),
@@ -18505,7 +18505,7 @@ module.exports = __webpack_require__(49);
 "use strict";
 
 
-let EventMatrix = __webpack_require__(51);
+let EventMatrix = __webpack_require__(52);
 
 let {
     listenEventType,
@@ -18534,15 +18534,38 @@ module.exports = {
 "use strict";
 
 
+const STATUS_WAITING = 'waiting';
+const STATUS_WORKING = 'working';
+const STATUS_FINISHED = 'finished';
+const STATUS_DISCARDED = 'discarded';
+
+const STATUS_LIST = [STATUS_WAITING, STATUS_WORKING, STATUS_FINISHED, STATUS_DISCARDED];
+
+module.exports = {
+    STATUS_LIST,
+    STATUS_WAITING,
+    STATUS_WORKING,
+    STATUS_FINISHED,
+    STATUS_DISCARDED
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 let {
     router,
     queryPager
-} = __webpack_require__(18);
+} = __webpack_require__(19);
 let {
     n,
     mount
 } = __webpack_require__(2);
-let focusPage = __webpack_require__(38);
+let focusPage = __webpack_require__(39);
 let editTaskPage = __webpack_require__(61);
 
 mount(n('div id="pager"'), document.body);
@@ -18564,13 +18587,13 @@ forward(window.location.href);
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(19);
+module.exports = __webpack_require__(20);
 
 /**
  * @readme-quick-run
@@ -18607,7 +18630,7 @@ module.exports = __webpack_require__(19);
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18621,7 +18644,7 @@ let {
     mount
 } = __webpack_require__(2);
 
-let querystring = __webpack_require__(35);
+let querystring = __webpack_require__(36);
 
 const SINGLE_JUMP_PREFIX = 'single://';
 
@@ -18803,7 +18826,7 @@ module.exports = {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18858,7 +18881,7 @@ module.exports = shadowFrame;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18914,7 +18937,7 @@ module.exports = startMomenter;
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18924,13 +18947,13 @@ let {
     n, svgn, bindPlugs, toHTML, parseArgs, isKabaneryNode, cn
 } = __webpack_require__(6);
 
-let plugs = __webpack_require__(26);
+let plugs = __webpack_require__(27);
 
-let view = __webpack_require__(29);
+let view = __webpack_require__(30);
 
 let mount = __webpack_require__(10);
 
-let N = __webpack_require__(34);
+let N = __webpack_require__(35);
 
 let reduceNode = __webpack_require__(7);
 
@@ -18955,7 +18978,7 @@ module.exports = {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19060,13 +19083,13 @@ module.exports = {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let parseAttribute = __webpack_require__(25);
+let parseAttribute = __webpack_require__(26);
 
 let {
     isString, isObject, isNode, likeArray, isNumber, isBool
@@ -19146,7 +19169,7 @@ module.exports = parseArgs;
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19258,14 +19281,14 @@ module.exports = parseAttribute;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let twowaybinding = __webpack_require__(27);
-let eventError = __webpack_require__(28);
+let twowaybinding = __webpack_require__(28);
+let eventError = __webpack_require__(29);
 
 module.exports = {
     twowaybinding,
@@ -19274,7 +19297,7 @@ module.exports = {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19301,7 +19324,7 @@ module.exports = (obj, path) => (tagName, attributes, childExp) => {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19333,7 +19356,7 @@ let wrapEventHandler = (fun, catcher) => {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19351,7 +19374,7 @@ let {
     forEach
 } = __webpack_require__(0);
 
-let replace = __webpack_require__(30);
+let replace = __webpack_require__(31);
 
 let reduceNode = __webpack_require__(7);
 
@@ -19544,7 +19567,7 @@ module.exports = View;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19562,7 +19585,7 @@ let {
     forEach
 } = __webpack_require__(0);
 
-let applyAttibutes = __webpack_require__(31);
+let applyAttibutes = __webpack_require__(32);
 
 let replaceDirectly = (node, newNode) => {
     let parent = node.parentNode;
@@ -19676,7 +19699,7 @@ module.exports = (node, newNode) => {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19723,7 +19746,7 @@ module.exports = applyAttibutes;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19770,7 +19793,7 @@ module.exports = {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19897,7 +19920,7 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19953,18 +19976,18 @@ module.exports = (...args) => {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-exports.decode = exports.parse = __webpack_require__(36);
-exports.encode = exports.stringify = __webpack_require__(37);
+exports.decode = exports.parse = __webpack_require__(37);
+exports.encode = exports.stringify = __webpack_require__(38);
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20055,7 +20078,7 @@ var isArray = Array.isArray || function (xs) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20147,7 +20170,7 @@ var objectKeys = Object.keys || function (obj) {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20159,13 +20182,7 @@ let {
 } = __webpack_require__(2);
 let queryString = __webpack_require__(11);
 let _ = __webpack_require__(12);
-let TaskView = __webpack_require__(43);
-let {
-    STATUS_WORKING,
-    STATUS_FINISHED,
-    STATUS_DISCARDED,
-    STATUS_NOT_STARTED
-} = __webpack_require__(60);
+let TaskListView = __webpack_require__(65);
 
 let FocusTaskListView = view((data) => {
     return n('ul', [
@@ -20192,38 +20209,6 @@ let DailyTaskListView = view((data) => {
         TaskListView({
             taskList: data.dailyList,
             planConfigPath: data.planConfigPath
-        })
-    ]);
-});
-
-let TaskListView = view(({
-    taskList,
-    planConfigPath
-}) => {
-    let groups = _.reduce(taskList, (prev, task) => {
-        if (task.status === STATUS_WORKING) {
-            prev.working.push(task);
-        } else if (task.status === STATUS_FINISHED) {
-            prev.finished.push(task);
-        } else if (task.status === STATUS_NOT_STARTED) {
-            prev.notStarted.push(task);
-        } else if (task.status === STATUS_DISCARDED) {
-            prev.discarded.push(task);
-        }
-        return prev;
-    }, {
-        working: [],
-        finished: [],
-        notStarted: [],
-        discarded: []
-    });
-
-    return n('ul', [
-        _.map(groups.working.concat(groups.notStarted).concat(groups.finished).concat(groups.discarded), (value) => {
-            return TaskView({
-                taskValue: value,
-                planConfigPath
-            });
         })
     ]);
 });
@@ -20280,7 +20265,7 @@ module.exports = () => {
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20367,7 +20352,7 @@ module.exports = function(qs, sep, eq, options) {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20438,7 +20423,7 @@ module.exports = function(obj, sep, eq, name) {
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 var g;
@@ -20465,7 +20450,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -20493,7 +20478,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20503,18 +20488,18 @@ let {
     view,
     n
 } = __webpack_require__(2);
-let Fold = __webpack_require__(44);
-let FoldArrow = __webpack_require__(45);
+let Fold = __webpack_require__(45);
+let FoldArrow = __webpack_require__(46);
 let _ = __webpack_require__(12);
 
 let {
-    STATUS_NOT_STARTED,
+    STATUS_WAITING,
     STATUS_FINISHED,
     STATUS_WORKING
-} = __webpack_require__(60);
+} = __webpack_require__(17);
 
 let colorMap = {
-    [STATUS_NOT_STARTED]: '#999999',
+    [STATUS_WAITING]: '#999999',
     [STATUS_FINISHED]: 'rgb(111,140,29)',
     [STATUS_WORKING]: 'white'
 };
@@ -20594,6 +20579,7 @@ let displayProgress = (progress) => {
         }) => {
             return n('li', {
                 style: {
+                    fontSize: 14,
                     marginLeft: 28,
                     'list-style': 'square !important'
                 }
@@ -20633,7 +20619,7 @@ let atomActionDisplayMap = {
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20671,7 +20657,7 @@ module.exports = view((data, {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20681,7 +20667,7 @@ let {
     n
 } = __webpack_require__(2);
 
-let angle = __webpack_require__(46);
+let angle = __webpack_require__(47);
 
 module.exports = (ops) => {
     return n('span', {
@@ -20698,13 +20684,13 @@ module.exports = (ops) => {
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let line = __webpack_require__(47);
+let line = __webpack_require__(48);
 let {
     n
 } = __webpack_require__(13);
@@ -20751,7 +20737,7 @@ module.exports = ({
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20784,7 +20770,7 @@ module.exports = ({
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20798,13 +20784,13 @@ let {
     parseArgs
 } = __webpack_require__(15);
 
-let plugs = __webpack_require__(52);
+let plugs = __webpack_require__(53);
 
-let view = __webpack_require__(55);
+let view = __webpack_require__(56);
 
-let mount = __webpack_require__(58);
+let mount = __webpack_require__(59);
 
-let N = __webpack_require__(59);
+let N = __webpack_require__(60);
 
 module.exports = {
     n,
@@ -20820,7 +20806,7 @@ module.exports = {
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20830,7 +20816,7 @@ let {
     isString, isObject, isNode, likeArray, isNumber, isBool
 } = __webpack_require__(1);
 
-let parseAttribute = __webpack_require__(50);
+let parseAttribute = __webpack_require__(51);
 
 const svgNS = 'http://www.w3.org/2000/svg';
 
@@ -20956,7 +20942,7 @@ module.exports = {
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21068,7 +21054,7 @@ module.exports = parseAttribute;
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21171,14 +21157,14 @@ let getGlobalEventTypeId = (type) => `__event_type_id_${type}`;
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-let twowaybinding = __webpack_require__(53);
-let eventError = __webpack_require__(54);
+let twowaybinding = __webpack_require__(54);
+let eventError = __webpack_require__(55);
 
 module.exports = {
     twowaybinding,
@@ -21187,7 +21173,7 @@ module.exports = {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21214,7 +21200,7 @@ module.exports = (obj, path) => (tagName, attributes, childExp) => {
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21246,7 +21232,7 @@ let wrapEventHandler = (fun, catcher) => {
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21264,7 +21250,7 @@ let {
     forEach
 } = __webpack_require__(0);
 
-let replace = __webpack_require__(56);
+let replace = __webpack_require__(57);
 
 /**
  * render function: (data) => node
@@ -21452,7 +21438,7 @@ module.exports = View;
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21470,7 +21456,7 @@ let {
     forEach
 } = __webpack_require__(0);
 
-let applyAttibutes = __webpack_require__(57);
+let applyAttibutes = __webpack_require__(58);
 
 let replaceDirectly = (node, newNode) => {
     let parent = node.parentNode;
@@ -21584,7 +21570,7 @@ module.exports = (node, newNode) => {
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21631,7 +21617,7 @@ module.exports = applyAttibutes;
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21674,7 +21660,7 @@ let getDoc = (node) => {
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21726,29 +21712,6 @@ module.exports = (...args) => {
 
         return n(tagName, attrs, renderList(childs));
     };
-};
-
-
-/***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-const STATUS_NOT_STARTED = 'not_started';
-const STATUS_WORKING = 'working';
-const STATUS_FINISHED = 'finished';
-const STATUS_DISCARDED = 'discarded';
-
-const STATUS_LIST = [STATUS_NOT_STARTED, STATUS_WORKING, STATUS_FINISHED, STATUS_DISCARDED];
-
-module.exports = {
-    STATUS_LIST,
-    STATUS_NOT_STARTED,
-    STATUS_WORKING,
-    STATUS_FINISHED,
-    STATUS_DISCARDED
 };
 
 
@@ -21988,6 +21951,95 @@ module.exports = view((data, {
         }, [data.content])
     ]);
 });
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+let {
+    n,
+    view
+} = __webpack_require__(2);
+let _ = __webpack_require__(12);
+let TaskView = __webpack_require__(44);
+let Fold = __webpack_require__(45);
+let FoldArrow = __webpack_require__(46);
+
+let {
+    STATUS_WORKING,
+    STATUS_FINISHED,
+    STATUS_DISCARDED,
+    STATUS_WAITING
+} = __webpack_require__(17);
+
+module.exports = view(({
+    taskList,
+    planConfigPath
+}) => {
+    let groups = _.reduce(taskList, (prev, task) => {
+        if (task.status === STATUS_WORKING) {
+            prev.working.push(task);
+        } else if (task.status === STATUS_FINISHED) {
+            prev.finished.push(task);
+        } else if (task.status === STATUS_WAITING) {
+            prev.waiting.push(task);
+        } else if (task.status === STATUS_DISCARDED) {
+            prev.discarded.push(task);
+        }
+        return prev;
+    }, {
+        working: [],
+        finished: [],
+        waiting: [],
+        discarded: []
+    });
+
+    return n('ul', [
+        groups.working.length && foldTaskList(groups.working, 'working', false, planConfigPath),
+        groups.waiting.length && foldTaskList(groups.waiting, 'waiting', true, planConfigPath),
+        groups.finished.length && foldTaskList(groups.finished, 'finished', true, planConfigPath),
+        groups.discarded.length && foldTaskList(groups.discarded, 'discarded', true, planConfigPath)
+    ]);
+});
+
+let foldTaskList = (tasks, title, hide, planConfigPath) => {
+    return Fold({
+        head: (ops) => {
+            return n('div', {
+                onclick: () => {
+                    ops.toggle();
+                },
+
+                style: {
+                    cursor: 'pointer',
+                    padding: 5
+                }
+            }, [
+                FoldArrow(ops),
+                n('strong style="padding-left:10px"', title),
+            ]);
+        },
+
+        body: () => listTask(tasks, planConfigPath),
+
+        hide
+    });
+};
+
+let listTask = (tasks, planConfigPath) => {
+    return n('ul', [
+        _.map(tasks, (value) => {
+            return TaskView({
+                taskValue: value,
+                planConfigPath
+            });
+        })
+    ]);
+};
 
 
 /***/ })
