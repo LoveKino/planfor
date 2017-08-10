@@ -50,8 +50,9 @@ let sendEmail = (title, content) => {
     });
 };
 
-let openUrl = (url, auto = false) => {
+let openUrl = (name, url, auto = false) => {
     return atomAction('openUrl', {
+        name,
         url,
         auto
     });

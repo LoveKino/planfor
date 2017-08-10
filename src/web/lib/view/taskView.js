@@ -11,36 +11,23 @@ let {
     displayClock
 } = require('../util/time');
 let AtomActionView = require('./atomActionView');
-let {
-    STATUS_WAITING,
-    STATUS_FINISHED,
-    STATUS_WORKING
-} = require('../../../const');
-
-let colorMap = {
-    [STATUS_WAITING]: '#999999',
-    [STATUS_FINISHED]: 'rgb(111,140,29)',
-    [STATUS_WORKING]: 'white'
-};
 
 module.exports = view(({
     taskValue,
     planConfigPath
 }) => {
-    let backgroundColor = colorMap[taskValue.status];
-
     return n('li class="card"', {
         style: {
-            backgroundColor,
+            backgroundColor: 'white',
             fontSize: 16
         }
     }, [
-        line('name', taskValue.name),
+        line('name', n('span style="font-size:18px;color:rgb(0,161,241);font-weight:bold;"', taskValue.name)),
         line('filePath', prettyFilePath(taskValue.filePath)),
         line('moment', displayMoment(taskValue)),
         line('status', taskValue.status),
         taskValue.description && line('description', taskValue.description),
-        taskValue.progress && lineBlock('progress', displayProgress(taskValue.progress), taskValue.status === STATUS_WORKING),
+        taskValue.progress && lineBlock('progress', displayProgress(taskValue.progress)),
 
         n(`a href="?page=editTask&planConfigPath=${planConfigPath}&filePath=${taskValue.filePath}&name=${taskValue.name}"`, {
             style: {
@@ -110,7 +97,8 @@ let displayProgress = (progress) => {
                 }
             }, [
                 AtomActionView({
-                    actionType, info
+                    actionType,
+                    info
                 })
             ]);
         })

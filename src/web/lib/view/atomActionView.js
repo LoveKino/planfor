@@ -15,9 +15,9 @@ module.exports = view(({
 
     if(actionType === 'openUrl') {
         return n('div', [
-            n('span', 'openUrl'),
+            n('span', info.name),
             n('span style="padding-left: 10px"'),
-            n(`a href="${info.url}" target="blank"`, info.url)
+            n(`a href="${info.url}" target="_blank"`, info.url)
         ]);
     }
 
